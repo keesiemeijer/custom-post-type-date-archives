@@ -3,9 +3,11 @@
 Plugin Name: Custom Post Type Date Archives
 Version: 1.0
 Plugin URI:
-Description: This plugin allows you to add date archives to custom post types in your theme's functions.php file.
+Description: This plugin allows you to add date archives to custom post types in your theme's functions.php file. Adds a post type dropdown to the archives widget.
 Author: keesiemijer
 Author URI:
+Text Domain: custom-post-type-date-archives
+Domain Path: languages
 License: GPL v2
 
 Custom Post Type Date Archives
@@ -25,269 +27,176 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * Class to add date archives to custom post types.
- *
- * @since 1.0
- * @author keesiemeijer
- */
-class CPTDA_Custom_Post_Type_Date_Archives {
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 
 	/**
-	 * Custom post types with 'date-archives' support.
+	 * Main Custom_Post_Type_Date_Archives Class
 	 *
 	 * @since 1.0
-	 * @var array
 	 */
-	public $post_types;
+	final class Custom_Post_Type_Date_Archives {
 
 	/**
-	 * Class instance.
 	 *
+	 *
+	 * @var Plugin instance
 	 * @since 1.0
-	 * @var object
 	 */
-	private static $instance = null;
-
+	private static $instance;
 
 	/**
-	 * Acces this plugin's working instance.
+	 *
+	 *
+	 * @var Post type object
+	 * @since 1.0
+	 */
+	public $post_type;
+
+	/**
+	 *
+	 *
+	 * @var Post type object
+	 * @since 1.0
+	 */
+	public $rewrite;
+
+	/**
+	 * Main Custom_Post_Type_Date_Archives Instance
+	 *
+	 * Insures that only one instance of CS_Custom_Post_Type_Date_Archives exists in memory at any one
+	 * time. Also prevents needing to define globals all over the place.
 	 *
 	 * @since 1.0
-	 * @return object
+	 * @uses CS_Custom_Post_Type_Date_Archives::setup_constants() Setup the constants needed
+	 * @uses CS_Custom_Post_Type_Date_Archives::includes() Include the required files
+	 * @uses CS_Custom_Post_Type_Date_Archives::load_textdomain() load the language files
+	 * @return CS_Custom_Post_Type_Date_Archives instance.
 	 */
-	public static function get_instance() {
-		// create a new object if it doesn't exist.
-		is_null( self::$instance ) && self::$instance = new self;
+	public static function instance() {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof CS_Custom_Post_Type_Date_Archives ) ) {
+			self::$instance = new Custom_Post_Type_Date_Archives;
+			self::$instance->setup_constants();
+			self::$instance->includes();
+			self::$instance->load_textdomain();
+			self::$instance->post_type  = new CPTDA_Post_Types();
+		}
+
 		return self::$instance;
 	}
 
 
 	/**
-	 * Sets up class properties on action hook wp_loaded.
+	 * Throw error on object clone
 	 *
+	 * The whole idea of the singleton design pattern is that there is a single
+	 * object therefore, we don't want the object to be cloned.
+	 *
+	 * @since 1.0
+	 * @access protected
+	 * @return void
+	 */
+	public function __clone() {
+		// Cloning instances of the class is forbidden
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'content-shortcuts' ), '1.0' );
+	}
+
+	/**
+	 * Disable unserializing of the class
+	 *
+	 * @since 1.0
+	 * @access protected
+	 * @return void
+	 */
+	public function __wakeup() {
+		// Unserializing instances of the class is forbidden
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'content-shortcuts' ), '1.0' );
+	}
+
+	/**
+	 * Setup plugin constants
+	 *
+	 * @access private
 	 * @since 1.0
 	 * @return void
 	 */
-	public function init() {
-		add_action( 'wp_loaded', array( self::get_instance(), 'setup_archives' ) );
+	private function setup_constants() {
+
+		// Plugin version
+		if ( ! defined( 'CPT_DATE_ARCHIVES_VERSION' ) ) {
+			define( 'CPT_DATE_ARCHIVES_VERSION', '1.0' );
+		}
+
+		// Plugin Folder Path
+		if ( ! defined( 'CPT_DATE_ARCHIVES_PLUGIN_DIR' ) ) {
+			define( 'CPT_DATE_ARCHIVES_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		}
+
+		// Plugin Folder URL
+		if ( ! defined( 'CPT_DATE_ARCHIVES_PLUGIN_URL' ) ) {
+			define( 'CPT_DATE_ARCHIVES_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		}
+
+		// Plugin Root File
+		if ( ! defined( 'CPT_DATE_ARCHIVES_PLUGIN_FILE' ) ) {
+			define( 'CPT_DATE_ARCHIVES_PLUGIN_FILE', __FILE__ );
+		}
 	}
 
-
 	/**
-	 * Sets up custom post type date archives.
+	 * Include required files
 	 *
+	 * @access private
 	 * @since 1.0
 	 * @return void
 	 */
-	function setup_archives() {
-		$this->post_types = $this->get_date_archive_post_types();
+	private function includes() {
 
-		if ( !empty( $this->post_types ) ) {
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/functions.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
 
-			// The custom post type date archive rewrite rules are added when the rewrite rules are flushed.
-			// Or when the rewrite rules are generated.
-
-			// Add the custom post type date archive rewrite rules when the rewrite rules are generated.
-			add_action( 'generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ) );
-
-			/**
-			 * This filter allows you to disable the automatic flushing of rewrite rules.
-			 * The rewrite rules are automaticly flushed on on the front end when
-			 * the date rewrite rules for custom post types don't exist yet.
-			 *
-			 * If disabled you'll have to update the rewrite rules manually by
-			 * going to wp-admin > Settings > Permalinks if you add date-archive support for custom post types.
-			 *
-			 * @since 1.0
-			 * @param boolean $automatic_flush Flush rewrite rules for new cpt date archives. Default true.
-			 */
-			$flush = apply_filters( 'custom_post_type_date_archives_flush_rules', true );
-
-			if ( !is_admin() && $flush && $this->is_new_rewrite_rules() ) {
-				// New cpt date archive rewrite rules found.
-				$this->flush_rules();
-			}
+		if ( !is_admin() ) {
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
 		}
-	}
-
-
-	/**
-	 * Returns custom post types to create a date archive for.
-	 * Checks if 'date-archives' support was added to custom post types.
-	 * see http://codex.wordpress.org/Function_Reference/add_post_type_support
-	 *
-	 * @since 1.0
-	 * @param array|string $post_type Post type(s).
-	 * @return array Post types to create date archives for.
-	 */
-	public function get_date_archive_post_types() {
-
-		$archive_post_types = array();
-		$custom_post_types  = get_post_types( array( 'public' => true, '_builtin' => false ), 'names', 'and' );
-
-		foreach ( array_keys( $custom_post_types ) as $type ) {
-
-			if ( post_type_supports( $type, 'date-archives' ) ) {
-				$archive_post_types[] = $type;
-			}
-		}
-
-		return $archive_post_types;
-	}
-
-
-	/**
-	 * Adds all custom post types date archive rewrite rules to the current rewrite rules.
-	 *
-	 * @since 1.0
-	 * @param object  $wp_rewrite WP_Rewrite object.
-	 * @return object WP_Rewrite object.
-	 */
-	public function generate_rewrite_rules( $wp_rewrite ) {
-		$rules = $this->get_rewrite_rules();
-		$wp_rewrite->rules = $rules + $wp_rewrite->rules;
-		return $wp_rewrite;
-	}
-
-
-	/**
-	 * Returns date rewrite rules for all custom post types that support date archives.
-	 *
-	 * @since 1.0
-	 * @return array Custom post types date archive rewrite rules.
-	 */
-	function get_rewrite_rules() {
-		$rules = array();
-
-		foreach ( (array) $this->post_types as $type ) {
-			$rules = $rules + $this->date_rewrite_rules( $type );
-		}
-		return $rules;
-	}
-
-
-	/**
-	 * Creates rewrite rules for a custom post type that supports date archives.
-	 *
-	 * @since 1.0
-	 * @param string  $cpt Custom post type name.
-	 * @return array Array with custom post type date archive rewrite rules.
-	 */
-	function date_rewrite_rules( $cpt ) {
-		global $wp_rewrite;
-		$rules = array();
-
-		$post_type = get_post_type_object( $cpt );
-		if ( isset( $post_type->name ) && !post_type_exists( $post_type->name ) ) {
-			return $rules;
-		}
-
-		if ( !$post_type->has_archive ) {
-			return $rules;
-		}
-
-		// Check if with_front is set for the post type.
-		$front = isset( $post_type->rewrite['with_front'] ) ? (bool) $post_type->rewrite['with_front'] : 1;
-		$base = $front ? $wp_rewrite->front : $wp_rewrite->root;
-
-		// Check if rewrite slug is set for the post type.
-		$slug = isset( $post_type->rewrite['slug'] ) ? $post_type->rewrite['slug'] : '';
-		$slug = !empty( $slug ) ? $slug : $post_type->name;
-
-		// Create slug with base.
-		$archive_slug = ltrim( trailingslashit( $base ) . $slug , '/' );
-
-		$dates = array(
-			array(
-				'rule' => "([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})",
-				'vars' => array( 'year', 'monthnum', 'day' ) ),
-			array(
-				'rule' => "([0-9]{4})/([0-9]{1,2})",
-				'vars' => array( 'year', 'monthnum' ) ),
-			array(
-				'rule' => "([0-9]{4})",
-				'vars' => array( 'year' ) )
-		);
-
-		foreach ( $dates as $data ) {
-			$query = 'index.php?post_type='.$cpt;
-			$rule = $archive_slug . '/' . $data['rule'];
-
-			$i = 1;
-			foreach ( $data['vars'] as $var ) {
-				$query .= '&' . $var . '=' . $wp_rewrite->preg_index( $i );
-				$i++;
-			}
-
-			$rules[ $rule . "/feed/(feed|rdf|rss|rss2|atom)/?$" ] = $query . "&feed=" . $wp_rewrite->preg_index( $i );
-			$rules[ $rule . "/(feed|rdf|rss|rss2|atom)/?$" ]      = $query . "&feed=" . $wp_rewrite->preg_index( $i );
-			$rules[ $rule . "/page/([0-9]{1,})/?$" ]              = $query . "&paged=" . $wp_rewrite->preg_index( $i );
-			$rules[ $rule . "/?$" ] = $query;
-		}
-
-		return $rules;
-	}
-
-
-	/**
-	 * Checks if the date rewrite rules for custom post types exist.
-	 * The date rules exist if they're already in the current rewrite rules.
-	 *
-	 * @since 1.0
-	 * @return boolean Returns true if custom post types date rewrite rules don't exist.
-	 */
-	private function is_new_rewrite_rules() {
-		global $wp_rewrite;
-
-		$rewrite_rules = get_option( 'rewrite_rules', $wp_rewrite->rules );
-
-
-		if ( empty( $rewrite_rules ) ) {
-			// Can't compare against the current rewrite rules. Lets bail.
-			return false;
-		}
-
-		// Store the $wp_rewrite object in a temp variable.
-		$wp_rewrite_temp = $wp_rewrite;
-
-		// Set the 'matches' property for the preg_index() method used in $this->get_rewrite_rules().
-		$wp_rewrite->matches = 'matches';
-
-		// Get all custom post types date archive rules.
-		$rules = $this->get_rewrite_rules();
-
-		// restore the $wp_rewrite object.
-		$wp_rewrite  = $wp_rewrite_temp;
-
-		// Check if the rewrite rule or query exists.
-		foreach ( $rules as $rule => $query ) {
-			if ( !in_array( $query, $rewrite_rules ) || !key_exists( $rule, $rewrite_rules ) ) {
-				// Doesn't exist.
-				return true;
-			}
-		}
-
-		return false;
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/install.php';
 	}
 
 	/**
-	 * Flush rewrite rules for new custom post type date archives.
-	 * !Important. The rewrite rules are not flushed on every page load. That would be bad.
-	 * See the custom_post_type_date_archives_flush_rules filter for when this method is called.
+	 * Loads the plugin language files
 	 *
+	 * @access public
 	 * @since 1.0
 	 * @return void
 	 */
-	function flush_rules() {
-		global $wp_rewrite;
-
-		// Uncomment this to see when rules are flushed.
-		// echo 'The Custom Post Type Date Archives plugin flushed the rewrite rules';
-
-		$wp_rewrite->flush_rules();
+	public function load_textdomain() {
+		$dir = dirname( plugin_basename( CPT_DATE_ARCHIVES_PLUGIN_FILE ) ) . '/languages/';
+		load_plugin_textdomain( 'custom-post-type-archives', '', $dir );
 	}
+
 
 }
+endif;
 
-CPTDA_Custom_Post_Type_Date_Archives::init();
+/**
+ * Returns the Custom_Post_Type_Date_Archives instance to functions everywhere.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * Example: <?php $instance = cptda_date_archives(); ?>
+ *
+ * @since 1.0
+ * @return object Custom_Post_Type_Date_Archives Instance.
+ */
+function cptda_date_archives() {
+	return Custom_Post_Type_Date_Archives::instance();
+}
+
+// Instantiate plugin
+cptda_date_archives();
