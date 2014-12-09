@@ -38,7 +38,7 @@ register_deactivation_hook( CPT_DATE_ARCHIVES_PLUGIN_FILE, 'cptda_deactivate_plu
  */
 function cptda_date_template_include( $template ) {
 
-	if ( is_cpt_date() ) {
+	if ( cptda_is_cpt_date() ) {
 
 		$_template = get_date_template();
 		$_template = !empty( $_template ) ? $_template : get_post_type_archive_template();

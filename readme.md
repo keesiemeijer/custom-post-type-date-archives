@@ -34,7 +34,7 @@ add_action( 'init', 'post_type_events_init' );
 These are the functions you can use in your theme template files.
 ```php
 // Is the current query for a custom post type date archive?
-is_cpt_date()
+cptda_is_cpt_date()
 ```
 
 ```php

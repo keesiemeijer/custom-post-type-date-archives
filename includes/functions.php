@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param unknown
  * @return bool
  */
-function is_cpt_date() {
+function cptda_is_cpt_date() {
 
 	if ( is_date() && is_post_type_archive() ) {
 
@@ -67,7 +67,7 @@ function cptda_is_date_post_type( $post_type = '' ) {
  */
 function cptda_get_date_archive_cpt() {
 
-	if ( is_cpt_date() ) {
+	if ( cptda_is_cpt_date() ) {
 		$post_type = get_query_var( 'post_type' );
 		if ( is_array( $post_type ) ) {
 			$post_type = reset( $post_type );
