@@ -80,7 +80,7 @@ function cptda_get_date_archive_cpt() {
 
 
 /**
- * Display archive links based on type and format.
+ * Display archive links based on post type, type and format.
  * Similar to wp_get_archives() but for custom post types.
  *
  * @since 1.0
