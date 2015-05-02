@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Post Type Date Archives
-Version: 1.0
+Version: 1.1
 Plugin URI:
 Description: This plugin allows you to add date archives to custom post types in your theme's functions.php file. Adds a post type dropdown to the archives widget.
 Author: keesiemijer
@@ -163,6 +163,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		if ( !is_admin() ) {
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/query.php';
 		}
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/install.php';
 	}

@@ -24,6 +24,7 @@ class CPTDA_Post_Types {
 
 	private $post_types      = array();
 	private $post_type_names = array();
+	private $future_status   = array();
 
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
@@ -49,6 +50,10 @@ class CPTDA_Post_Types {
 
 			if (  !empty( $has_archive ) && $support ) {
 				$this->post_type_names[] = $name;
+
+				if ( post_type_supports( $name, 'future_status' ) ) {
+					$this->future_status[] = $name;
+				}
 			} else {
 				unset( $this->post_types[ $name ] );
 			}
@@ -66,15 +71,20 @@ class CPTDA_Post_Types {
 	public function get_date_archive_post_types( $type = 'names' ) {
 
 		$post_types = $this->post_type_names;
+
 		if ( 'objects' === $type ) {
 			$post_types = $this->post_types;
 		}
+
 		if ( 'labels' === $type ) {
 			$post_types = array();
 			foreach ( $this->post_types as $key => $value ) {
 				$post_types[$key] = esc_attr( $value->labels->menu_name );
 			}
+		}
 
+		if ( 'future_status' === $type ) {
+			$post_types = $this->future_status;
 		}
 
 		return $post_types;
