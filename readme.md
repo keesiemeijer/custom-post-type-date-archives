@@ -38,13 +38,13 @@ add_action( 'init', 'post_type_events_init' );
 
 **Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) and [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
-To allow **future dates** for a post type include `future_status` in the supports parameter. Post types that support `future_status` will now also show the (scheduled) posts in the custom post type date archives.
+To allow **future dates** for a post type include `future-status` in the supports parameter. Post types that support `future-status` will now also show the (scheduled) posts in the custom post type date archives.
 
 ```php
 // Adding date archives and future post status support to the events custom post type.
-add_post_type_support( 'events', array( 'date-archives', 'future_status' ) );
+add_post_type_support( 'events', array( 'date-archives', 'future-status' ) );
 ```
-**Note** if `future_status` is supported don't link to individual posts in your theme archive templates. The (sceduled) posts only exists in the custom post type date archives. Use the `pre_get_posts` filter to set the future post status if you need them displayed elsewhere also.
+**Note** if `future-status` is supported don't link to individual posts in your theme archive templates. The (sceduled) posts only exists in the custom post type date archives. Use the `pre_get_posts` filter to set the future post status if you need them displayed elsewhere also.
 
 ## Functions
 
@@ -69,7 +69,7 @@ cptda_get_date_archive_cpt()
 ```php
 // Get the post stati for a post type thas support date archives. 
 // Returns an array with post stati. Default array( 'publish' ).
-// If the post type supports 'future_status' an array with 'publish' and 'future' is returned.
+// If the post type supports 'future-status' an array with 'publish' and 'future' is returned.
 // The post stati can be filtered with the 'cptda_post_stati' filter.
 
 cptda_get_cpt_date_archive_stati( $post_type = '' )

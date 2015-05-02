@@ -51,7 +51,7 @@ class CPTDA_Post_Types {
 			if (  !empty( $has_archive ) && $support ) {
 				$this->post_type_names[] = $name;
 
-				if ( post_type_supports( $name, 'future_status' ) ) {
+				if ( post_type_supports( $name, 'future-status' ) ) {
 					$this->future_status[] = $name;
 				}
 			} else {
