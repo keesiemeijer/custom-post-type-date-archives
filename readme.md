@@ -5,22 +5,21 @@ Tested up to: 4.2.1
 
 Add date archives to custom post types.
 
-The default archives and calendar widget will be replaced with a widget where you can select a post type.
+The default archives and calendar widget will be replaced with similar widgets where you can select a post type.
 
-WordPress only supports date archives for the `post` post type . With this plugin you can add date archive support for custom post types in your theme's functions.php file with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the supports parameter and this plugin will add the rewrite rules needed for the date archives of the custom post type.
+WordPress only supports date archives for the `post` post type. With this plugin you can add date archive support for custom post types with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the supports parameter and this plugin will add the rewrite rules needed.
 
 Example url for a custom post type 'events' date archive.
 ```
 https://example.com/events/2015/06/12
 ```
 
-When registering a custom post type the `has_archive` parameter is required to be for it to have date archives added. See the example below. 
+When registering a custom post type the `has_archive` parameter is required for it to have date archives added. See the example below. 
 
-For example, add date archives to a 'events' custom post type.
+For example, add date archives to a 'events' custom post type. Put this in your (child) theme's functions.php file. 
 
 ```php
 // Registering the events custom post type.
-// And adding date archives support.
 function post_type_events_init() {
 
 	$args = array(
@@ -37,15 +36,15 @@ function post_type_events_init() {
 add_action( 'init', 'post_type_events_init' );
 ```
 
-**Note** The function `add_post_type_support()` should be called using the `init` action hook, like in the above example.
+**Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
-To allow future dates for a post type include `future_status` in the supports parameter. Post types that support `future_status` will now also show the scheduled posts in the custom post type date archives.
+To allow **future dates** for a post type include `future_status` in the supports parameter. Post types that support `future_status` will now also show the (scheduled) posts in the custom post type date archives.
 
 ```php
-	// Adding date archives and future post status support to the events custom post type.
-	add_post_type_support( 'events', array( 'date-archives', 'future_status' ) );
+// Adding date archives and future post status support to the events custom post type.
+add_post_type_support( 'events', array( 'date-archives', 'future_status' ) );
 ```
-**Note** if `future_status` is supported don't link to individual posts in your theme archive templates. The (sceduled) post only exists in the custom post type date archives. Use the `pre_get_posts` filter to set the future post status if you need them displayed elsewhere also.
+**Note** if `future_status` is supported don't link to individual posts in your theme archive templates. The (sceduled) posts only exists in the custom post type date archives. Use the `pre_get_posts` filter to set the future post status if you need them displayed elsewhere also.
 
 ## Functions
 
@@ -58,12 +57,12 @@ cptda_is_cpt_date()
 ```
 
 ```php
-// Checks if the post type supports date archives.
+// Checks if a specific post type supports date archives.
 cptda_is_date_post_type( $post_type = '' )
 ```
 
 ```php
-// Get the current date archive custom post type.
+// Get the posts type for the current custom date archive.
 cptda_get_date_archive_cpt()
 ```
 
@@ -83,7 +82,7 @@ cptda_get_archives( $args = '' )
 ```
 
 ```php
-// Display a calendar for a post type with days that have posts as links.
+// Display a calendar for a custom post type with days that have posts as links.
 // Similar to the WordPress function get_calendar(). Altered to include a custom post type parameter.
 cptda_get_calendar( $post_type = '', $initial = true, $echo = true )
 ```
