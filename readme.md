@@ -36,7 +36,7 @@ function post_type_events_init() {
 add_action( 'init', 'post_type_events_init' );
 ```
 
-**Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
+**Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) and [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
 To allow **future dates** for a post type include `future_status` in the supports parameter. Post types that support `future_status` will now also show the (scheduled) posts in the custom post type date archives.
 
