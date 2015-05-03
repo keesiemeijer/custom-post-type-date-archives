@@ -5,7 +5,7 @@ Tested up to: 4.2.1
 
 Add date archives to custom post types.
 
-The default archives and calendar widget will be replaced with similar widgets where you can select a post type.
+The default archives and calendar widget will be replaced with similar widgets where you can now select a post type.
 
 WordPress only supports date archives for the `post` post type. With this plugin you can add date archive support for custom post types with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the supports parameter and this plugin will add the rewrite rules needed.
 
@@ -19,7 +19,6 @@ When registering a custom post type the `has_archive` parameter is required for 
 For example, add date archives to a 'events' custom post type. Put this in your (child) theme's functions.php file. 
 
 ```php
-// Registering the events custom post type.
 function post_type_events_init() {
 
 	$args = array(
@@ -27,6 +26,8 @@ function post_type_events_init() {
 		'public'      => true,
 		'has_archive' => true, // required for date archives
 	);
+
+	// Registering the events custom post type.
 	register_post_type( 'events', $args );
 
 	// Adding date archives support to the events custom post type.
@@ -38,13 +39,32 @@ add_action( 'init', 'post_type_events_init' );
 
 **Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) and [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
-To allow **future dates** for a post type include `future-status` in the supports parameter. Post types that support `future-status` will now also show the (scheduled) posts in the custom post type date archives.
-
+## future dates
+To allow future dates for a post type include `publish-future-posts` in the supports parameter.
 ```php
-// Adding date archives and future post status support to the events custom post type.
-add_post_type_support( 'events', array( 'date-archives', 'future-status' ) );
+// Adding date archives and publish future post support for the 'events' custom post type.
+add_post_type_support( 'events', array( 'date-archives', 'publish-future-posts' ) );
 ```
-**Note** if `future-status` is supported don't link to individual posts in your theme archive templates. The (sceduled) posts only exists in the custom post type date archives. Use the `pre_get_posts` filter to set the future post status if you need them displayed elsewhere also.
+
+This will set the post status for **newly** published posts with a sceduled **future date** to 'publish' instead of 'future'. Sceduled (future) posts are no longer hidden in the front end of your site. To update old sceduled posts with the post status 'publish' use [bulk edit](http://bobwp.com/bulk-edit-posts-wordpress/) and set the status to publish.
+
+To reverse this behaviour for all post types use the code below in your (child) theme's functions.php file.
+```php
+// Don't publish scedueled posts for all custom post types that support date archives.
+// Sceduled posts are still displayed in the custom post type date archives.
+
+add_filter( 'cptda_publish_future_posts', '__return_false' );
+```
+
+To reverse it for a single post type (called events).
+```php
+// Don't publish scedueled posts for the post type 'events'.
+// Sceduled posts are still displayed in the 'events' date archives.
+
+add_filter( 'cptda_publish_future_events', '__return_false' );
+```
+
+**Note** If you return false as in the code examples above, **newly** sceduled future posts are only displayed in the custom post type date archives. Also, don't link to the individual single posts in your theme archive templates as it will go to a 404.
 
 ## Functions
 

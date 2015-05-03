@@ -40,7 +40,6 @@ class CPTDA_Post_Types {
 	 * @return void
 	 */
 	public function setup() {
-
 		$this->post_types  = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects', 'and' );
 
 		foreach ( (array) $this->post_types as $name => $post_type ) {
@@ -51,12 +50,41 @@ class CPTDA_Post_Types {
 			if (  !empty( $has_archive ) && $support ) {
 				$this->post_type_names[] = $name;
 
-				if ( post_type_supports( $name, 'future-status' ) ) {
+				if ( post_type_supports( $name, 'publish-future-posts' ) ) {
 					$this->future_status[] = $name;
 				}
 			} else {
 				unset( $this->post_types[ $name ] );
 			}
+		}
+
+		if ( !empty( $this->future_status ) ) {
+			$publish = apply_filters( 'cptda_publish_future_posts', true );
+
+			if ( (bool) $publish ) {
+				foreach ( $this->future_status as $name ) {
+					remove_action( "future_{$name}", '_future_post_hook' );
+					add_action( "future_{$name}", array( $this, 'publish_future_post' ) );
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Set new post's post_status to "publish" if the post is sceduled.
+	 *
+	 * @since 1.2
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	function publish_future_post( $post_id ) {
+
+		$post = get_post( $post_id );
+
+		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
+		if ( (bool) $publish ) {
+			wp_publish_post( $post_id );
 		}
 	}
 
