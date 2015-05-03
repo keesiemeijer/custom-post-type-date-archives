@@ -48,7 +48,7 @@ add_post_type_support( 'events', array( 'date-archives', 'publish-future-posts' 
 
 This will set the post status for **newly** published posts with a sceduled **future date** to 'publish' instead of 'future'. Sceduled (future) posts are no longer hidden in the front end of your site. To update old sceduled posts with the post status 'publish' use [bulk edit](http://bobwp.com/bulk-edit-posts-wordpress/) and set the status to publish.
 
-To reverse this behaviour for all post types use the code below in your (child) theme's functions.php file.
+To reverse this behaviour for all post types use the code below in your (child) theme's functions.php file. With this the post status for **newly** scheduled posts remains 'future'. Use the same bulk edit trick to set the 'future' post status for older posts.
 ```php
 // Don't publish scedueled posts for all custom post types that support date archives.
 // Sceduled posts are still displayed in the custom post type date archives.
@@ -89,7 +89,7 @@ cptda_get_date_archive_cpt()
 ```php
 // Get the post stati for a post type thas support date archives. 
 // Returns an array with post stati. Default array( 'publish' ).
-// If the post type supports 'future-status' an array with 'publish' and 'future' is returned.
+// If the post type supports 'publish-future-posts' an array with 'publish' and 'future' is returned.
 // The post stati can be filtered with the 'cptda_post_stati' filter.
 
 cptda_get_cpt_date_archive_stati( $post_type = '' )
