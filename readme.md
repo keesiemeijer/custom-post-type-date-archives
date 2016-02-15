@@ -122,3 +122,7 @@ cptda_get_month_link( $year, $month, $post_type = '' )
 cptda_get_day_link( $year, $month, $day, $post_type = '' )
 ```
 
+## Pagination
+Pagination of cpt date archives is the same as normal date archives. For those needing to paginate by year, month or day there is a seperate plugin that does just that.
+https://github.com/keesiemeijer/custom-post-type-date-archives-pagination 
+
