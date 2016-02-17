@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+add_action( 'pre_get_posts', 'cptda_pre_get_posts' );
+
 /**
  * Includes the post status 'future' for post types that support it.
  *
@@ -28,4 +30,20 @@ function cptda_pre_get_posts( $query ) {
 	}
 }
 
-add_action( 'pre_get_posts', 'cptda_pre_get_posts' );
+add_action( 'wp', 'cptda_handle_404' );
+
+/**
+ * Set 404 if no posts found on a custom post type date archive
+ *
+ * @since 2.0.0
+ * @return void
+ */
+function cptda_handle_404() {
+	global $wp_query;
+
+	if (  !is_admin() && !is_paged() && cptda_is_cpt_date() && !$wp_query->posts  ) {
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+	}
+}
