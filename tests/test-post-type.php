@@ -63,7 +63,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	 * Test slug with front (blog)
 	 */
 	function test_cpt_slug_with_front(){
-		$this->set_permalink_structure( 'blog/%postname%/' );
+		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init();
 		$instance = cptda_date_archives();
 		$slug     = $instance->post_type->get_post_type_base_slug( 'cpt' );
@@ -75,7 +75,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	 * Test slug
 	 */
 	function test_cpt_slug(){
-		$this->set_permalink_structure( '/%postname%/' );
+		$this->utils->set_permalink_structure( '/%postname%/' );
 		$this->utils->init();
 		$instance = cptda_date_archives();
 		$slug     = $instance->post_type->get_post_type_base_slug( 'cpt' );
@@ -87,7 +87,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	 * Test rewrite slug
 	 */
 	function test_cpt_rewrite_slug(){
-		$this->set_permalink_structure( 'blog/%postname%/' );
+		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init('cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
 		$plugin = cptda_date_archives();
 		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );
@@ -99,7 +99,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	 * Test rewrite slug without front
 	 */
 	function test_cpt_rewrite_slug_without_front(){
-		$this->set_permalink_structure( 'blog/%postname%/' );
+		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init('cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
 		$plugin = cptda_date_archives();
 		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );

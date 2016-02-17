@@ -106,4 +106,21 @@ class CPTDA_Test_Utils {
 		$plugin = cptda_date_archives();
 		$plugin->post_type = new CPTDA_Post_Types();
 	}
+
+	/**
+	 * Utility method that resets permalinks and flushes rewrites.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @global WP_Rewrite $wp_rewrite
+	 *
+	 * @param string $structure Optional. Permalink structure to set. Default empty.
+	 */
+	public function set_permalink_structure( $structure = '' ) {
+		global $wp_rewrite;
+
+		$wp_rewrite->init();
+		$wp_rewrite->set_permalink_structure( $structure );
+		$wp_rewrite->flush_rules();
+	}
 }
