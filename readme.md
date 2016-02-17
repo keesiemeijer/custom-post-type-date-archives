@@ -1,7 +1,8 @@
-# Custom Post Type Date Archives
+# Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=master)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
 
-version:      1.1  
-Tested up to: 4.2.1  
+Version:           2.0.0  
+Requires at least: 3.9  
+Tested up to:      4.4  
 
 Add date archives to custom post types.
 
