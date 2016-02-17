@@ -22,6 +22,11 @@ class CPTDA_Test_Utils {
 
 		$now = time();
 
+		// WP < 4.4
+		if ( !defined( 'MONTH_IN_SECONDS' ) ) {
+			define( 'MONTH_IN_SECONDS',  30 * DAY_IN_SECONDS );
+		}
+
 		$dates = array(
 
 			// future dates
@@ -71,7 +76,7 @@ class CPTDA_Test_Utils {
 	function register_post_type( $post_type = 'cpt', $rewrite = false ) {
 
 		$args = array( 'public'      => true, 'has_archive' => true );
-		if($rewrite) {
+		if ( $rewrite ) {
 			$args['rewrite'] = $rewrite;
 		}
 		register_post_type( $post_type, $args );
@@ -114,7 +119,7 @@ class CPTDA_Test_Utils {
 	 *
 	 * @global WP_Rewrite $wp_rewrite
 	 *
-	 * @param string $structure Optional. Permalink structure to set. Default empty.
+	 * @param string  $structure Optional. Permalink structure to set. Default empty.
 	 */
 	public function set_permalink_structure( $structure = '' ) {
 		global $wp_rewrite;
