@@ -75,10 +75,10 @@ class CPTDA_Post_Types {
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
 	 * @since 1.2
-	 * @param int $post_id Post ID.
+	 * @param int     $post_id Post ID.
 	 * @return void
 	 */
-	function publish_future_post( $post_id ) {
+	public function publish_future_post( $post_id ) {
 
 		$post = get_post( $post_id );
 
