@@ -1,0 +1,17 @@
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite>	
+				
+			<file>tests/test-post-type.php</file>
+			<file>tests/test-functions.php</file>
+			<file>tests/test-query.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>
