@@ -48,6 +48,7 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 		}
 	}
 
+
 	/**
 	 * Test date archives for published custom post type posts.
 	 */

@@ -11,6 +11,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	 */
 	private $utils;
 
+
 	/**
 	 * Set up.
 	 */

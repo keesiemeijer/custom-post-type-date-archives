@@ -112,6 +112,7 @@ class CPTDA_Test_Utils {
 		$plugin->post_type = new CPTDA_Post_Types();
 	}
 
+
 	/**
 	 * Utility method that resets permalinks and flushes rewrites.
 	 *

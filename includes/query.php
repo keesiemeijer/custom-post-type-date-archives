@@ -32,6 +32,7 @@ function cptda_pre_get_posts( $query ) {
 
 add_action( 'wp', 'cptda_handle_404' );
 
+
 /**
  * Set 404 if no posts found on a custom post type date archive
  *

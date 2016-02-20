@@ -147,6 +147,7 @@ class CPTDA_Post_Types {
 
 	}
 
+
 	/**
 	 * Gets the base slug for the post type depending on the post type's parameters.
 	 *

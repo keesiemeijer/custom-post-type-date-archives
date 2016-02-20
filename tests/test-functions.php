@@ -147,7 +147,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 			$year  = get_the_date( 'Y', $_posts[0] );
 			$this->go_to( '?post_type=cpt&year=' . $year  );
 		}
-		
+
 		ob_start();
 
 		// these functions should not output anything.
