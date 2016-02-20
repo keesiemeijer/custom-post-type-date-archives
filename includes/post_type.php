@@ -40,19 +40,26 @@ class CPTDA_Post_Types {
 	 * @return void
 	 */
 	public function setup() {
-		$this->post_types  = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects', 'and' );
+
+		$this->reset_post_types();
+		$this->setup_admin_post_types();
+
+		$args = array(
+			'public'       => true,
+			'_builtin'     => false,
+			'has_archive'  => true,
+		);
+
+		$this->post_types = get_post_types( $args, 'objects', 'and' );
 
 		foreach ( (array) $this->post_types as $name => $post_type ) {
 
-			$has_archive = $post_type->has_archive;
-			$support     = post_type_supports( $name, 'date-archives' );
+			if ( post_type_supports( $name, 'publish-future-posts' ) ) {
+				$this->future_status[] = $name;
+			}
 
-			if (  !empty( $has_archive ) && $support ) {
+			if ( post_type_supports( $name, 'date-archives' ) ) {
 				$this->post_type_names[] = $name;
-
-				if ( post_type_supports( $name, 'publish-future-posts' ) ) {
-					$this->future_status[] = $name;
-				}
 			} else {
 				unset( $this->post_types[ $name ] );
 			}
@@ -72,6 +79,16 @@ class CPTDA_Post_Types {
 
 
 	/**
+	 * Reset post type properties.
+	 *
+	 * @since 2.1.0
+	 * @return void
+	 */
+	function reset_post_types() {
+		$this->post_types      = array();
+		$this->post_type_names = array();
+		$this->future_status   = array();
+	}
 
 
 	/**
