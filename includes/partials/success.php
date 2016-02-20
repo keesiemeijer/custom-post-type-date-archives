@@ -1,0 +1,1 @@
+<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible"><p><?php echo $message; ?></p></div>

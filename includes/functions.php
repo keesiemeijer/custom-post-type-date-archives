@@ -102,6 +102,37 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	return apply_filters( 'cptda_post_stati', $post_status, $post_type );
 }
 
+/**
+ * Returns public post types that have archives and are displayed in the admin menu.
+ *
+ * @since 2.1.0
+ * @param string  $type Return type 'names' or 'objects'.
+ * @return array|object Post types.
+ */
+function cptda_get_admin_post_types( $type = 'names' ) {
+
+	$args = array(
+		'public'             => true,
+		'publicly_queryable' => true,
+		'_builtin'           => false,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'has_archive'        => true,
+	);
+
+	$post_types = get_post_types( $args, 'objects', 'and' );
+
+	if ( 'objects' === $type ) {
+		return $post_types;
+	}
+
+	foreach ( $post_types as $key => $post_type ) {
+		$post_types[ $key ] = esc_attr( $post_type->labels->menu_name );
+	}
+
+	return $post_types;
+}
+
 
 /**
  * Display archive links based on post type, type and format.

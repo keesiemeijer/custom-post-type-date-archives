@@ -72,6 +72,57 @@ class CPTDA_Post_Types {
 
 
 	/**
+
+
+	/**
+	 * Add support to post types from admin page settings.
+	 *
+	 * @since 2.1.0
+	 * @return void
+	 */
+	function setup_admin_post_types() {
+		$archives = get_option( 'custom_post_type_date_archives' );
+
+		if ( empty( $archives ) ) {
+			return;
+		}
+
+		foreach ( array( 'date_archives', 'publish_future_posts' ) as $support ) {
+			if ( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) {
+				$post_types = is_array( $archives[ $support ] ) ? $archives[ $support ] : array();
+				$this->add_admin_post_types_support( array_keys( $post_types ), $support );
+			}
+		}
+	}
+
+
+	/**
+	 * Add support to post type from admin settings
+	 *
+	 * @since 2.1.0
+	 * @param array   $archives Array with date archive post types
+	 * @param string  $support  Type of support. 'date_archives' or 'publish_future_posts'
+	 * @return void
+	 */
+	function add_admin_post_types_support( $archives, $support = 'date-archives' ) {
+
+		if ( empty( $archives ) || !is_array( $archives ) ) {
+			return;
+		}
+
+		$post_types = cptda_get_admin_post_types();
+
+		foreach ( $post_types as $post_type => $value ) {
+			if ( in_array( $post_type, $archives ) ) {
+				add_post_type_support( $post_type, str_replace( '_', '-', $support ) );
+			} else {
+				remove_post_type_support( $post_type, str_replace( '_', '-', $support ) );
+			}
+		}
+	}
+
+
+	/**
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
 	 * @since 1.2

@@ -12,6 +12,7 @@
 			<file>tests/test-post-type.php</file>
 			<file>tests/test-functions.php</file>
 			<file>tests/test-query.php</file>
+			<file>tests/test-admin.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

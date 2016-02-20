@@ -84,6 +84,9 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->post_type  = new CPTDA_Post_Types();
+			if(is_admin()) {
+				new CPTDA_Admin();
+			}
 		}
 
 		return self::$instance;
@@ -164,6 +167,8 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/query.php';
+		} else {
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin.php';
 		}
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/install.php';
 	}
