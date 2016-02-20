@@ -15,6 +15,7 @@ The `develop` branch is the current working branch for development. Both branche
 * [Plugin Description](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#plugin-description)
 * [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pagination)
 * [Adding Date Archives in Themes](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#adding-date-archives-in-themes)
+  * [future dates](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#future-dates)
   * [Functions](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#functions)
 * [Pull Requests](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pull-requests)
 * [Creating a new build](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#creating-a-new-build)
