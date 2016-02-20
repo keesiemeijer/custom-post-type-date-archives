@@ -58,8 +58,10 @@ class CPTDA_Rewrite {
 
 			/**
 			 * This filter allows you to disable the automatic flushing of rewrite rules.
-			 * The rewrite rules are automaticly flushed on on the front end when
-			 * the date rewrite rules for custom post types don't exist yet.
+			 * The rewrite rules are automaticly flushed on on the front end,
+			 * when the date rewrite rules for custom post types don't exist yet.
+			 *
+			 * So, not on every page load.
 			 *
 			 * If disabled you'll have to update the rewrite rules manually by
 			 * going to wp-admin > Settings > Permalinks if you add date-archive support for custom post types.
