@@ -10,7 +10,15 @@ Add date archives to WordPress custom post types.
 This is the development repository for the Custom Post Type Date Archives plugin.
 
 The `master` branch is where you'll find the most recent, stable release.
-The `develop` branch is the current working branch for development. Both branches are required to pass all unit tests. Any pull requests are first merged with the `develop` branch before being merged into the `master` branch. 
+The `develop` branch is the current working branch for development. Both branches are required to pass all unit tests. Any pull requests are first merged with the `develop` branch before being merged into the `master` branch.
+
+* [Plugin Description](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#plugin-description)
+* [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pagination)
+* [Adding Date Archives in Themes](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#adding-date-archives-in-themes)
+  * [Functions](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#functions)
+* [Pull Requests](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pull-requests)
+* [Creating a new build](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#creating-a-new-build)
+* [Bugs](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#bugs)
 
 ## Plugin Description ##
 
