@@ -2,7 +2,7 @@
 /**
  * Tests for dependencies and various plugin functions
  */
-class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
+class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 
 	/**
 	 * Utils object to create posts to test with.
@@ -52,7 +52,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 
 
 	/**
-	 * Test if posts are created with post status publish also for posts with future dates.
+	 * Test if posts with future dates are created with post status publish.
 	 */
 	function test_published_posts_future_init() {
 		$this->utils->future_init();
@@ -63,7 +63,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	/**
 	 * Test slug with front (blog)
 	 */
-	function test_cpt_slug_with_front(){
+	function test_cpt_slug_with_front() {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init();
 		$instance = cptda_date_archives();
@@ -75,7 +75,7 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	/**
 	 * Test slug
 	 */
-	function test_cpt_slug(){
+	function test_cpt_slug() {
 		$this->utils->set_permalink_structure( '/%postname%/' );
 		$this->utils->init();
 		$instance = cptda_date_archives();
@@ -87,9 +87,9 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	/**
 	 * Test rewrite slug
 	 */
-	function test_cpt_rewrite_slug(){
+	function test_cpt_rewrite_slug() {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
-		$this->utils->init('cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
+		$this->utils->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
 		$plugin = cptda_date_archives();
 		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );
 		$this->assertEquals( 'blog/rewrite', $slug );
@@ -99,9 +99,9 @@ class KM_CPTDA_Misc_Tests extends WP_UnitTestCase {
 	/**
 	 * Test rewrite slug without front
 	 */
-	function test_cpt_rewrite_slug_without_front(){
+	function test_cpt_rewrite_slug_without_front() {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
-		$this->utils->init('cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
+		$this->utils->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
 		$plugin = cptda_date_archives();
 		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );
 		$this->assertEquals( 'rewrite', $slug );
