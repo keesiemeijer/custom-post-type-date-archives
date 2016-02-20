@@ -12,7 +12,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	private $utils;
 
 	public static function setUpBeforeClass() {
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 		update_option( 'siteurl', 'http://example.com' );
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin.php';
 	}
@@ -23,7 +22,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 */
 	function setUp() {
 		parent::setUp();
-
+		wp_set_current_user( $this->factory->user->create( array( 'role' => 'administrator' ) ) );
 		// Use the utils class to create posts with terms
 		$this->utils = new CPTDA_Test_Utils( $this->factory );
 	}
