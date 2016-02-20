@@ -89,7 +89,7 @@ class CPTDA_Admin {
 
 		$old_settings = array_merge( $defaults, (array) $old_settings );
 
-		if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) &&  ('POST' === $_SERVER['REQUEST_METHOD'] ) ) {
 			check_admin_referer( "custom_post_type_date_archives_{$post_type}_nonce" );
 			$_POST = stripslashes_deep( $_POST );
 
