@@ -75,7 +75,7 @@ class CPTDA_Test_Utils {
 
 	function register_post_type( $post_type = 'cpt', $rewrite = false ) {
 
-		$args = array( 'public'      => true, 'has_archive' => true );
+		$args = array( 'public' => true, 'has_archive' => true, 'label' => 'Custom Post Type' );
 		if ( $rewrite ) {
 			$args['rewrite'] = $rewrite;
 		}
@@ -90,9 +90,14 @@ class CPTDA_Test_Utils {
 
 	function init( $post_type = 'cpt', $type = 'publish', $rewrite = false ) {
 		$this->unregister_post_type( $post_type );
-		$date_archives = ( 'future' === $type ) ? array( 'date-archives', 'publish-future-posts' ) : array( 'date-archives' );
+		$supports = ( 'future' === $type ) ? array( 'date-archives', 'publish-future-posts' ) : array( 'date-archives' );
 		$this->register_post_type( $post_type, $rewrite );
-		add_post_type_support( $post_type, $date_archives );
+		$this->setup( $post_type, $supports );
+	}
+
+
+	function setup( $post_type = 'cpt', $supports = 'date-archives' ) {
+		add_post_type_support( $post_type, $supports );
 		$plugin = cptda_date_archives();
 		$plugin->post_type->setup();
 	}
