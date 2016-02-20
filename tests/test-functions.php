@@ -63,14 +63,25 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_cptda_is_date_post_type() {
 		$this->utils->init();
-		$this->assertTrue( cptda_is_date_post_type('cpt') );
+		$this->assertTrue( cptda_is_date_post_type( 'cpt' ) );
 	}
 
 	/**
 	 * Test cptda_is_date_post_type() for post type post.
 	 */
 	function test_cptda_is_date_post_type_false() {
-		$this->assertFalse( cptda_is_date_post_type('post') );
+		$this->assertFalse( cptda_is_date_post_type( 'post' ) );
+	}
+
+
+	/**
+	 * Test cptda_is_date_post_type() for post type post without archive.
+	 */
+	function test_cptda_is_date_post_type_no_archive() {
+		$args = array( 'public' => true, 'has_archive' => false );
+		register_post_type( 'cpt', $args );
+		$this->utils->setup( 'cpt' );
+		$this->assertFalse( cptda_is_date_post_type( 'cpt' ) );
 	}
 
 	/**
@@ -94,7 +105,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_get_date_archive_cpt() on normal date archive.
 	 */
 	function test_cptda_get_date_archive_cpt_post() {
-		$posts = $this->utils->create_posts('post');
+		$posts = $this->utils->create_posts( 'post' );
 		$_posts = get_posts( 'posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
@@ -176,7 +187,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$is_date   = cptda_is_cpt_date();
 		$is_posts  = cptda_is_date_post_type( 'cpt' );
 		$post_type = cptda_get_date_archive_cpt();
-		$stati     = cptda_get_cpt_date_archive_stati('cpt');
+		$stati     = cptda_get_cpt_date_archive_stati( 'cpt' );
 		$post_type = cptda_get_admin_post_types();
 		$archives  = cptda_get_archives( 'post_type=cpt&echo=0' );
 		$calendar  = cptda_get_calendar( 'cpt', true, false );
