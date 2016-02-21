@@ -39,7 +39,7 @@ class CPTDA_Admin {
 			add_submenu_page(
 				'edit.php?post_type=' . urlencode( $post_type ),
 				__( 'Custom Post Type Date Archives', 'custom-post-type-date-archives' ),
-				__( 'Date Archive', 'custom-post-type-date-archives' ),
+				__( 'Date Archives', 'custom-post-type-date-archives' ),
 				'manage_options',
 				'date-archives-' . urlencode( $post_type ),
 				array( $this, 'admin_menu' )
@@ -89,7 +89,7 @@ class CPTDA_Admin {
 
 		$old_settings = array_merge( $defaults, (array) $old_settings );
 
-		if ( isset( $_SERVER['REQUEST_METHOD'] ) &&  ('POST' === $_SERVER['REQUEST_METHOD'] ) ) {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && ('POST' === $_SERVER['REQUEST_METHOD'] ) ) {
 			check_admin_referer( "custom_post_type_date_archives_{$post_type}_nonce" );
 			$_POST = stripslashes_deep( $_POST );
 
