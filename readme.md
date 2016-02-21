@@ -33,6 +33,8 @@ By default WordPress only supports date archives for the `post` post type. This 
 
 **Notice** The custom post types must be [registered](https://codex.wordpress.org/Function_Reference/register_post_type) to have archives and be publicly queryable.
 
+![Settings Page](/../screenshots/screenshot-1.png?raw=true)
+
 ## Adding Date Archives in Themes
 Besides adding the date archives in the dashboard you can add date archives in your (child) theme's functions.php file with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the `$supports` parameter and this plugin will add the rewrite rules needed.
 When registering a custom post type the `has_archive` parameter is required for it to have date archives added. See the example below. 
