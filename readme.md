@@ -4,7 +4,7 @@ Version:           2.1.0
 Requires at least: 3.9  
 Tested up to:      4.4  
 
-Add date archives to WordPress custom post types.
+Add date archives to WordPress custom post types
 
 ## Welcome to the GitHub repository for this plugin ##
 This is the development repository for the Custom Post Type Date Archives plugin.
@@ -13,32 +13,28 @@ The `master` branch is where you'll find the most recent, stable release.
 The `develop` branch is the current working branch for development. Both branches are required to pass all unit tests. Any pull requests are first merged with the `develop` branch before being merged into the `master` branch.
 
 * [Plugin Description](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#plugin-description)
-* [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pagination)
 * [Adding Date Archives in Themes](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#adding-date-archives-in-themes)
   * [future dates](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#future-dates)
   * [Functions](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#functions)
+  * [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pagination)
 * [Pull Requests](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pull-requests)
 * [Creating a new build](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#creating-a-new-build)
 * [Bugs](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#bugs)
 
 ## Plugin Description ##
-
-WordPress only supports date archives for the `post` post type. With this plugin you can add date archives to custom post types and allow scheduled posts to be published as normal posts. This plugin provides functions you can use in your theme template files.
-
-The archives and calendar widget will be replaced with similar widgets where you can now select a post type (and more).
+Add date archives to custom post types right in the dashboard. Selection of a post type is now possible in the calendar and archives widget. This plugin can be used among other things as a super simple events calendar. 
 
 Example url for a custom post type `events` date archive.
 ```
 https://example.com/events/2015/06/12
 ```
 
-## Pagination
-Pagination of cpt date archives works the same as normal date archives. For those needing to paginate by year, month or day there is a seperate plugin that does just that.
-https://github.com/keesiemeijer/custom-post-type-date-archives-pagination 
+By default WordPress only supports date archives for the `post` post type. This plugin provides the rewrite rules needed for custom post types to also have date archives. This plugin works with your existing (date) theme template files. If you need to integrate the custom post types differently you can make use of [functions](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#functions) provided by this plugin.
 
+**Notice** The custom post types must be [registered](https://codex.wordpress.org/Function_Reference/register_post_type) to have archives and be publicly queryable.
 
 ## Adding Date Archives in Themes
-Add date archives in your (child)t theme's functions.php file with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the `$supports` parameter and this plugin will add the rewrite rules needed.
+Besides adding the date archives in the dashboard you can add date archives in your (child) theme's functions.php file with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the `$supports` parameter and this plugin will add the rewrite rules needed.
 When registering a custom post type the `has_archive` parameter is required for it to have date archives added. See the example below. 
 
 For example, add date archives to a `events` custom post type. Put this in your (child) theme's functions.php file. 
@@ -64,7 +60,7 @@ add_action( 'init', 'post_type_events_init' );
 
 **Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) and [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
-### future dates
+### future dates ###
 To allow future dates for a post type include `publish-future-posts` in the `$supports` parameter.
 ```php
 // Adding date archives and publish future post support for the 'events' custom post type.
@@ -72,7 +68,7 @@ add_post_type_support( 'events', array( 'date-archives', 'publish-future-posts' 
 ```
 This will set the post status for **newly** published posts with a scheduled **future date** to `publish` instead of `future`. Scheduled (future) posts are no longer hidden in the front end of your site. To update old scheduled posts with the post status `publish` use this [bulk edit trick](http://bobwp.com/bulk-edit-posts-wordpress/) and set the status to `published` for posts with a future date.
 
-## Functions
+### Functions ###
 
 These are the functions you can use in your theme template files.
 See the functions.php file for what each function does.
@@ -127,6 +123,9 @@ cptda_get_month_link( $year, $month, $post_type = '' )
 // Retrieve the permalink for custom post type day archives with year and month.
 cptda_get_day_link( $year, $month, $day, $post_type = '' )
 ```
+### Pagination ###
+Pagination of cpt date archives works the same as normal date archives. For those needing to paginate by year, month or day there is a seperate plugin that does just that.
+https://github.com/keesiemeijer/custom-post-type-date-archives-pagination
 
 ## Pull Requests ##
 When starting work on a new feature, branch off from the `develop` branch.
