@@ -58,7 +58,7 @@ class CPTDA_Rewrite {
 
 			/**
 			 * This filter allows you to disable the automatic flushing of rewrite rules.
-			 * The rewrite rules are automaticly flushed on on the front end,
+			 * The rewrite rules are automaticly flushed on the front end,
 			 * when the date rewrite rules for custom post types don't exist yet.
 			 *
 			 * So, not on every page load.

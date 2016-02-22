@@ -14,7 +14,7 @@ The `develop` branch is the current working branch for development. Both branche
 
 * [Plugin Description](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#plugin-description)
 * [Adding Date Archives in Themes](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#adding-date-archives-in-themes)
-  * [future dates](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#future-dates)
+  * [Future Dates](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#future-dates)
   * [Functions](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#functions)
   * [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pagination)
 * [Pull Requests](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#pull-requests)
@@ -22,7 +22,8 @@ The `develop` branch is the current working branch for development. Both branche
 * [Bugs](https://github.com/keesiemeijer/custom-post-type-date-archives/tree/develop#bugs)
 
 ## Plugin Description ##
-Add date archives to custom post types right in the dashboard. Selection of a post type is now possible in the calendar and archives widget. This plugin can be used among other things as a super simple events calendar. 
+Date archives can be added to custom post types right in the dashboard itself.
+The calendar and archives widget get a new option where you can now select the post type the widget should use. This plugin can be used, among other things, as a super simple events calendar.
 
 Example url for a custom post type `events` date archive.
 ```
@@ -36,7 +37,7 @@ By default WordPress only supports date archives for the `post` post type. This 
 ![Settings Page](/../screenshots/screenshot-1.png?raw=true)
 
 ## Adding Date Archives in Themes
-Besides adding the date archives in the dashboard you can add date archives in your (child) theme's functions.php file with the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the `$supports` parameter and this plugin will add the rewrite rules needed.
+Besides adding date archives in the dashboard you can add support for date archives in your (child) theme's functions.php file by using the [add_post_type_support()](http://codex.wordpress.org/Function_Reference/add_post_type_support) function. Add `date-archives` to the `$supports` parameter and this plugin will add the rewrite rules needed.
 When registering a custom post type the `has_archive` parameter is required for it to have date archives added. See the example below. 
 
 For example, add date archives to a `events` custom post type. Put this in your (child) theme's functions.php file. 
@@ -62,7 +63,7 @@ add_action( 'init', 'post_type_events_init' );
 
 **Note** The functions [register_post_type()](https://codex.wordpress.org/Function_Reference/register_post_type) and [add_post_type_support()](https://codex.wordpress.org/Function_Reference/add_post_type_support) should be called using the `init` action hook, like in the example above.
 
-### future dates ###
+### Future Dates ###
 To allow future dates for a post type include `publish-future-posts` in the `$supports` parameter.
 ```php
 // Adding date archives and publish future post support for the 'events' custom post type.
@@ -73,26 +74,31 @@ This will set the post status for **newly** published posts with a scheduled **f
 ### Functions ###
 
 These are the functions you can use in your theme template files.
-See the functions.php file for what each function does.
 
 ```php
-// Is the current query for a custom post type date archive?
+// Is the current page a custom post type date archive?
+// Returns boolean. True if called on a on a custom post type date archive.
+
 cptda_is_cpt_date()
 ```
 
 ```php
-// Checks if a specific post type supports date archives.
-cptda_is_date_post_type( $post_type = '' )
-```
-
-```php
 // Get the posts type for the current custom date archive.
+// Returns string. A post type name or empty string if called outside a custom post type date archive
+
 cptda_get_date_archive_cpt()
 ```
 
 ```php
+// Checks if a specific post type supports date archives.
+// Returns boolean. True when the post type supports date archives, false if not.
+
+cptda_is_date_post_type( $post_type = '' )
+```
+
+```php
 // Get the post stati for a post type thas support date archives. 
-// Returns an array with post stati. Default array( 'publish' ).
+// Returns array. Array with post stati. Default array( 'publish' ).
 // If the post type supports 'publish-future-posts' an array with 'publish' and 'future' is returned.
 // The post stati can be filtered with the 'cptda_post_stati' filter.
 
@@ -101,28 +107,38 @@ cptda_get_cpt_date_archive_stati( $post_type = '' )
 
 ```php
 // Display archive links based on post type, type and format.
-// Similar to wp_get_archives. Use 'post_type' in the $args parameter to set the post type
+// Similar to the WordPress function wp_get_archives(). Use 'post_type' in the $args parameter to set the post type.
+// Returns string|void String when retrieving, void when displaying. See wp_get_archives()
+
 cptda_get_archives( $args = '' )
 ```
 
 ```php
 // Display a calendar for a custom post type with days that have posts as links.
 // Similar to the WordPress function get_calendar(). Altered to include a custom post type parameter.
+// Returns string|void String when retrieving, void when displaying. See get_calendar()
+
 cptda_get_calendar( $post_type = '', $initial = true, $echo = true )
 ```
 
 ```php
 // Retrieve the permalink for custom post type year archives.
+// Returns string. Url of year archive.
+
 cptda_get_year_link( $year, $post_type = '' )
 ```
 
 ```php
 // Retrieve the permalink for custom post type month archives with year.
+// Returns string. Url of month archive.
+
 cptda_get_month_link( $year, $month, $post_type = '' )
 ```
 
 ```php
 // Retrieve the permalink for custom post type day archives with year and month.
+// Returns string. Url of day archive.
+
 cptda_get_day_link( $year, $month, $day, $post_type = '' )
 ```
 ### Pagination ###
