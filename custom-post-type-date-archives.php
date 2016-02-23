@@ -72,13 +72,13 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	 * time. Also prevents needing to define globals all over the place.
 	 *
 	 * @since 1.0
-	 * @uses CS_Custom_Post_Type_Date_Archives::setup_constants() Setup the constants needed
-	 * @uses CS_Custom_Post_Type_Date_Archives::includes() Include the required files
-	 * @uses CS_Custom_Post_Type_Date_Archives::load_textdomain() load the language files
-	 * @return CS_Custom_Post_Type_Date_Archives instance.
+	 * @uses Custom_Post_Type_Date_Archives::setup_constants() Setup the constants needed
+	 * @uses Custom_Post_Type_Date_Archives::includes() Include the required files
+	 * @uses Custom_Post_Type_Date_Archives::load_textdomain() load the language files
+	 * @return Custom_Post_Type_Date_Archives instance.
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof CS_Custom_Post_Type_Date_Archives ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Custom_Post_Type_Date_Archives ) ) {
 			self::$instance = new Custom_Post_Type_Date_Archives;
 			self::$instance->setup_constants();
 			self::$instance->includes();
