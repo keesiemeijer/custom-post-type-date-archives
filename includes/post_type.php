@@ -66,6 +66,12 @@ class CPTDA_Post_Types {
 		}
 
 		if ( !empty( $this->future_status ) ) {
+
+			/**
+			 * Publish posts with future dates as normal.
+			 * 
+			 * @param bool $publish Default true.
+			 */
 			$publish = apply_filters( 'cptda_publish_future_posts', true );
 
 			if ( (bool) $publish ) {
@@ -150,6 +156,11 @@ class CPTDA_Post_Types {
 
 		$post = get_post( $post_id );
 
+		/**
+		 * Publish posts with future dates from a specific post type as normal.
+		 * 
+		 * @param bool $publish Default true.
+		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {
 			wp_publish_post( $post_id );
