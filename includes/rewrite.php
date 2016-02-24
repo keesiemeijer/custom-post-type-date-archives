@@ -57,9 +57,9 @@ class CPTDA_Rewrite {
 			add_action( 'generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ) );
 
 			/**
-			 * This filter allows you to disable the automatic flushing of rewrite rules.
-			 * The rewrite rules are automaticly flushed on the front end,
-			 * when the date rewrite rules for custom post types don't exist yet.
+			 * Filter whether to disable the automatic flushing of rewrite rules.
+			 * Rewrite rules are automaticly flushed by this plugin on the front end.
+			 * Only when the date rewrite rules for custom post types don't exist yet.
 			 *
 			 * So, not on every page load.
 			 *
