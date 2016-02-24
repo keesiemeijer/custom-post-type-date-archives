@@ -10,18 +10,20 @@ Add date archives to WordPress custom post types
 This is the development repository for the Custom Post Type Date Archives plugin.
 
 ## Plugin Description ##
-Add Date archives to custom post types right in the dashboard itself. The calendar and archives widget get a new option where you can now select the post type the widget should use. This plugin can be used, among other things, as a super simple events calendar.
+Add Date archives to custom post types right in the dashboard itself. Allow scheduled posts to be published on a per post type basis. A new option to select a post type is added to the calendar and archive widgets.
+
+This plugin can be used, among other things, as a super simple events calendar.
 
 Example url for a custom post type `events` date archive.
 ```
 https://example.com/events/2015/06/12
 ```
 
-By default WordPress only supports date archives for the `post` post type. This plugin provides the rewrite rules needed for custom post types to also have date archives.
+WordPress only supports date archives for the `post` post type. This plugin provides the rewrite rules needed for custom post types to also have date archives.
 
-This plugin works with your existing [date archives theme template files](https://developer.wordpress.org/themes/basics/template-hierarchy/#date). If you need to integrate the custom post types differently you can make use of [functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions) provided by this plugin.
+The new date archives use your existing [date archives theme template files](https://developer.wordpress.org/themes/basics/template-hierarchy/#date). If you need to integrate the custom post types differently you can make use of [functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions) provided by this plugin.
 
-**Notice** Custom post types must be [registered](https://codex.wordpress.org/Function_Reference/register_post_type) to have archives and be publicly queryable for this plugin to add date archives.
+**Notice** Custom post types must be [registered](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types) to have archives and be publicly queryable for this plugin to add the date archives.
 
 ![Settings Page](/../screenshots/screenshot-1.png?raw=true)
 
