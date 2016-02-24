@@ -34,7 +34,31 @@ class CPTDA_Admin {
 	public function cptda_admin_menu() {
 		$this->post_types = cptda_get_admin_post_types();
 
+		/**
+		 * Filter whether to add admin pages to custom post type menus
+		 *
+		 * @since 2.1.0
+		 * @param bool    $pages Add admin pages to custom post types. Default true
+		 */
+		$pages = apply_filters( 'cpda_add_admin_pages', true );
+		if ( !$pages ) {
+			return;
+		}
+
 		foreach ( $this->post_types as $post_type => $label ) {
+
+			/**
+			 * Filter whether to add an admin page to a specific custom post type
+			 *
+			 * @since 2.1.0
+			 * @param bool    $page Add an admin page for a specific post type. Default true
+			 */
+			$page = apply_filters( "cpda_add_admin_page_{$post_type}", true );
+
+			if ( !$page ) {
+				continue;
+			}
+
 			add_submenu_page(
 				'edit.php?post_type=' . urlencode( $post_type ),
 				__( 'Custom Post Type Date Archives', 'custom-post-type-date-archives' ),
@@ -137,7 +161,7 @@ class CPTDA_Admin {
 	 * Remove invalid post types from settings.
 	 * e.g. Removes post types that no longer exist or don't have an archive (anymore).
 	 *
-	 * @param array   $settings Settings.
+	 * @param array $settings Settings.
 	 * @return array Settings with invalid post types removed.
 	 */
 	private function remove_invalid_post_types( $settings ) {
