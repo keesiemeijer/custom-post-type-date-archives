@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'pre_get_posts', 'cptda_pre_get_posts' );
+add_action( 'pre_get_posts', 'cptda_pre_get_posts', 9 );
 
 /**
  * Include the post status 'future' for post types that support it.

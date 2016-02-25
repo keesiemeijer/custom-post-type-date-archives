@@ -30,7 +30,7 @@
 						<?php _e('Publish posts with future dates', 'custom-post-type-date-archives') ?><br/>
 					</label>
 					<p class="description">
-						<?php printf( __( 'Publish new scheduled posts from the post type %s as normal posts', 'custom-post-type-date-archives' ), $label ); ?><br/>
+						<?php printf( __( 'Publish new scheduled posts from the post type %s as normal posts.', 'custom-post-type-date-archives' ), $label ); ?>
 					</p>
 				</fieldset>
 			</td>
