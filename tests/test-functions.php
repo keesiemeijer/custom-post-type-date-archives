@@ -28,7 +28,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->reset_post_types();
 		$this->utils->unregister_post_type();
 	}
 
