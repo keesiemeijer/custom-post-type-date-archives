@@ -87,16 +87,10 @@ function cptda_get_date_archive_cpt() {
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 
+	$post_status = array( 'publish' );
+
 	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
-		return array();
-	}
-
-	$post_status   = array( 'publish' );
-	$instance      = cptda_date_archives();
-	$future_status = $instance->post_type->get_date_archive_post_types( 'future_status' );
-
-	if ( in_array( $post_type, $future_status ) ) {
-		$post_status[] = 'future';
+		return $post_status;
 	}
 
 	/**
@@ -105,9 +99,10 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	 * @since 1.1
 	 * @param unknown $stati array Array with post stati for a custom post type with date archives
 	 */
-	$stati = apply_filters( 'cptda_post_stati', $post_status, $post_type );
-	return $stati;
+	$post_status = apply_filters( 'cptda_post_stati', $post_status, $post_type );
+	return $post_status;
 }
+
 
 /**
  * Returns public post types that have archives and are displayed in the admin menu.
@@ -121,10 +116,10 @@ function cptda_get_admin_post_types( $type = 'names' ) {
 	$args = array(
 		'public'             => true,
 		'publicly_queryable' => true,
-		'_builtin'           => false,
 		'show_ui'            => true,
 		'show_in_menu'       => true,
 		'has_archive'        => true,
+		'_builtin'           => false,
 	);
 
 	$post_types = get_post_types( $args, 'objects', 'and' );
