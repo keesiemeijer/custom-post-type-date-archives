@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class to add custom post types date archives rewrite rules.
+ * Add custom post type date archives rewrite rules.
  *
  * @since 1.0
  * @author keesiemeijer
@@ -58,18 +58,14 @@ class CPTDA_Rewrite {
 
 			/**
 			 * Filter whether to disable the automatic flushing of rewrite rules.
-			 * Rewrite rules are automaticly flushed by this plugin on the front end.
-			 * Only when the date rewrite rules for custom post types don't exist yet.
-			 *
-			 * So, not on every page load.
-			 *
-			 * If disabled you'll have to update the rewrite rules manually by
-			 * going to wp-admin > Settings > Permalinks if you add date-archive support for custom post types.
+			 * Rewrite rules are automatically flushed by this plugin on the front end.
+			 * They are only flushed when the date rewrite rules for custom post types don't exist yet.
+			 * If disabled you'll have to update the rewrite rules manually by going to wp-admin > Settings > Permalinks.
 			 *
 			 * @since 1.0
-			 * @param boolean $automatic_flush Flush rewrite rules for new cpt date archives. Default true.
+			 * @param boolean $flush Flush rewrite rules for new cpt date archives. Default true.
 			 */
-			$flush = apply_filters( 'custom_post_type_date_archives_flush_rules', true );
+			$flush = apply_filters( 'cptda_flush_rewrite_rules', true );
 
 			if ( !is_admin() && $flush && $this->is_new_rewrite_rules() ) {
 				// New cpt date archive rewrite rules found.

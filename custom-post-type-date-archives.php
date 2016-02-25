@@ -84,7 +84,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->post_type  = new CPTDA_Post_Types();
-			if(is_admin()) {
+			if ( is_admin() ) {
 				new CPTDA_Admin();
 			}
 		}

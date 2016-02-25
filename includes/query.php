@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'pre_get_posts', 'cptda_pre_get_posts' );
 
 /**
- * Includes the post status 'future' for post types that support it.
+ * Include the post status 'future' for post types that support it.
  *
  * @since 1.1
  * @return void
@@ -34,7 +34,7 @@ function cptda_pre_get_posts( $query ) {
 add_action( 'wp', 'cptda_handle_404' );
 
 /**
- * Set 404 if no posts found on a custom post type date archive
+ * Set 404 if no posts are found on a custom post type date archive
  *
  * @since 2.0.0
  * @return void

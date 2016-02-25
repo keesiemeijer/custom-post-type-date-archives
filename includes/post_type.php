@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class CPTDA_Post_Types.
+ * Setup of post types that support date archives.
  *
  * @since 1.0
  * @author keesiemeijer
@@ -45,8 +45,8 @@ class CPTDA_Post_Types {
 		$this->setup_admin_post_types();
 
 		$args = array(
-			'public'       => true,
 			'_builtin'     => false,
+			'public'       => true,
 			'has_archive'  => true,
 		);
 
@@ -71,7 +71,7 @@ class CPTDA_Post_Types {
 			 * Filter whether to publish posts with future dates as normal posts.
 			 *
 			 * @since 1.0
-			 * @param bool $publish Default true.
+			 * @param bool    $publish Default true.
 			 */
 			$publish = apply_filters( 'cptda_publish_future_posts', true );
 
@@ -161,7 +161,7 @@ class CPTDA_Post_Types {
 		 * Filter whether to publish posts with future dates from a specific post type.
 		 *
 		 * @since 1.2
-		 * @param bool $publish Default true.
+		 * @param bool    $publish Default true.
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {

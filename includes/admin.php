@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class CPTDA_Admin.
+ * Creates admin pages to add date archives for custom post types.
  *
  * @since 2.1.0
  * @author keesiemeijer
@@ -106,18 +106,20 @@ class CPTDA_Admin {
 
 		$old_settings = get_option( 'custom_post_type_date_archives' );
 
-		if ( empty( $old_settings ) ) {
+		if ( empty( $old_settings ) || !is_array( $old_settings ) ) {
 			$old_settings = $defaults;
 		}
 
-		$old_settings = array_merge( $defaults, (array) $old_settings );
+		$old_settings = array_merge( $defaults, $old_settings );
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && ( 'POST' === $_SERVER['REQUEST_METHOD'] ) ) {
-			check_admin_referer( "custom_post_type_date_archives_{$post_type}_nonce" );
-			$_POST = stripslashes_deep( $_POST );
 
+			check_admin_referer( "custom_post_type_date_archives_{$post_type}_nonce" );
+
+			$_POST    = stripslashes_deep( $_POST );
 			$settings = $this->merge_settings( $old_settings, (array) $_POST, $post_type );
-			$message = __( 'Settings Saved', 'custom-post-type-date-archives' );
+			$message  = __( 'Settings Saved', 'custom-post-type-date-archives' );
+
 			add_settings_error ( 'update', 'update', $message, 'updated' );
 		} else {
 			$settings = $old_settings;
@@ -161,7 +163,7 @@ class CPTDA_Admin {
 	 * Remove invalid post types from settings.
 	 * e.g. Removes post types that no longer exist or don't have an archive (anymore).
 	 *
-	 * @param array $settings Settings.
+	 * @param array   $settings Settings.
 	 * @return array Settings with invalid post types removed.
 	 */
 	private function remove_invalid_post_types( $settings ) {
