@@ -29,6 +29,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 		$this->utils->unregister_post_type();
+		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
 	}
 
 
@@ -122,7 +123,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_not_supported_custom_post_type_stati() {
 		$this->utils->register_post_type( 'no_date_archives' );
-		$this->assertEquals( array(), cptda_get_cpt_date_archive_stati( 'no_date_archives' ) );
+		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'no_date_archives' ) );
 		$this->utils->unregister_post_type( 'no_date_archives' );
 	}
 
@@ -141,6 +142,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_post_status_future() {
 		$this->utils->future_init();
+		add_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10 , 2 );
 		$this->assertEquals( array( 'publish', 'future' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
 
@@ -186,13 +188,21 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$is_date   = cptda_is_cpt_date();
 		$is_posts  = cptda_is_date_post_type( 'cpt' );
 		$post_type = cptda_get_date_archive_cpt();
-		$stati     = cptda_get_cpt_date_archive_stati( 'cpt' );
 		$post_type = cptda_get_admin_post_types();
 		$archives  = cptda_get_archives( 'post_type=cpt&echo=0' );
-		$calendar  = cptda_get_calendar( 'cpt', true, false );
+		//$calendar  = cptda_get_calendar( 'cpt', true, false );
 
 		$out = ob_get_clean();
 
 		$this->assertEmpty( $out );
+	}
+
+	function add_future_status( $status, $post_type ) {
+
+		if ( 'cpt' === $post_type ) {
+			$status[] = 'future';
+		}
+
+		return $status;
 	}
 }
