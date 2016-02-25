@@ -104,17 +104,20 @@ class CPTDA_Test_Utils {
 
 
 	function unregister_post_type( $post_type = 'cpt' ) {
+		$plugin = cptda_date_archives();
+
+		remove_post_type_support ( $post_type, 'date-archives' );
+		remove_post_type_support ( $post_type, 'publish-future-posts' );
+		remove_action( 'future_' . $post_type, '_future_post_hook', 5 );
+		remove_action( "future_{$post_type}", array( $plugin->post_type, 'publish_future_post' ) );
 
 		global $wp_post_types;
 		if ( isset( $wp_post_types[ $post_type ] ) ) {
 			unset( $wp_post_types[ $post_type ] );
 		}
 
-		remove_post_type_support ( $post_type, 'date-archives' );
-		remove_post_type_support ( $post_type, 'publish-future-posts' );
-
-		$plugin = cptda_date_archives();
 		$plugin->post_type = new CPTDA_Post_Types();
+		$plugin->post_type->setup();
 	}
 
 
