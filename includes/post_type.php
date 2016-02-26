@@ -202,6 +202,37 @@ class CPTDA_Post_Types {
 
 
 	/**
+	 * Check if a post type is valid to be used as date archive post type
+	 *
+	 * @since 2.1.0
+	 * @param string  $post_type Post type name
+	 * @return boolean            True if it's a valid post type
+	 */
+	function is_valid_post_type( $post_type ) {
+
+		$post_type = get_post_type_object ( trim( (string) $post_type ) );
+
+		if ( !( isset( $post_type->public ) && $post_type->public ) ) {
+			return false;
+		}
+
+		if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
+			return false;
+		}
+
+		if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
+			return false;
+		}
+
+		if ( !isset( $post_type->_builtin ) ) {
+			return false;
+		}
+
+		return $post_type->_builtin ? false : true;
+	}
+
+
+	/**
 	 * Returns the base of a custom post type depending on the rewrite parameter.
 	 * Uses the post type's rewrite parameter 'with_front' and 'slug'.
 	 *
@@ -212,11 +243,11 @@ class CPTDA_Post_Types {
 	public function get_post_type_base( $post_type = '' ) {
 		global $wp_rewrite;
 
-		if ( !isset( $this->post_types[ $post_type ] ) ) {
+		if ( !$this->is_valid_post_type( $post_type ) ) {
 			return array( 'front' => '', 'slug' => '' );
 		}
 
-		$post_type = $this->post_types[ $post_type ];
+		$post_type = get_post_type_object ( trim( (string) $post_type ) );
 
 		$front = isset( $post_type->rewrite['with_front'] ) ? (bool) $post_type->rewrite['with_front'] : 1;
 		$front = $front ? $wp_rewrite->front : $wp_rewrite->root;
