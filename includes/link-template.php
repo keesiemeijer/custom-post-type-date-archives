@@ -25,12 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 function cptda_get_year_link( $year, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
-		return '';
-	}
-
 	$instance = cptda_date_archives();
 	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
+
+	if ( empty( $slug ) ) {
+		return '';
+	}
 
 	if ( !$year ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
@@ -77,12 +77,12 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 function cptda_get_month_link( $year, $month, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
-		return '';
-	}
-
 	$instance = cptda_date_archives();
 	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
+
+	if ( empty( $slug ) ) {
+		return '';
+	}
 
 	if ( !$year )
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
@@ -131,12 +131,12 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
-		return '';
-	}
-
 	$instance = cptda_date_archives();
 	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
+
+	if ( empty( $slug ) ) {
+		return '';
+	}
 
 	if ( !$year )
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
