@@ -31,9 +31,7 @@ function cptda_is_cpt_date() {
 			$post_type = reset( $post_type );
 		}
 
-		if ( cptda_is_date_post_type( $post_type ) ) {
-			return true;
-		}
+		return cptda_is_date_post_type( $post_type );
 	}
 
 	return false;
