@@ -48,29 +48,30 @@ class CPTDA_Rewrite {
 		$instance = cptda_date_archives();
 		$this->post_types = $instance->post_type->get_date_archive_post_types( 'names' );
 
-		if ( !empty( $this->post_types ) ) {
+		if ( empty( $this->post_types ) ) {
+			return;
+		}
 
-			// The custom post type date archive rewrite rules are added when the rewrite rules are flushed.
-			// Or when the rewrite rules are generated.
+		// The custom post type date archive rewrite rules are added when the rewrite rules are flushed.
+		// Or when the rewrite rules are generated.
 
-			// Add the custom post type date archive rewrite rules when the rewrite rules are generated.
-			add_action( 'generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ) );
+		// Add the custom post type date archive rewrite rules when the rewrite rules are generated.
+		add_action( 'generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ) );
 
-			/**
-			 * Filter whether to disable the automatic flushing of rewrite rules.
-			 * Rewrite rules are automatically flushed by this plugin on the front end.
-			 * They are only flushed when the date rewrite rules for custom post types don't exist yet.
-			 * If disabled you'll have to update the rewrite rules manually by going to wp-admin > Settings > Permalinks.
-			 *
-			 * @since 1.0
-			 * @param boolean $flush Flush rewrite rules for new cpt date archives. Default true.
-			 */
-			$flush = apply_filters( 'cptda_flush_rewrite_rules', true );
+		/**
+		 * Filter whether to disable the automatic flushing of rewrite rules.
+		 * Rewrite rules are automatically flushed by this plugin on the front end.
+		 * They are only flushed when the date rewrite rules for custom post types don't exist yet.
+		 * If disabled you'll have to update the rewrite rules manually by going to wp-admin > Settings > Permalinks.
+		 *
+		 * @since 1.0
+		 * @param boolean $flush Flush rewrite rules for new cpt date archives. Default true.
+		 */
+		$flush = apply_filters( 'cptda_flush_rewrite_rules', true );
 
-			if ( !is_admin() && $flush && $this->is_new_rewrite_rules() ) {
-				// New cpt date archive rewrite rules found.
-				$this->flush_rules();
-			}
+		if ( !is_admin() && $flush && $this->is_new_rewrite_rules() ) {
+			// New cpt date archive rewrite rules found.
+			$this->flush_rules();
 		}
 	}
 
