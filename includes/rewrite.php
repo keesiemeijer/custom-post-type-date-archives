@@ -119,6 +119,10 @@ class CPTDA_Rewrite {
 		$instance = cptda_date_archives();
 		$slug     = $instance->post_type->get_post_type_base_slug( $cpt );
 
+		if ( empty( $slug ) ) {
+			return $rules;
+		}
+
 		$dates = array(
 			array(
 				'rule' => "([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})",
