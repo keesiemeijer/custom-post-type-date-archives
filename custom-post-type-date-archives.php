@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Custom Post Type Date Archives
-Version: 2.0.0
+Version: 2.1.0
 Plugin URI:
-Description: This plugin allows you to add date archives to custom post types in your theme's functions.php file. Adds a post type dropdown to the archives widget.
+Description: This plugin allows you to add date archives to custom post types. Adds custom post types to the archive and calendar widget.
 Author: keesiemijer
 Author URI:
 Text Domain: custom-post-type-date-archives
@@ -72,18 +72,21 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	 * time. Also prevents needing to define globals all over the place.
 	 *
 	 * @since 1.0
-	 * @uses CS_Custom_Post_Type_Date_Archives::setup_constants() Setup the constants needed
-	 * @uses CS_Custom_Post_Type_Date_Archives::includes() Include the required files
-	 * @uses CS_Custom_Post_Type_Date_Archives::load_textdomain() load the language files
-	 * @return CS_Custom_Post_Type_Date_Archives instance.
+	 * @uses Custom_Post_Type_Date_Archives::setup_constants() Setup the constants needed
+	 * @uses Custom_Post_Type_Date_Archives::includes() Include the required files
+	 * @uses Custom_Post_Type_Date_Archives::load_textdomain() load the language files
+	 * @return Custom_Post_Type_Date_Archives instance.
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof CS_Custom_Post_Type_Date_Archives ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Custom_Post_Type_Date_Archives ) ) {
 			self::$instance = new Custom_Post_Type_Date_Archives;
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->post_type  = new CPTDA_Post_Types();
+			if ( is_admin() ) {
+				new CPTDA_Admin();
+			}
 		}
 
 		return self::$instance;
@@ -128,7 +131,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 
 		// Plugin version
 		if ( ! defined( 'CPT_DATE_ARCHIVES_VERSION' ) ) {
-			define( 'CPT_DATE_ARCHIVES_VERSION', '2.0.0' );
+			define( 'CPT_DATE_ARCHIVES_VERSION', '2.1.0' );
 		}
 
 		// Plugin Folder Path
@@ -157,13 +160,16 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	private function includes() {
 
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/functions.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
 
+
 		if ( !is_admin() ) {
-			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/query.php';
+		} else {
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin.php';
 		}
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/install.php';
 	}

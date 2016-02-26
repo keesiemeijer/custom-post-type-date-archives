@@ -75,7 +75,7 @@ class CPTDA_Test_Utils {
 
 	function register_post_type( $post_type = 'cpt', $rewrite = false ) {
 
-		$args = array( 'public'      => true, 'has_archive' => true );
+		$args = array( 'public' => true, 'has_archive' => true, 'label' => 'Custom Post Type' );
 		if ( $rewrite ) {
 			$args['rewrite'] = $rewrite;
 		}
@@ -90,27 +90,36 @@ class CPTDA_Test_Utils {
 
 	function init( $post_type = 'cpt', $type = 'publish', $rewrite = false ) {
 		$this->unregister_post_type( $post_type );
-		$date_archives = ( 'future' === $type ) ? array( 'date-archives', 'publish-future-posts' ) : array( 'date-archives' );
+		$supports = ( 'future' === $type ) ? array( 'date-archives', 'publish-future-posts' ) : array( 'date-archives' );
 		$this->register_post_type( $post_type, $rewrite );
-		add_post_type_support( $post_type, $date_archives );
+		$this->setup( $post_type, $supports );
+	}
+
+
+	function setup( $post_type = 'cpt', $supports = 'date-archives' ) {
+		add_post_type_support( $post_type, $supports );
 		$plugin = cptda_date_archives();
 		$plugin->post_type->setup();
 	}
 
 
 	function unregister_post_type( $post_type = 'cpt' ) {
+		$plugin = cptda_date_archives();
+
+		remove_post_type_support ( $post_type, 'date-archives' );
+		remove_post_type_support ( $post_type, 'publish-future-posts' );
+		remove_action( 'future_' . $post_type, '_future_post_hook', 5 );
+		remove_action( "future_{$post_type}", array( $plugin->post_type, 'publish_future_post' ) );
 
 		global $wp_post_types;
 		if ( isset( $wp_post_types[ $post_type ] ) ) {
 			unset( $wp_post_types[ $post_type ] );
 		}
 
-		remove_post_type_support ( $post_type, 'date-archives' );
-		remove_post_type_support ( $post_type, 'publish-future-posts' );
-
-		$plugin = cptda_date_archives();
 		$plugin->post_type = new CPTDA_Post_Types();
+		$plugin->post_type->setup();
 	}
+
 
 	/**
 	 * Utility method that resets permalinks and flushes rewrites.

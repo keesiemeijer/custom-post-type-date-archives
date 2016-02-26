@@ -7,11 +7,12 @@
 	convertWarningsToExceptions="true"
 	>
 	<testsuites>
-		<testsuite>	
-				
+		<testsuite>
 			<file>tests/test-post-type.php</file>
 			<file>tests/test-functions.php</file>
 			<file>tests/test-query.php</file>
+			<file>tests/test-admin.php</file>
+			<file>tests/test-uninstall.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

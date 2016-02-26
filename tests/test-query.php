@@ -27,7 +27,6 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->reset_post_types();
 		$this->utils->unregister_post_type();
 	}
 
@@ -47,6 +46,7 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 			$this->fail( "Posts not created" );
 		}
 	}
+
 
 	/**
 	 * Test date archives for published custom post type posts.

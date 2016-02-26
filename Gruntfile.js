@@ -132,8 +132,8 @@ module.exports = function( grunt ) {
 					from: /custom-post-type-date-archives.svg\?branch=(master|develop)/g,
 					to: "custom-post-type-date-archives.svg?branch=<%= gitinfo.local.branch.current.name %>"
 				}, {
-					from: /custom-post-type-date-archives\/tree\/(master|develop)#pull-requests/g,
-					to: "custom-post-type-date-archives/tree/<%= gitinfo.local.branch.current.name %>#pull-requests"
+					from: /custom-post-type-date-archives\/tree\/(master|develop)#/g,
+					to: "custom-post-type-date-archives/tree/<%= gitinfo.local.branch.current.name %>#"
 				} ]
 			}
 		}

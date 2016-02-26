@@ -31,9 +31,7 @@ function cptda_is_cpt_date() {
 			$post_type = reset( $post_type );
 		}
 
-		if ( cptda_is_date_post_type( $post_type ) ) {
-			return true;
-		}
+		return cptda_is_date_post_type( $post_type );
 	}
 
 	return false;
@@ -52,7 +50,7 @@ function cptda_is_date_post_type( $post_type = '' ) {
 	$post_types = $instance->post_type->get_date_archive_post_types( 'names' );
 
 	if ( in_array( (string) $post_type, $post_types ) ) {
-		return true;
+		return $instance->post_type->is_valid_post_type( $post_type );
 	}
 
 	return false;
@@ -87,19 +85,52 @@ function cptda_get_date_archive_cpt() {
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 
+	$post_status = array( 'publish' );
+
 	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
-		return array();
+		return $post_status;
 	}
 
-	$post_status   = array( 'publish' );
-	$instance      = cptda_date_archives();
-	$future_status = $instance->post_type->get_date_archive_post_types( 'future_status' );
+	/**
+	 * Filter post stati for a custom post type with date archives
+	 *
+	 * @since 1.1
+	 * @param unknown $stati array Array with post stati for a custom post type with date archives
+	 */
+	$post_status = apply_filters( 'cptda_post_stati', $post_status, $post_type );
+	return $post_status;
+}
 
-	if ( in_array( $post_type, $future_status ) ) {
-		$post_status[] = 'future';
+
+/**
+ * Returns public post types that have archives and are displayed in the admin menu.
+ *
+ * @since 2.1.0
+ * @param string  $type Return type 'names' or 'objects'.
+ * @return array|object Post types.
+ */
+function cptda_get_admin_post_types( $type = 'names' ) {
+
+	$args = array(
+		'public'             => true,
+		'publicly_queryable' => true,
+		'show_ui'            => true,
+		'show_in_menu'       => true,
+		'has_archive'        => true,
+		'_builtin'           => false,
+	);
+
+	$post_types = get_post_types( $args, 'objects', 'and' );
+
+	if ( 'objects' === $type ) {
+		return $post_types;
 	}
 
-	return apply_filters( 'cptda_post_stati', $post_status, $post_type );
+	foreach ( $post_types as $key => $post_type ) {
+		$post_types[ $key ] = esc_attr( $post_type->labels->menu_name );
+	}
+
+	return $post_types;
 }
 
 
@@ -402,7 +433,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	// Quick check. If we have no posts at all, abort!
 	if ( ! $posts ) {
-		$gotsome = $wpdb->get_var("SELECT 1 as test FROM $wpdb->posts WHERE post_type = '{$post_type_escaped}' AND {$post_status} LIMIT 1");
+		$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE post_type = '{$post_type_escaped}' AND {$post_status} LIMIT 1" );
 		if ( ! $gotsome ) {
 			$cache[ $key ] = '';
 			wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
@@ -426,7 +457,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		$thisyear = (int) substr( $m, 0, 4 );
 		//it seems MySQL's weeks disagree with PHP's
 		$d = ( ( $w - 1 ) * 7 ) + 6;
-		$thismonth = $wpdb->get_var("SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')");
+		$thismonth = $wpdb->get_var( "SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')" );
 	} elseif ( ! empty( $m ) ) {
 		$thisyear = (int) substr( $m, 0, 4 );
 		if ( strlen( $m ) < 6 ) {
@@ -443,21 +474,21 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$last_day = date( 't', $unixmonth );
 
 	// Get the next and previous month and year with at least one post
-	$previous = $wpdb->get_row("SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
+	$previous = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date < '$thisyear-$thismonth-01'
 		AND post_type = '{$post_type_escaped}' AND {$post_status}
 			ORDER BY post_date DESC
-			LIMIT 1");
-	$next = $wpdb->get_row("SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
+			LIMIT 1" );
+	$next = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date > '$thisyear-$thismonth-{$last_day} 23:59:59'
 		AND post_type = '{$post_type_escaped}' AND {$post_status}
 			ORDER BY post_date ASC
-			LIMIT 1");
+			LIMIT 1" );
 
 	/* translators: Calendar caption: 1: month name, 2: 4-digit year */
-	$calendar_caption = _x('%1$s %2$s', 'calendar caption');
+	$calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
 	$calendar_output = '<table id="wp-calendar">
 	<caption>' . sprintf(
 		$calendar_caption,
@@ -489,7 +520,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	if ( $previous ) {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) .
-		'</a></td>';
+			'</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 	}
@@ -499,7 +530,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	if ( $next ) {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) .
-		' &raquo;</a></td>';
+			' &raquo;</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t".'<td colspan="3" id="next" class="pad">&nbsp;</td>';
 	}
@@ -514,10 +545,10 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$daywithpost = array();
 
 	// Get days with posts
-	$dayswithposts = $wpdb->get_results("SELECT DISTINCT DAYOFMONTH(post_date)
+	$dayswithposts = $wpdb->get_results( "SELECT DISTINCT DAYOFMONTH(post_date)
 		FROM $wpdb->posts WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
 		AND post_type = '{$post_type_escaped}' AND {$post_status}
-		AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59'", ARRAY_N);
+		AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59'", ARRAY_N );
 	if ( $dayswithposts ) {
 		foreach ( (array) $dayswithposts as $daywith ) {
 			$daywithpost[] = $daywith[0];
@@ -534,7 +565,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$daysinmonth = (int) date( 't', $unixmonth );
 
 	for ( $day = 1; $day <= $daysinmonth; ++$day ) {
-		if ( isset($newrow) && $newrow ) {
+		if ( isset( $newrow ) && $newrow ) {
 			$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
 		}
 		$newrow = false;
@@ -562,7 +593,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		}
 		$calendar_output .= '</td>';
 
-		if ( 6 == calendar_week_mod( date( 'w', mktime(0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins ) ) {
+		if ( 6 == calendar_week_mod( date( 'w', mktime( 0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins ) ) {
 			$newrow = true;
 		}
 	}
