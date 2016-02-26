@@ -52,7 +52,7 @@ function cptda_is_date_post_type( $post_type = '' ) {
 	$post_types = $instance->post_type->get_date_archive_post_types( 'names' );
 
 	if ( in_array( (string) $post_type, $post_types ) ) {
-		return true;
+		return $instance->post_type->is_valid_post_type( $post_type );
 	}
 
 	return false;
