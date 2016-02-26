@@ -1,6 +1,6 @@
 === Custom Post Type Date Archives ===
 Contributors: keesiemeijer
-Tags: date archives
+Tags: post type,date,archives
 Requires at least: 3.9
 Tested up to: 4.4
 Stable tag: 2.1.0
