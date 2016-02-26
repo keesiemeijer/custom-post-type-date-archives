@@ -32,13 +32,13 @@ For more information about this plugin see the [Wiki](https://github.com/keesiem
 
 * [Adding Date Archives](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Adding-Date-Archives)
 * [Adding Date Archives in Your Theme](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Adding-Date-Archives-in-Your-Theme)
-  * [Future Dates](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Adding-Date-Archives-in-Your-Theme#future-dates)
+  * [Publish Scheduled Posts](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Adding-Date-Archives-in-Your-Theme#publish-scheduled-posts)
   * [Functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions)
   * [Pagination](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Pagination)
 * [Scheduled Posts](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts)
   * [Update Scheduled Posts with Post Status Published](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#update-scheduled-posts-with-post-status-published)
   * [Reschedule Published Posts with a Future Date](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#reschedule-published-posts-with-a-future-date)
-  * [Only Display Scheduled Posts in the Date Archives](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#only-display-scheduled-posts-in-the-date-archives)
+  * [Display Scheduled Posts in the Date Archives Only](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#display-scheduled-posts-in-the-date-archives-only)
 * [Custom Post Types](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types)
 * [Filters](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Filters)
 
