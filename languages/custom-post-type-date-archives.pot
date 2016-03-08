@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Date Archives 2.1.0\n"
+"Project-Id-Version: Custom Post Type Date Archives 2.1.1-alpha\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2016-02-26 13:09:26+00:00\n"
+"POT-Creation-Date: 2016-03-08 15:14:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -93,21 +93,21 @@ msgid "Add date archives to the custom post type %s."
 msgstr ""
 
 #: includes/partials/admin-help.php:8
-msgid "Example date archive url: %s."
+msgid "Example date archive url"
 msgstr ""
 
-#: includes/partials/admin-help.php:11
+#: includes/partials/admin-help.php:12
 msgid "Scheduled Posts"
 msgstr ""
 
-#: includes/partials/admin-help.php:15
+#: includes/partials/admin-help.php:16
 msgid ""
 "Scheduled posts normally don't show up in the front of your site. If you've "
-"checked \"Publish posts with future dates\" Newly published posts with a "
+"checked \"Publish posts with future dates\" newly published posts with a "
 "scheduled future date will be automatically published instead of scheduled."
 msgstr ""
 
-#: includes/partials/admin-help.php:19
+#: includes/partials/admin-help.php:20
 msgid ""
 "See the %s for more information about scheduled posts and how to publish "
 "<strong>existing</strong> scheduled posts."
