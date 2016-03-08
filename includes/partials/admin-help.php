@@ -5,14 +5,15 @@
 	<?php printf( __( 'Add date archives to the custom post type %s.', 'custom-post-type-date-archives' ), $label ); ?>
 </p>
 <p>
-	<?php printf( __( 'Example date archive url: %s.', 'custom-post-type-date-archives' ), $sample_day_link ); ?>
+	<?php _e( 'Example date archive url', 'custom-post-type-date-archives' ); ?><br/>
+	<code><?php echo $sample_day_link ?></code>
 </p>
 <h4>
 	<?php _e( 'Scheduled Posts', 'custom-post-type-date-archives' ); ?>
 </h4>
 
 <p>
-	<?php _e( "Scheduled posts normally don't show up in the front of your site. If you've checked \"Publish posts with future dates\" Newly published posts with a scheduled future date will be automatically published instead of scheduled.", 'custom-post-type-date-archives' ); ?>
+	<?php _e( "Scheduled posts normally don't show up in the front of your site. If you've checked \"Publish posts with future dates\" newly published posts with a scheduled future date will be automatically published instead of scheduled.", 'custom-post-type-date-archives' ); ?>
 </p>
 
 <p>

@@ -17,6 +17,8 @@ WP_CORE_DIR=/tmp/wordpress/
 #remove trailing slash
 WP_CORE_DIR=${WP_CORE_DIR%/}
 
+PLUGIN_DIR=`pwd`
+
 set -ex
 
 download() {
@@ -99,6 +101,20 @@ install_wp() {
 	fi
 }
 
+install_theme() {
+
+	local core_themes="$WP_CORE_DIR/wp-content/themes"
+	local test_themes="$PLUGIN_DIR/tests/themes"
+
+	if [[ -d "$core_themes/cptda-test-theme" ]]; then
+		rm -rf "$core_themes/cptda-test-theme"
+	fi
+
+	if [[ -d "$test_themes/cptda-test-theme" ]]; then
+		cp -rf "$test_themes/cptda-test-theme" "$core_themes/cptda-test-theme"
+	fi
+}
+
 install_test_suite() {
 	# portable in-place argument for both GNU sed and Mac OSX sed
 	if [[ $(uname -s) == 'Darwin' ]]; then
@@ -153,5 +169,6 @@ install_db() {
 }
 
 install_wp
+install_theme
 install_test_suite
 install_db

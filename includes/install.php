@@ -31,6 +31,13 @@ register_deactivation_hook( CPT_DATE_ARCHIVES_PLUGIN_FILE, 'cptda_deactivate_plu
 
 /**
  * Includes the date template file on custom post type date archives.
+ * In this order
+ *     date-{$post_type}.php
+ *     date-cptda-archive.php
+ *     date.php
+ *     archive-{post_type}.php
+ *     archive.php
+ *     index.php
  *
  * @since 1.0
  * @param string  $template Template file.
@@ -38,14 +45,22 @@ register_deactivation_hook( CPT_DATE_ARCHIVES_PLUGIN_FILE, 'cptda_deactivate_plu
  */
 function cptda_date_template_include( $template ) {
 
-	if ( cptda_is_cpt_date() ) {
+	if ( !cptda_is_cpt_date() ) {
+		return $template;
+	}
 
-		$_template = get_date_template();
-		$_template = !empty( $_template ) ? $_template : get_post_type_archive_template();
+	$post_type   = sanitize_key ( cptda_get_date_archive_cpt() );
+	$templates   = array();
+	$templates[] = get_query_template( "date-{$post_type}" );
+	$templates[] = get_query_template( "date-cptda-archive" );
+	$templates[] = get_date_template();
+	$templates[] = get_post_type_archive_template();
+	$templates[] = get_archive_template();
+	$templates   = array_unique( array_filter( array_map( 'basename', $templates ) ) );
+	$template    = locate_template( $templates );
 
-		if ( !empty( $_template ) ) {
-			return apply_filters( 'cptda_date_template_include', $_template );
-		}
+	if ( !empty( $template ) ) {
+		return apply_filters( 'cptda_date_template_include', $template   );
 	}
 
 	return $template;
