@@ -17,13 +17,14 @@ Features
 * Submenus for each custom post type to add the date archives
 * Allow scheduled posts with future dates to be published like normal posts
 * Selection of a post type inside the calendar and archive widgets
+* Use theme templates specific for custom post type date archives
 
 Example url for a custom post type `events` date archive.
 `
 https:&#47;&#47;example.com&#47;events&#47;2015&#47;06&#47;12
 `
 
-WordPress doesn't support date archives for custom post types. This plugin provides the rewrite rules needed for custom post types to also have date archives.
+WordPress doesn't support date archives with [pretty permalinks](https://codex.wordpress.org/Using_Permalinks#Permalink_Types) for custom post types. This plugin provides the rewrite rules needed for custom post types to also have date archives with pretty permalinks.
 
 The cpt date archives use the same theme template files as normal date archives. Extra [template files](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Theme-Template-Files) and [template functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions) are available for use in the custom post type date archives.
 
