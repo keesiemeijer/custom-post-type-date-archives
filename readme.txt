@@ -3,7 +3,7 @@ Contributors: keesiemeijer
 Tags: post type,date,archives
 Requires at least: 3.9
 Tested up to: 4.4
-Stable tag: 2.2.1-alpha
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,8 @@ Features
 * Allow scheduled posts with future dates to be published like normal posts
 * Selection of a post type inside the calendar and archive widgets
 * Use theme templates specific for custom post type date archives
+
+[Plugin Documentation](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki)
 
 Example url for a custom post type `events` date archive.
 `
@@ -47,6 +49,18 @@ You add the date archives in the "Date Archives" sub menu of a custom post type.
 = I don't see the sub menu to add date archives? =
 If you don't see the "Date Archives" sub menu in the menu of a custom post type, the post type is probably [registered](https://codex.wordpress.org/Function_Reference/register_post_type) to not be public or not have archives. See [Custom Post Types](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types)
 
+== Screenshots ==
+
+1. Date archives settings page for the custom post type Products.
+2. The Calendar widget
+3. The Archives widget
+
 == Changelog ==
-= 2.1.0 =
+= 2.2.1 =
+* Enhancement
+	* Flush rewrite rules when date archives are removed in admin page
+	* Update help section with WordPress repo links
+	* Add screenshots
+
+= 2.2.0 =
 Initial Commit

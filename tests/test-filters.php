@@ -1,11 +1,11 @@
 <?php
 /**
- * Tests CPT date archive template used
+ * Tests default state of filters
  */
 class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 
 	/**
-	 * Utils object to create posts with terms to test with.
+	 * Helper class object.
 	 *
 	 * @var object
 	 */
@@ -22,7 +22,7 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 
 
 	/**
-	 * Reset post type on teardown.
+	 * Reset post type and filters on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
