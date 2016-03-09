@@ -23,10 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CPTDA_Admin {
 
 	private $post_types;
+	private $flush_rewrite;
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'cptda_admin_menu' ) );
+		add_action( 'shutdown', array( $this, 'shutdown' ) );
 	}
+
 
 	/**
 	 * Adds a settings page for this plugin.
@@ -134,6 +137,13 @@ class CPTDA_Admin {
 		// Removes invalid post types (e.g. post types that no longer exist)
 		$settings = $this->remove_invalid_post_types( $settings );
 
+		// Flush rewrite rules on shutdown action if date archives were removed.
+		$flush = isset( $settings['date_archives'][ $post_type ] ) ? false : true;
+		if ( $flush && isset( $old_settings['date_archives'][ $post_type ] )  ) {
+			$this->flush_rewrite = true;
+		}
+
+		// Save new settings
 		if ( $old_settings != $settings ) {
 			update_option( 'custom_post_type_date_archives', $settings );
 		}
@@ -145,20 +155,20 @@ class CPTDA_Admin {
 	/**
 	 * Merge settings from a current post type admin page with the old settings
 	 *
-	 * @param array   $old_settings Old settings.
-	 * @param array   $settings     New settings.
+	 * @param array   $settings     Old settings.
+	 * @param array   $new_settings New settings.
 	 * @param string  $post_type    Current admin page post type.
 	 * @return array               Settings with new settings merged.
 	 */
-	public function merge_settings( $old_settings, $settings, $post_type ) {
+	public function merge_settings( $settings, $new_settings, $post_type ) {
 
-		foreach ( $old_settings as $key => $setting ) {
-			unset( $old_settings[ $key ][ $post_type ] );
-			if ( isset( $settings[ $key ] ) ) {
-				$old_settings[ $key ][ $post_type] = 1;
+		foreach ( (array) $settings as $key => $setting ) {
+			unset( $settings[ $key ][ $post_type ] );
+			if ( isset( $new_settings[ $key ] ) ) {
+				$settings[ $key ][ $post_type] = 1;
 			}
 		}
-		return $old_settings;
+		return $settings;
 	}
 
 
@@ -171,7 +181,7 @@ class CPTDA_Admin {
 	 */
 	private function remove_invalid_post_types( $settings ) {
 
-		foreach ( $settings as $key => $setting ) {
+		foreach ( (array) $settings as $key => $setting ) {
 			if ( !is_array( $setting ) || empty( $setting ) ) {
 				continue;
 			}
@@ -221,12 +231,22 @@ class CPTDA_Admin {
 	/**
 	 * Adds a help section on admin pages
 	 */
-	function add_help_tab() {
-		$screen          = get_current_screen();
-		$post_types      = $this->post_types;
-		$post_type       = $this->get_current_post_type();
-		$label           = isset( $post_types[ $post_type ] ) ? $post_types[ $post_type ] : $post_type;
-		$date            = getdate();
+	public function add_help_tab() {
+
+		$post_type = $this->get_current_post_type();
+		if ( !$post_type ) {
+			return;
+		}
+
+		$label = isset( $this->post_types[ $post_type ] ) ?  $this->post_types[ $post_type ] : $post_type;
+
+		// Get date from last post
+		$post = get_posts( "post_type={$post_type}&posts_per_page=1" );
+		$date = getdate();
+		if ( isset( $post[0]->post_date ) && $post[0]->post_date ) {
+			$date = getdate( strtotime( $post[0]->post_date ) );
+		}
+
 		$sample_day_link = cptda_get_day_link( $date['year'], $date['mon'], $date['mday'], $post_type );
 		$scheduled_posts = '<a href="https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts">';
 		$scheduled_posts .= __( 'plugin documentation', 'custom-post-type-date-archives' ) . '</a>';
@@ -235,12 +255,29 @@ class CPTDA_Admin {
 		include 'partials/admin-help.php';
 		$content = ob_get_clean();
 
-		// Add my_help_tab if current screen is My Admin Page
+		$screen = get_current_screen();
+
+		// Add help tab
 		$screen->add_help_tab( array(
 				'id' => 'cptda_date_archive',
 				'title' => __( 'Date Archives' ),
 				'content' => $content
-			) );
+			)
+		);
+	}
+
+
+	/**
+	 * Flush rules if date archives are removed from a post type
+	 *
+	 * @since 2.2.1
+	 * @return void
+	 */
+	public function shutdown() {
+		global $wp_rewrite;
+		if ( true === $this->flush_rewrite ) {
+			$wp_rewrite->flush_rules();
+		}
 	}
 
 }
