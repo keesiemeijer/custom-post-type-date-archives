@@ -64,6 +64,23 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 
 		$this->assertEquals( $templates, $this->templates );
 	}
+	
+
+	/**
+	 * Test dummy theme templates
+	 *
+	 * @depends KM_CPTDA_Tests_Template::test_theme
+	 */
+	function test_theme_templates() {
+		$templates = array(
+			'archive-cpt',
+			'date',
+			'date-cptda-archive',
+			'date-cpt',
+		);
+
+		$this->assertEquals( $templates, $this->templates );
+	}
 
 
 	/**

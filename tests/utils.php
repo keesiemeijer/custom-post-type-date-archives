@@ -2,6 +2,7 @@
 class CPTDA_Test_Utils {
 
 	private $factory;
+	public $boolean;
 
 	function __construct( $factory = null ) {
 		$this->factory = $factory;
@@ -118,6 +119,11 @@ class CPTDA_Test_Utils {
 
 		$plugin->post_type = new CPTDA_Post_Types();
 		$plugin->post_type->setup();
+	}
+
+
+	function return_bool( $bool ) {
+		return $this->boolean = $bool;
 	}
 
 
