@@ -64,3 +64,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 
 = 2.2.0 =
 Initial Commit
+
+== Upgrade Notice ==
+= 2.2.1 =
+Update help section with WordPress repo links.
