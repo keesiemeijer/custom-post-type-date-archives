@@ -2,7 +2,7 @@
 
 Version:           2.2.2-alpha  
 Requires at least: 3.9  
-Tested up to:      4.4  
+Tested up to:      4.5  
 
 Add date archives to WordPress custom post types
 
