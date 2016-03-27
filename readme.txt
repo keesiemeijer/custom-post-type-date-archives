@@ -2,8 +2,8 @@
 Contributors: keesiemeijer
 Tags: post type,date,archives
 Requires at least: 3.9
-Tested up to: 4.4
-Stable tag: 2.2.1
+Tested up to: 4.5
+Stable tag: 2.2.2-alpha
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,3 +64,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 
 = 2.2.0 =
 Initial Commit
+
+== Upgrade Notice ==
+= 2.2.1 =
+Update help section with WordPress repo links.
