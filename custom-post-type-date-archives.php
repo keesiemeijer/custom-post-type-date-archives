@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Post Type Date Archives
-Version:  2.2.1
+Version:  2.2.2-alpha
 Plugin URI:
 Description: This plugin allows you to add date archives to custom post types. Adds custom post types to the archive and calendar widget.
 Author: keesiemijer
