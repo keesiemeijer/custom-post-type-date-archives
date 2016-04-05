@@ -125,8 +125,10 @@ class CPTDA_Admin {
 			$_POST    = stripslashes_deep( $_POST );
 			$settings = $this->merge_settings( $old_settings, (array) $_POST, $post_type );
 			$message  = __( 'Settings Saved', 'custom-post-type-date-archives' );
-
 			add_settings_error ( 'update', 'update', $message, 'updated' );
+
+			// Flush rewrite rules when settings are changed
+			$this->flush_rewrite = true;
 		} else {
 			$settings = $old_settings;
 		}
