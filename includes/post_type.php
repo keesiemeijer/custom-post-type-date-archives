@@ -63,22 +63,135 @@ class CPTDA_Post_Types {
 			}
 		}
 
-		if ( !empty( $this->publish_future ) ) {
+		$this->setup_publish_future();
+	}
 
-			/**
-			 * Filter whether to publish posts with future dates as normal posts.
-			 *
-			 * @since 1.0
-			 * @param bool    $publish Default true.
-			 */
-			$publish = apply_filters( 'cptda_publish_future_posts', true );
 
-			if ( (bool) $publish ) {
-				foreach ( $this->publish_future as $name ) {
-					remove_action( "future_{$name}", '_future_post_hook' );
-					add_action( "future_{$name}", array( $this, 'publish_future_post' ) );
-				}
+	/**
+	 * Reset post type properties.
+	 *
+	 * @since 2.1.0
+	 * @return void
+	 */
+	function reset_post_types() {
+		$this->date_post_types = array();
+		$this->publish_future  = array();
+	}
+
+
+	/**
+	 * Setup post types from admin page settings.
+	 *
+	 * @since 2.1.0
+	 * @return void
+	 */
+	private function setup_admin_post_types() {
+		$archives = get_option( 'custom_post_type_date_archives' );
+
+		if ( empty( $archives ) ) {
+			return;
+		}
+
+		if ( isset( $archives['remove_archive_feeds'] ) ) {
+			$feeds = $archives['remove_archive_feeds'];
+			$feeds = is_array( $feeds ) ? array_keys( $feeds ) : array();
+			$this->remove_archive_feeds( $feeds );
+		}
+
+		$this->setup_admin_post_type_support( $archives );
+	}
+
+
+	/**
+	 * Set up admin settings post type support
+	 *
+	 * @since 2.3.0
+	 * @param array   $archives Admin archives settings
+	 * @return void
+	 */
+	private function setup_admin_post_type_support( $archives ) {
+		$supports = array( 'date_archives', 'publish_future_posts' );
+
+		foreach ( $supports  as $support ) {
+
+			if ( !( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) ) {
+				continue;
 			}
+
+			$post_types = is_array( $archives[ $support ] ) ? $archives[ $support ] : array();
+			$support    = str_replace( '_', '-', $support );
+			$this->add_admin_post_type_support( array_keys( $post_types ), $support );
+		}
+	}
+
+
+	/**
+	 * Add support to post type from admin settings
+	 *
+	 * @since 2.1.0
+	 * @param array   $archives Array with date archive post types
+	 * @param string  $support  Type of support. 'date_archives' or 'publish_future_posts'
+	 * @return void
+	 */
+	private function add_admin_post_type_support( $archives, $support = 'date-archives' ) {
+
+		if ( empty( $archives ) || !is_array( $archives ) ) {
+			return;
+		}
+
+		$post_types = cptda_get_admin_post_types();
+
+		foreach ( $post_types as $post_type => $value ) {
+			if ( in_array( $post_type, $archives ) ) {
+				add_post_type_support( $post_type, $support );
+			} else {
+				remove_post_type_support( $post_type, $support );
+			}
+		}
+	}
+
+
+	/**
+	 * Removes date archives feeds from admin settings.
+	 *
+	 * @since 2.3.0
+	 * @param array   $post_types Post types to remove date archive feeds for.
+	 * @return void
+	 */
+	private function remove_archive_feeds( $post_types ) {
+		foreach ( (array) $post_types as $post_type ) {
+			add_filter( "cptda_{$post_type}_date_archives_feed", '__return_false' );
+		}
+	}
+
+
+	/**
+	 * Sets up post types were scheduled posts are published.
+	 *
+	 * @since 2.3.0
+	 * @return void
+	 */
+	private function setup_publish_future() {
+
+		if ( empty( $this->publish_future ) ) {
+			return;
+		}
+
+		/**
+		 * Filter whether to publish posts with future dates as normal posts.
+		 *
+		 * @since 1.0
+		 * @param bool    $publish Default true.
+		 */
+		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
+
+		if ( !$publish ) {
+			return;
+		}
+
+		foreach ( $this->publish_future as $name ) {
+			remove_action( "future_{$name}", '_future_post_hook' );
+			add_action( "future_{$name}", array( $this, 'publish_future_post' ) );
 		}
 	}
 
@@ -103,66 +216,6 @@ class CPTDA_Post_Types {
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {
 			wp_publish_post( $post_id );
-		}
-	}
-
-
-	/**
-	 * Reset post type properties.
-	 *
-	 * @since 2.1.0
-	 * @return void
-	 */
-	function reset_post_types() {
-		$this->date_post_types = array();
-		$this->publish_future  = array();
-	}
-
-
-	/**
-	 * Add support to post types from admin page settings.
-	 *
-	 * @since 2.1.0
-	 * @return void
-	 */
-	function setup_admin_post_types() {
-		$archives = get_option( 'custom_post_type_date_archives' );
-
-		if ( empty( $archives ) ) {
-			return;
-		}
-
-		foreach ( array( 'date_archives', 'publish_future_posts' ) as $support ) {
-			if ( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) {
-				$post_types = is_array( $archives[ $support ] ) ? $archives[ $support ] : array();
-				$this->add_admin_post_types_support( array_keys( $post_types ), $support );
-			}
-		}
-	}
-
-
-	/**
-	 * Add support to post type from admin settings
-	 *
-	 * @since 2.1.0
-	 * @param array   $archives Array with date archive post types
-	 * @param string  $support  Type of support. 'date_archives' or 'publish_future_posts'
-	 * @return void
-	 */
-	function add_admin_post_types_support( $archives, $support = 'date-archives' ) {
-
-		if ( empty( $archives ) || !is_array( $archives ) ) {
-			return;
-		}
-
-		$post_types = cptda_get_admin_post_types();
-
-		foreach ( $post_types as $post_type => $value ) {
-			if ( in_array( $post_type, $archives ) ) {
-				add_post_type_support( $post_type, str_replace( '_', '-', $support ) );
-			} else {
-				remove_post_type_support( $post_type, str_replace( '_', '-', $support ) );
-			}
 		}
 	}
 
