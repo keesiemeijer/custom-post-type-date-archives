@@ -107,6 +107,7 @@ class CPTDA_Admin {
 
 		$defaults = array(
 			'date_archives'        => array(),
+			'remove_archive_feeds' => array(),
 			'publish_future_posts' => array(),
 		);
 
@@ -138,12 +139,6 @@ class CPTDA_Admin {
 
 		// Removes invalid post types (e.g. post types that no longer exist)
 		$settings = $this->remove_invalid_post_types( $settings );
-
-		// Flush rewrite rules on shutdown action if date archives were removed.
-		$flush = isset( $settings['date_archives'][ $post_type ] ) ? false : true;
-		if ( $flush && isset( $old_settings['date_archives'][ $post_type ] )  ) {
-			$this->flush_rewrite = true;
-		}
 
 		// Save new settings
 		if ( $old_settings != $settings ) {
