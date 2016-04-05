@@ -64,7 +64,7 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 
 		$this->assertEquals( $templates, $this->templates );
 	}
-	
+
 
 	/**
 	 * Test dummy theme templates
