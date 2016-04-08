@@ -63,7 +63,7 @@ class CPTDA_Post_Types {
 			}
 		}
 
-		$this->setup_publish_future();
+		$this->publish_scheduled_posts();
 	}
 
 
@@ -171,7 +171,7 @@ class CPTDA_Post_Types {
 
 		foreach ( $this->publish_future as $name ) {
 			remove_action( "future_{$name}", '_future_post_hook' );
-			add_action( "future_{$name}", array( $this, 'publish_future_post' ) );
+			add_action( "future_{$name}", array( $this, '_future_post_hook' ) );
 		}
 	}
 
@@ -183,7 +183,7 @@ class CPTDA_Post_Types {
 	 * @param int     $post_id Post ID.
 	 * @return void
 	 */
-	public function publish_future_post( $post_id ) {
+	public function _future_post_hook( $post_id ) {
 
 		$post = get_post( $post_id );
 
@@ -262,48 +262,6 @@ class CPTDA_Post_Types {
 		}
 
 		return $post_type->_builtin ? false : true;
-	}
-
-
-	/**
-	 * Returns the base of a custom post type depending on the rewrite parameter.
-	 * Uses the post type's rewrite parameter 'with_front' and 'slug'.
-	 *
-	 * @since 1.0
-	 * @param string  $post_type Post type.
-	 * @return array  Array with front and slug from the custom post type.
-	 */
-	public function get_post_type_base( $post_type = '' ) {
-		global $wp_rewrite;
-
-		if ( !$this->is_valid_post_type( $post_type ) ) {
-			return array( 'front' => '', 'slug' => '' );
-		}
-
-		$post_type = get_post_type_object ( trim( (string) $post_type ) );
-
-		$front = isset( $post_type->rewrite['with_front'] ) ? (bool) $post_type->rewrite['with_front'] : 1;
-		$front = $front ? $wp_rewrite->front : $wp_rewrite->root;
-
-		// Check if rewrite slug is set for the post type.
-		$slug = isset( $post_type->rewrite['slug'] ) ? $post_type->rewrite['slug'] : '';
-		$slug = !empty( $slug ) ? $slug : $post_type->name;
-
-		return compact( 'front', 'slug' );
-	}
-
-
-	/**
-	 * Gets the base slug for the post type depending on the post type's parameters.
-	 *
-	 * @since 1.0
-	 * @uses get_post_type_base()
-	 * @param string  $post_type Post type.
-	 * @return string Post type base (front + slug).
-	 */
-	public function get_post_type_base_slug( $post_type = '' ) {
-		$base = $this->get_post_type_base( $post_type );
-		return ltrim( trailingslashit( $base['front'] ) . $base['slug'] , '/' );
 	}
 
 }

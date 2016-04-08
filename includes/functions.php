@@ -133,6 +133,23 @@ function cptda_get_admin_post_types( $type = 'names' ) {
 	return $post_types;
 }
 
+/**
+ * Gets the post type base slug.
+ *
+ * @since 2.3.0
+ * @param string  $post_type Post type.
+ * @return string Post type base (front + slug).
+ */
+function cptda_get_post_type_base( $post_type = '' ) {
+
+	if ( !cptda_is_date_post_type( $post_type ) ) {
+		return '';
+	}
+
+	$rewrite = new CPTDA_CPT_Rewrite( $post_type );
+	return $rewrite->get_front();
+}
+
 
 /**
  * Display archive links based on post type, type and format.

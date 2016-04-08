@@ -30,23 +30,6 @@ class CPTDA_Rewrite {
 	 */
 	private $post_types;
 
-	/**
-	 * Custom post types with 'date-archives-feed' support.
-	 *
-	 * @since 2.2.0
-	 * @var array
-	 */
-	private $feeds;
-
-	/**
-	 * Plugin object.
-	 *
-	 * @since 2.3.0
-	 * @var object
-	 */
-	private $plugin;
-
-
 	public function __construct() {
 		// Setup the rewrite class after the post types are set up
 		// Priority 15 is after setting up post types.
@@ -62,25 +45,13 @@ class CPTDA_Rewrite {
 	 */
 	public function setup_archives() {
 
-		$this->plugin = cptda_date_archives();
+		$plugin = cptda_date_archives();
 
-		if ( !( $this->plugin && $this->plugin instanceof Custom_Post_Type_Date_Archives ) ) {
-			return;
-		}
-
-		$this->post_types = $this->plugin->post_type->get_date_archive_post_types( 'names' );
+		$this->post_types = $plugin->post_type->get_date_archive_post_types( 'names' );
 
 		if ( empty( $this->post_types ) ) {
 			return;
 		}
-
-		/**
-		 * Filter whether feeds are added to date archives.
-		 *
-		 * @since 2.3.0
-		 * @param bool    $feeds Add a feed for post type date archives. Default true
-		 */
-		$this->feeds = apply_filters( "cptda_date_archives_feed", true );
 
 		$this->setup_archive_rewrite_rules();
 	}
@@ -142,28 +113,9 @@ class CPTDA_Rewrite {
 		$rules = array();
 
 		foreach ( (array) $this->post_types as $post_type ) {
-			$rules = $rules + $this->get_cpt_rewrite_rules( $post_type );
+			$rules = $rules + $this->get_rules( $post_type );
 		}
 		return $rules;
-	}
-
-
-	/**
-	 * Returns date archive rewrite rules for a custom post type.
-	 *
-	 * @since 1.0
-	 * @param string  $cpt Custom post type name.
-	 * @return array Array with custom post type date archive rewrite rules.
-	 */
-	private function get_cpt_rewrite_rules( $post_type ) {
-		$rewrite_rules = array();
-
-		foreach ( $this->get_archive_types() as $archive ) {
-			$rules = $this->get_rules( $post_type, $archive );
-			$rewrite_rules = array_merge( $rewrite_rules, $rules  );
-		}
-
-		return $rewrite_rules;
 	}
 
 
@@ -174,71 +126,37 @@ class CPTDA_Rewrite {
 	 * @param string  $post_type Post type to return rewrite rules for
 	 * @param array   $archive   Type of archive to get the rules for (year, month day).
 	 */
-	private function get_rules( $post_type, $archive ) {
+	private function get_rules( $post_type ) {
 		global $wp_rewrite;
 
-		$rules = array();
-		$slug  = $this->plugin->post_type->get_post_type_base_slug( $post_type );
+		$rules           = array();
+		$feeds           = $this->archive_has_feed( $post_type );
+		$date_permastuct = $this->get_date_permastruct( $post_type );
 
-		if ( empty( $slug ) ) {
+		if ( ! $date_permastuct ) {
 			return $rules;
 		}
 
-		$rule  = $slug . '/' . $archive['rule'];
-		$query = $this->get_query_part( $post_type, $archive['vars'] );
-		$index = count( $archive['vars'] ) +1;
+		$date_rewrite = $wp_rewrite->generate_rewrite_rules( $date_permastuct , EP_DATE, true, $feeds );
 
-		if (  $this->archive_has_feed(  $post_type, $archive['vars'] ) ) {
-			$rules[ $rule . "/feed/(feed|rdf|rss|rss2|atom)/?$" ] = $query . "&feed=" . $wp_rewrite->preg_index( $index );
-			$rules[ $rule . "/(feed|rdf|rss|rss2|atom)/?$" ]      = $query . "&feed=" . $wp_rewrite->preg_index( $index );
+		// Add post type to query vars
+		foreach ( $date_rewrite as $rule => $vars ) {
+			$date_rewrite[$rule] = str_replace( "{$wp_rewrite->index}?", "{$wp_rewrite->index}?post_type={$post_type}&", $vars );
 		}
 
-		$rules[ $rule . "/page/([0-9]{1,})/?$" ] = $query . "&paged=" . $wp_rewrite->preg_index( $index );
-		$rules[ $rule . "/?$" ] = $query;
-
-		return $rules;
+		return $date_rewrite;
 	}
 
 
 	/**
-	 * Get rewrite rule query part
+	 * Returns date permastruct for a custom post type
 	 *
 	 * @since 2.3.0
-	 * @param string  $post_type Post type to get the query part for.
-	 * @param archive $archive   Archive query vars.
-	 * @return string            Query part used in rewrite rule.
+	 * @param string|bool Custom post type date permastruct or false
 	 */
-	private function get_query_part( $post_type, $archive ) {
-		global $wp_rewrite;
-
-		$query = 'index.php?post_type=' . $post_type;
-
-		for ( $i=0; $i < count( $archive ) ; $i++ ) {
-			$query .= '&' . $archive[ $i ] . '=' . $wp_rewrite->preg_index( $i + 1 );
-		}
-
-		return $query;
-	}
-
-
-	/**
-	 * Returns rewrite rules and query vars for all archives.
-	 *
-	 * @since 2.3.0
-	 * @return array Rewrite rules and query vars.
-	 */
-	public function get_archive_types() {
-		return array(
-			array(
-				'rule' => "([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})",
-				'vars' => array( 'year', 'monthnum', 'day' ) ),
-			array(
-				'rule' => "([0-9]{4})/([0-9]{1,2})",
-				'vars' => array( 'year', 'monthnum' ) ),
-			array(
-				'rule' => "([0-9]{4})",
-				'vars' => array( 'year' ) )
-		);
+	private function get_date_permastruct( $post_type ) {
+		$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
+		return $cpt_rewrite->get_date_permastruct();
 	}
 
 
@@ -250,34 +168,28 @@ class CPTDA_Rewrite {
 	 * @param array   $archive   Date archive vars.
 	 * @return bool True if post type date archive has a feed.
 	 */
-	private function archive_has_feed( $post_type, $archive ) {
+	private function archive_has_feed( $post_type ) {
 
-		if ( !$this->feeds ) {
+		/**
+		 * Filter whether feeds are added to date archives.
+		 *
+		 * @since 2.3.0
+		 * @param bool    $feed Add a feed for post type date archives. Default true
+		 */
+		$feed = (bool) apply_filters( "cptda_date_archives_feed", true );
+
+		if ( !$feed ) {
 			return false;
 		}
 
 		/**
 		 * Filter adding rewrite rules for post type date archives feed.
 		 *
-		 * @param bool    $add_feed Add a feed for a post type date archive. Default true.
+		 * @param bool    $feed Add a feed for a post type date archive. Default true.
 		 */
-		$add_feed = apply_filters( "cptda_{$post_type}_date_archives_feed", true );
+		$feed = (bool) apply_filters( "cptda_{$post_type}_date_archives_feed", true );
 
-		if ( $add_feed ) {
-
-			end( $archive );
-			$key = key( $archive );
-			$date_type = str_replace( 'num', '', $archive[ $key ] );
-
-			/**
-			 * Filter adding feed for date type day, month or year archive feed.
-			 *
-			 * @param bool    $add_feed Add a feed for the {$date_type} date archive. Default true.
-			 */
-			$add_feed = apply_filters( "cptda_{$post_type}_{$date_type}_archives_feed", true );
-		}
-
-		return $add_feed;
+		return $feed;
 	}
 
 

@@ -65,8 +65,7 @@ class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 	function test_cpt_slug_with_front() {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init();
-		$instance = cptda_date_archives();
-		$slug     = $instance->post_type->get_post_type_base_slug( 'cpt' );
+		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'blog/cpt', $slug );
 	}
 
@@ -77,8 +76,7 @@ class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 	function test_cpt_slug() {
 		$this->utils->set_permalink_structure( '/%postname%/' );
 		$this->utils->init();
-		$instance = cptda_date_archives();
-		$slug     = $instance->post_type->get_post_type_base_slug( 'cpt' );
+		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'cpt', $slug );
 	}
 
@@ -89,8 +87,7 @@ class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 	function test_cpt_rewrite_slug() {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
-		$plugin = cptda_date_archives();
-		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );
+		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'blog/rewrite', $slug );
 	}
 
@@ -102,7 +99,7 @@ class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 		$this->utils->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
 		$plugin = cptda_date_archives();
-		$slug = $plugin->post_type->get_post_type_base_slug( 'cpt' );
+		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'rewrite', $slug );
 	}
 

@@ -25,10 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function cptda_get_year_link( $year, $post_type = '' ) {
 	global $wp_rewrite;
 
-	$instance = cptda_date_archives();
-	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
-
-	if ( empty( $slug ) ) {
+	if ( !cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
@@ -36,16 +33,10 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
 	}
 
-	$yearlink = $wp_rewrite->get_year_permastruct();
+	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
+	$yearlink = $cpt_rewrite->get_year_permastruct();
 
 	if ( !empty( $yearlink ) ) {
-
-		// Remove rewrite front.
-		$yearlink = cptda_remove_front_from_permastruct( $yearlink );
-
-		// Add $post type front + slug.
-		$yearlink = trailingslashit( $slug ) . $yearlink;
-
 		$yearlink = str_replace( '%year%', $year, $yearlink );
 		$yearlink = home_url( user_trailingslashit( $yearlink, 'year' ) );
 	} else {
@@ -77,10 +68,7 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 function cptda_get_month_link( $year, $month, $post_type = '' ) {
 	global $wp_rewrite;
 
-	$instance = cptda_date_archives();
-	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
-
-	if ( empty( $slug ) ) {
+	if ( !cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
@@ -88,15 +76,11 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
 	if ( !$month )
 		$month = gmdate( 'm', current_time( 'timestamp' ) );
-	$monthlink = $wp_rewrite->get_month_permastruct();
+
+	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
+	$monthlink = $cpt_rewrite->get_month_permastruct();
+
 	if ( !empty( $monthlink ) ) {
-
-		// Remove rewrite front
-		$monthlink = cptda_remove_front_from_permastruct( $monthlink );
-
-		// Add $post type front + slug.
-		$monthlink = trailingslashit( $slug ) . $monthlink;
-
 		$monthlink = str_replace( '%year%', $year, $monthlink );
 		$monthlink = str_replace( '%monthnum%', zeroise( intval( $month ), 2 ), $monthlink );
 		$monthlink = home_url( user_trailingslashit( $monthlink, 'month' ) );
@@ -131,10 +115,7 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	global $wp_rewrite;
 
-	$instance = cptda_date_archives();
-	$slug     = $instance->post_type->get_post_type_base_slug( $post_type );
-
-	if ( empty( $slug ) ) {
+	if ( !cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
@@ -145,15 +126,10 @@ function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	if ( !$day )
 		$day = gmdate( 'j', current_time( 'timestamp' ) );
 
-	$daylink = $wp_rewrite->get_day_permastruct();
+	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
+	$daylink = $cpt_rewrite->get_day_permastruct();
+
 	if ( !empty( $daylink ) ) {
-
-		// Remove rewrite front
-		$daylink = cptda_remove_front_from_permastruct( $daylink );
-
-		// Add $post type front + slug.
-		$daylink = trailingslashit( $slug ) . $daylink;
-
 		$daylink = str_replace( '%year%', $year, $daylink );
 		$daylink = str_replace( '%monthnum%', zeroise( intval( $month ), 2 ), $daylink );
 		$daylink = str_replace( '%day%', zeroise( intval( $day ), 2 ), $daylink );
@@ -174,24 +150,4 @@ function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	 * @param int     $day     The day for the archive.
 	 */
 	return apply_filters( 'cptda_get_day_link', $daylink, $year, $month, $day );
-}
-
-
-/**
- * Removes the 'post' post type front from the date permalink structure.
- *
- * @since 1.0
- *
- * @param string  $permastruct Permalink structure.
- * @return string              Permalink structure with front removed.
- */
-function cptda_remove_front_from_permastruct( $permastruct ) {
-	global $wp_rewrite;
-
-	if ( '/' !== $wp_rewrite->front ) {
-		$permastruct = str_replace( $wp_rewrite->front, '',  $permastruct );
-	}
-
-	// trim slashes off the front
-	return ltrim( $permastruct, '/' );
 }
