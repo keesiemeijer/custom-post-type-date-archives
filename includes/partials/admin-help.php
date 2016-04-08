@@ -9,18 +9,6 @@
 	<code><?php echo $sample_day_link ?></code>
 </p>
 <h3>
-	<?php _e( 'Remove date archive feeds', 'custom-post-type-date-archives' ); ?>
-</h3>
-<p>
-	<?php printf( __( 'Feeds are automatically created for custom post type date archives.', 'custom-post-type-date-archives' ), $label ); ?>
-	<?php printf( __( 'Check the "Remove feeds" checkbox if you don\'t want any feeds for the %s date archives.', 'custom-post-type-date-archives' ), $label ); ?>
-	<a href="https://codex.wordpress.org/WordPress_Feeds"><?php _e('More information about feeds', 'custom-post-type-date-archives') ?></a>
-</p>
-<p>
-	<?php _e( 'Example date archive feed url', 'custom-post-type-date-archives' ); ?><br/>
-	<code><?php echo $sample_day_link ?>feed</code>
-</p>
-<h3>
 	<?php _e( 'Publish posts with future dates', 'custom-post-type-date-archives' ); ?>
 </h3>
 

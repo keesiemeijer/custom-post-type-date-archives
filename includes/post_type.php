@@ -92,12 +92,6 @@ class CPTDA_Post_Types {
 			return;
 		}
 
-		if ( isset( $archives['remove_archive_feeds'] ) ) {
-			$feeds = $archives['remove_archive_feeds'];
-			$feeds = is_array( $feeds ) ? array_keys( $feeds ) : array();
-			$this->remove_archive_feeds( $feeds );
-		}
-
 		$this->setup_admin_post_type_support( $archives );
 	}
 
@@ -152,26 +146,12 @@ class CPTDA_Post_Types {
 
 
 	/**
-	 * Removes date archives feeds from admin settings.
-	 *
-	 * @since 2.3.0
-	 * @param array   $post_types Post types to remove date archive feeds for.
-	 * @return void
-	 */
-	private function remove_archive_feeds( $post_types ) {
-		foreach ( (array) $post_types as $post_type ) {
-			add_filter( "cptda_{$post_type}_date_archives_feed", '__return_false' );
-		}
-	}
-
-
-	/**
 	 * Sets up post types were scheduled posts are published.
 	 *
 	 * @since 2.3.0
 	 * @return void
 	 */
-	private function setup_publish_future() {
+	private function publish_scheduled_posts() {
 
 		if ( empty( $this->publish_future ) ) {
 			return;

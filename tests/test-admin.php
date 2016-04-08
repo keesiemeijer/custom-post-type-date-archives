@@ -58,7 +58,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 
 		$expected =  array(
 			'date_archives'        => array( 'cpt' => 1, 'cpt_2' => 1 ),
-			'remove_archive_feeds' => array(),
 			'publish_future_posts' => array( 'cpt' => 1 ),
 		);
 
@@ -83,7 +82,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 
 		$expected =  array(
 			'date_archives'        => array(),
-			'remove_archive_feeds' => array(),
 			'publish_future_posts' => array( 'cpt' => 1 ),
 		);
 
@@ -108,7 +106,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 
 		$expected =  array(
 			'date_archives'        => array(),
-			'remove_archive_feeds'   => array(),
 			'publish_future_posts' => array(),
 		);
 
@@ -126,7 +123,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 
 		$expected =  array(
 			'date_archives'        => array( 'cpt' => 1 ),
-			'remove_archive_feeds' => array(),
 			'publish_future_posts' => array(),
 		);
 

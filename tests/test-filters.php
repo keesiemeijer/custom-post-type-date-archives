@@ -32,7 +32,6 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 		remove_filter( 'cpda_add_admin_page_cpt', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_date_archives_feed', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_cpt_date_archives_feed', array( $this->utils, 'return_bool' ) );
-		remove_filter( 'cptda_cpt_day_archive_feed', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_publish_future_posts', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_publish_future_cpt', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_flush_rewrite_rules', array( $this->utils, 'return_bool' ) );
@@ -96,20 +95,6 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 	function test_cptda_cpt_date_archives_feed_filter_bool() {
 		global $wp_rewrite;
 		add_filter( 'cptda_cpt_date_archives_feed', array( $this->utils, 'return_bool' ) );
-		$this->utils->init();
-		$rewrite = new CPTDA_Rewrite();
-		$rewrite->setup_archives();
-		$rewrite->generate_rewrite_rules( $wp_rewrite );
-		$this->assertTrue( $this->utils->boolean );
-		$this->utils->boolean = null;
-	}
-
-	/**
-	 * Test cptda_cpt_day_archive_feed filter is set to true (by default).
-	 */
-	function test_cptda_cpt_day_archive_feed_filter_bool() {
-		global $wp_rewrite;
-		add_filter( 'cptda_cpt_day_archives_feed', array( $this->utils, 'return_bool' ) );
 		$this->utils->init();
 		$rewrite = new CPTDA_Rewrite();
 		$rewrite->setup_archives();

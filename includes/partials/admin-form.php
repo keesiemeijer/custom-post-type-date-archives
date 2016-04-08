@@ -22,24 +22,6 @@
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text">
-						<span><?php _e('Don\'t create date archive feeds', 'custom-post-type-date-archives') ?></span>
-					</legend>
-					<label for="remove_archive_feeds">
-						<input name="remove_archive_feeds" id="remove_archive_feeds" type="checkbox" value="1" 
-						<?php echo isset( $settings['remove_archive_feeds'][$post_type] ) ? ' checked="checked"' : ''; ?> />
-						<?php _e('Remove date archive feeds', 'custom-post-type-date-archives') ?><br/>
-					</label>
-					<p class="description">
-						<?php printf( __( 'Don\'t create feeds for the post type %s date archives.', 'custom-post-type-date-archives' ), $label ); ?>
-					</p>
-				</fieldset>
-			</td>
-		</tr>
-		<tr valign='top'>
-			<th scope='row'></th>
-			<td>
-				<fieldset>
-					<legend class="screen-reader-text">
 						<span><?php _e('Publish scheduled posts', 'custom-post-type-date-archives') ?></span>
 					</legend>
 					<label for="publish_future_posts">
