@@ -233,35 +233,4 @@ class CPTDA_Post_Types {
 		return $post_types;
 	}
 
-
-	/**
-	 * Check if a post type is valid to be used as date archive post type
-	 *
-	 * @since 2.1.0
-	 * @param string  $post_type Post type name
-	 * @return boolean            True if it's a valid post type
-	 */
-	function is_valid_post_type( $post_type ) {
-
-		$post_type = get_post_type_object ( trim( (string) $post_type ) );
-
-		if ( !( isset( $post_type->public ) && $post_type->public ) ) {
-			return false;
-		}
-
-		if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
-			return false;
-		}
-
-		if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
-			return false;
-		}
-
-		if ( !isset( $post_type->_builtin ) ) {
-			return false;
-		}
-
-		return $post_type->_builtin ? false : true;
-	}
-
 }
