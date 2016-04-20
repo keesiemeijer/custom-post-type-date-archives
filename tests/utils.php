@@ -105,6 +105,12 @@ class CPTDA_Test_Utils {
 
 
 	function unregister_post_type( $post_type = 'cpt' ) {
+
+		global $wp_rewrite;
+
+		delete_option( 'rewrite_rules' );
+		delete_option( 'custom_post_type_date_archives' );
+
 		$plugin = cptda_date_archives();
 
 		remove_post_type_support ( $post_type, 'date-archives' );
@@ -116,6 +122,8 @@ class CPTDA_Test_Utils {
 		if ( isset( $wp_post_types[ $post_type ] ) ) {
 			unset( $wp_post_types[ $post_type ] );
 		}
+
+		unset( $wp_rewrite->extra_permastructs[ $post_type ] );
 
 		$plugin->post_type = new CPTDA_Post_Types();
 		$plugin->post_type->setup();

@@ -81,10 +81,12 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 	 * Test cptda_date_archives_feed filter is set to true (by default).
 	 */
 	function test_cptda_date_archives_feed_filter_bool() {
+		global $wp_rewrite;
 		add_filter( 'cptda_date_archives_feed', array( $this->utils, 'return_bool' ) );
 		$this->utils->init();
 		$rewrite = new CPTDA_Rewrite();
 		$rewrite->setup_archives();
+		$rewrite->generate_rewrite_rules( $wp_rewrite );
 		$this->assertTrue( $this->utils->boolean );
 		$this->utils->boolean = null;
 	}
