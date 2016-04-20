@@ -55,11 +55,9 @@ class CPTDA_CPT_Rewrite {
 		global $wp_rewrite;
 
 		// Reset values
-		$this->permalink_structure = '';
-		$this->front               = '';
-		$this->date_structure      = '';
+		$this->reset_permastruct();
 
-		if ( !cptda_is_date_post_type( $post_type  ) || empty( $wp_rewrite->permalink_structure ) ) {
+		if ( empty( $wp_rewrite->permalink_structure ) || !cptda_is_valid_post_type( $post_type ) ) {
 			return;
 		}
 
@@ -67,14 +65,19 @@ class CPTDA_CPT_Rewrite {
 
 		$this->permalink_structure = $wp_rewrite->permalink_structure;
 
-		$front = isset( $post_type->rewrite['with_front'] ) ? (bool) $post_type->rewrite['with_front'] : 1;
-		$front = $front ? $wp_rewrite->front : $wp_rewrite->root;
+		$permastruct = $wp_rewrite->get_extra_permastruct( $post_type->name );
+		if ( $permastruct ) {
+			$permastruct = str_replace( "%{$post_type->name}%", '', (string) $permastruct );
+			$this->front = trim( $permastruct, '/' ) ;
+		} else {
+			$this->reset_permastruct();
+		}
+	}
 
-		// Check if rewrite slug is set for the post type.
-		$slug = isset( $post_type->rewrite['slug'] ) ? $post_type->rewrite['slug'] : '';
-		$slug = !empty( $slug ) ? $slug : $post_type->name;
-
-		$this->front = ltrim( trailingslashit( $front ) . $slug , '/' );
+	public function reset_permastruct() {
+		$this->permalink_structure = '';
+		$this->front               = '';
+		$this->date_structure      = '';
 	}
 
 
@@ -84,8 +87,8 @@ class CPTDA_CPT_Rewrite {
 
 	public function get_date_permastruct() {
 
-		if ( empty( $this->permalink_structure ) ) {
-			$this->date_structure = '';
+		if ( empty( $this->permalink_structure ) || empty( $this->front ) ) {
+			$this->reset_permastruct();
 			return false;
 		}
 
