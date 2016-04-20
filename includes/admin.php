@@ -232,6 +232,7 @@ class CPTDA_Admin {
 	 * Adds a help section on admin pages
 	 */
 	public function add_help_tab() {
+		global $wp_rewrite;
 
 		$post_type = $this->get_current_post_type();
 		if ( !$post_type ) {
@@ -240,14 +241,30 @@ class CPTDA_Admin {
 
 		$label = isset( $this->post_types[ $post_type ] ) ?  $this->post_types[ $post_type ] : $post_type;
 
+		// current date
+		$date = getdate();
+
 		// Get date from last post
 		$post = get_posts( "post_type={$post_type}&posts_per_page=1" );
-		$date = getdate();
 		if ( isset( $post[0]->post_date ) && $post[0]->post_date ) {
 			$date = getdate( strtotime( $post[0]->post_date ) );
 		}
 
-		$sample_day_link = cptda_get_day_link( $date['year'], $date['mon'], $date['mday'], $post_type );
+		// Get day rewrite permastruct
+		$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
+		$daylink = $cpt_rewrite->get_day_permastruct();
+
+		// Create example link
+		if ( !empty( $daylink ) ) {
+			$daylink = str_replace( '%year%', $date['year'], $daylink );
+			$daylink = str_replace( '%monthnum%', zeroise( intval( $date['mon'] ), 2 ), $daylink );
+			$daylink = str_replace( '%day%', zeroise( intval( $date['mday'] ), 2 ), $daylink );
+			$sample_day_link = home_url( user_trailingslashit( $daylink, 'day' ) );
+		} else {
+			$daylink = home_url( '?m=' . $date['year'] . zeroise( $date['mon'], 2 ) . zeroise( $date['mday'], 2 ) );
+			$sample_day_link = add_query_arg( 'post_type', $post_type, $daylink );
+		}
+
 		$scheduled_posts = '<a href="https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts">';
 		$scheduled_posts .= __( 'plugin documentation', 'custom-post-type-date-archives' ) . '</a>';
 
