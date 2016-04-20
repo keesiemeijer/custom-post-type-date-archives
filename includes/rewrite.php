@@ -98,7 +98,9 @@ class CPTDA_Rewrite {
 	 */
 	public function generate_rewrite_rules( $wp_rewrite ) {
 		$rules = $this->get_rewrite_rules();
-		$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+		if ( is_array( $wp_rewrite->rules ) ) {
+			$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+		}
 		return $wp_rewrite;
 	}
 
@@ -113,7 +115,11 @@ class CPTDA_Rewrite {
 		$rules = array();
 
 		foreach ( (array) $this->post_types as $post_type ) {
-			$rules = $rules + $this->get_rules( $post_type );
+			$post_type_obj = get_post_type_object( $post_type );
+
+			if ( isset( $post_type_obj->rewrite ) && ( false !== $post_type_obj->rewrite ) ) {
+				$rules = $rules + $this->get_rules( $post_type );
+			}
 		}
 		return $rules;
 	}
@@ -129,12 +135,11 @@ class CPTDA_Rewrite {
 	private function get_rules( $post_type ) {
 		global $wp_rewrite;
 
-		$rules           = array();
 		$feeds           = $this->archive_has_feed( $post_type );
 		$date_permastuct = $this->get_date_permastruct( $post_type );
 
 		if ( ! $date_permastuct ) {
-			return $rules;
+			return array();
 		}
 
 		$date_rewrite = $wp_rewrite->generate_rewrite_rules( $date_permastuct , EP_DATE, true, $feeds );
