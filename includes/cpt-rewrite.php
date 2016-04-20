@@ -23,23 +23,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CPTDA_CPT_Rewrite {
 
 	/**
-	 * Custom post types with 'date-archives' support.
+	 * Post type base permalink.
 	 *
-	 * @since 1.0
+	 * @since 2.3.0
 	 * @var array
 	 */
 	private $front;
 
 	/**
-	 * Custom post types with 'date-archives-feed' support.
+	 * Current permalink structure.
 	 *
-	 * @since 2.2.0
+	 * @since 2.3.0
 	 * @var array
 	 */
 	private $permalink_structure;
 
 	/**
-	 * Plugin object.
+	 * Custom post type date permalink structure.
 	 *
 	 * @since 2.3.0
 	 * @var object
@@ -51,6 +51,13 @@ class CPTDA_CPT_Rewrite {
 		$this->init( trim( (string) $post_type ) );
 	}
 
+	/**
+	 * Set's up the class properties
+	 *
+	 * @since 2.3.0
+	 * @param string  $post_type Post type name
+	 * @return void
+	 */
 	private function init( $post_type ) {
 		global $wp_rewrite;
 
@@ -61,18 +68,11 @@ class CPTDA_CPT_Rewrite {
 			return;
 		}
 
-		$post_type = get_post_type_object( $post_type );
-
 		$this->permalink_structure = $wp_rewrite->permalink_structure;
 
-		$permastruct = $wp_rewrite->get_extra_permastruct( $post_type->name );
-		if ( $permastruct ) {
-			$permastruct = str_replace( "%{$post_type->name}%", '', (string) $permastruct );
-			$this->front = trim( $permastruct, '/' ) ;
-		} else {
-			$this->reset_permastruct();
-		}
+		$this->front = $this->get_cpt_base_permastruct( $post_type );
 	}
+
 
 	public function reset_permastruct() {
 		$this->permalink_structure = '';
@@ -81,9 +81,28 @@ class CPTDA_CPT_Rewrite {
 	}
 
 
-	public function get_front() {
+	public function get_base_permastruct() {
 		return $this->front;
 	}
+
+
+	private function get_cpt_base_permastruct( $post_type ) {
+		global $wp_rewrite;
+
+		$base        = '';
+		$permastruct = $wp_rewrite->get_extra_permastruct( $post_type );
+
+		if ( $permastruct ) {
+			$base = str_replace( "%{$post_type}%", '', (string) $permastruct );
+			$base = trim( $base, '/' ) ;
+		} else {
+			$this->reset_permastruct();
+		}
+
+		return $base;
+	}
+
+
 
 	public function get_date_permastruct() {
 
@@ -129,6 +148,7 @@ class CPTDA_CPT_Rewrite {
 		return $this->date_structure;
 	}
 
+
 	/**
 	 * Retrieves the year permalink structure without month and day.
 	 *
@@ -154,6 +174,7 @@ class CPTDA_CPT_Rewrite {
 		return $structure;
 	}
 
+
 	/**
 	 * Retrieves the month permalink structure without day and with year.
 	 *
@@ -177,6 +198,7 @@ class CPTDA_CPT_Rewrite {
 
 		return $structure;
 	}
+
 
 	/**
 	 * Retrieves the day permalink structure with month and year.

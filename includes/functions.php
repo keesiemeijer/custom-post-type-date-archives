@@ -179,7 +179,7 @@ function cptda_get_post_type_base( $post_type = '' ) {
 	}
 
 	$rewrite = new CPTDA_CPT_Rewrite( $post_type );
-	return $rewrite->get_front();
+	return $rewrite->get_base_permastruct();
 }
 
 
