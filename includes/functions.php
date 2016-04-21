@@ -50,10 +50,40 @@ function cptda_is_date_post_type( $post_type = '' ) {
 	$post_types = $instance->post_type->get_date_archive_post_types( 'names' );
 
 	if ( in_array( (string) $post_type, $post_types ) ) {
-		return $instance->post_type->is_valid_post_type( $post_type );
+		return cptda_is_valid_post_type( $post_type );
 	}
 
 	return false;
+}
+
+/**
+ * Check if a post type is valid to be used as date archive post type
+ *
+ * @since 2.3.0
+ * @param string  $post_type Post type name
+ * @return boolean            True if it's a valid post type
+ */
+function cptda_is_valid_post_type( $post_type ) {
+
+	$post_type = get_post_type_object ( trim( (string) $post_type ) );
+
+	if ( !( isset( $post_type->public ) && $post_type->public ) ) {
+		return false;
+	}
+
+	if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
+		return false;
+	}
+
+	if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
+		return false;
+	}
+
+	if ( !isset( $post_type->_builtin ) ) {
+		return false;
+	}
+
+	return $post_type->_builtin ? false : true;
 }
 
 
@@ -131,6 +161,25 @@ function cptda_get_admin_post_types( $type = 'names' ) {
 	}
 
 	return $post_types;
+}
+
+
+
+/**
+ * Gets the post type base slug.
+ *
+ * @since 2.3.0
+ * @param string  $post_type Post type.
+ * @return string Post type base (front + slug).
+ */
+function cptda_get_post_type_base( $post_type = '' ) {
+
+	if ( !cptda_is_date_post_type( $post_type ) ) {
+		return '';
+	}
+
+	$rewrite = new CPTDA_CPT_Rewrite( $post_type );
+	return $rewrite->get_base_permastruct();
 }
 
 

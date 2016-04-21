@@ -63,47 +63,7 @@ class CPTDA_Post_Types {
 			}
 		}
 
-		if ( !empty( $this->publish_future ) ) {
-
-			/**
-			 * Filter whether to publish posts with future dates as normal posts.
-			 *
-			 * @since 1.0
-			 * @param bool    $publish Default true.
-			 */
-			$publish = apply_filters( 'cptda_publish_future_posts', true );
-
-			if ( (bool) $publish ) {
-				foreach ( $this->publish_future as $name ) {
-					remove_action( "future_{$name}", '_future_post_hook' );
-					add_action( "future_{$name}", array( $this, 'publish_future_post' ) );
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Set new post's post_status to "publish" if the post is sceduled.
-	 *
-	 * @since 1.2
-	 * @param int     $post_id Post ID.
-	 * @return void
-	 */
-	public function publish_future_post( $post_id ) {
-
-		$post = get_post( $post_id );
-
-		/**
-		 * Filter whether to publish posts with future dates from a specific post type.
-		 *
-		 * @since 1.2
-		 * @param bool    $publish Default true.
-		 */
-		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
-		if ( (bool) $publish ) {
-			wp_publish_post( $post_id );
-		}
+		$this->publish_scheduled_posts();
 	}
 
 
@@ -120,23 +80,41 @@ class CPTDA_Post_Types {
 
 
 	/**
-	 * Add support to post types from admin page settings.
+	 * Setup post types from admin page settings.
 	 *
 	 * @since 2.1.0
 	 * @return void
 	 */
-	function setup_admin_post_types() {
+	private function setup_admin_post_types() {
 		$archives = get_option( 'custom_post_type_date_archives' );
 
 		if ( empty( $archives ) ) {
 			return;
 		}
 
-		foreach ( array( 'date_archives', 'publish_future_posts' ) as $support ) {
-			if ( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) {
-				$post_types = is_array( $archives[ $support ] ) ? $archives[ $support ] : array();
-				$this->add_admin_post_types_support( array_keys( $post_types ), $support );
+		$this->setup_admin_post_type_support( $archives );
+	}
+
+
+	/**
+	 * Set up admin settings post type support
+	 *
+	 * @since 2.3.0
+	 * @param array   $archives Admin archives settings
+	 * @return void
+	 */
+	private function setup_admin_post_type_support( $archives ) {
+		$supports = array( 'date_archives', 'publish_future_posts' );
+
+		foreach ( $supports  as $support ) {
+
+			if ( !( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) ) {
+				continue;
 			}
+
+			$post_types = is_array( $archives[ $support ] ) ? $archives[ $support ] : array();
+			$support    = str_replace( '_', '-', $support );
+			$this->add_admin_post_type_support( array_keys( $post_types ), $support );
 		}
 	}
 
@@ -149,7 +127,7 @@ class CPTDA_Post_Types {
 	 * @param string  $support  Type of support. 'date_archives' or 'publish_future_posts'
 	 * @return void
 	 */
-	function add_admin_post_types_support( $archives, $support = 'date-archives' ) {
+	private function add_admin_post_type_support( $archives, $support = 'date-archives' ) {
 
 		if ( empty( $archives ) || !is_array( $archives ) ) {
 			return;
@@ -159,10 +137,65 @@ class CPTDA_Post_Types {
 
 		foreach ( $post_types as $post_type => $value ) {
 			if ( in_array( $post_type, $archives ) ) {
-				add_post_type_support( $post_type, str_replace( '_', '-', $support ) );
+				add_post_type_support( $post_type, $support );
 			} else {
-				remove_post_type_support( $post_type, str_replace( '_', '-', $support ) );
+				remove_post_type_support( $post_type, $support );
 			}
+		}
+	}
+
+
+	/**
+	 * Sets up post types were scheduled posts are published.
+	 *
+	 * @since 2.3.0
+	 * @return void
+	 */
+	private function publish_scheduled_posts() {
+
+		if ( empty( $this->publish_future ) ) {
+			return;
+		}
+
+		/**
+		 * Filter whether to publish posts with future dates as normal posts.
+		 *
+		 * @since 1.0
+		 * @param bool    $publish Default true.
+		 */
+		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
+
+		if ( !$publish ) {
+			return;
+		}
+
+		foreach ( $this->publish_future as $name ) {
+			remove_action( "future_{$name}", '_future_post_hook' );
+			add_action( "future_{$name}", array( $this, '_future_post_hook' ) );
+		}
+	}
+
+
+	/**
+	 * Set new post's post_status to "publish" if the post is sceduled.
+	 *
+	 * @since 1.2
+	 * @param int     $post_id Post ID.
+	 * @return void
+	 */
+	public function _future_post_hook( $post_id ) {
+
+		$post = get_post( $post_id );
+
+		/**
+		 * Filter whether to publish posts with future dates from a specific post type.
+		 *
+		 * @since 1.2
+		 * @param bool    $publish Default true.
+		 */
+		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
+		if ( (bool) $publish ) {
+			wp_publish_post( $post_id );
 		}
 	}
 
@@ -198,79 +231,6 @@ class CPTDA_Post_Types {
 		}
 
 		return $post_types;
-	}
-
-
-	/**
-	 * Check if a post type is valid to be used as date archive post type
-	 *
-	 * @since 2.1.0
-	 * @param string  $post_type Post type name
-	 * @return boolean            True if it's a valid post type
-	 */
-	function is_valid_post_type( $post_type ) {
-
-		$post_type = get_post_type_object ( trim( (string) $post_type ) );
-
-		if ( !( isset( $post_type->public ) && $post_type->public ) ) {
-			return false;
-		}
-
-		if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
-			return false;
-		}
-
-		if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
-			return false;
-		}
-
-		if ( !isset( $post_type->_builtin ) ) {
-			return false;
-		}
-
-		return $post_type->_builtin ? false : true;
-	}
-
-
-	/**
-	 * Returns the base of a custom post type depending on the rewrite parameter.
-	 * Uses the post type's rewrite parameter 'with_front' and 'slug'.
-	 *
-	 * @since 1.0
-	 * @param string  $post_type Post type.
-	 * @return array  Array with front and slug from the custom post type.
-	 */
-	public function get_post_type_base( $post_type = '' ) {
-		global $wp_rewrite;
-
-		if ( !$this->is_valid_post_type( $post_type ) ) {
-			return array( 'front' => '', 'slug' => '' );
-		}
-
-		$post_type = get_post_type_object ( trim( (string) $post_type ) );
-
-		$front = isset( $post_type->rewrite['with_front'] ) ? (bool) $post_type->rewrite['with_front'] : 1;
-		$front = $front ? $wp_rewrite->front : $wp_rewrite->root;
-
-		// Check if rewrite slug is set for the post type.
-		$slug = isset( $post_type->rewrite['slug'] ) ? $post_type->rewrite['slug'] : '';
-		$slug = !empty( $slug ) ? $slug : $post_type->name;
-
-		return compact( 'front', 'slug' );
-	}
-
-
-	/**
-	 * Gets the base slug for the post type depending on the post type's parameters.
-	 *
-	 * @since 1.0
-	 * @uses get_post_type_base()
-	 * @param string  $post_type Post type.
-	 * @return string Post type base (front + slug).
-	 */
-	public function get_post_type_base_slug( $post_type = '' ) {
-		$base = $this->get_post_type_base( $post_type );
-		return ltrim( trailingslashit( $base['front'] ) . $base['slug'] , '/' );
 	}
 
 }

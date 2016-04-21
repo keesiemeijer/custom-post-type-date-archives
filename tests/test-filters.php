@@ -30,6 +30,8 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 		$this->utils->boolean = null;
 		remove_filter( 'cpda_add_admin_pages', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cpda_add_admin_page_cpt', array( $this->utils, 'return_bool' ) );
+		remove_filter( 'cptda_date_archives_feed', array( $this->utils, 'return_bool' ) );
+		remove_filter( 'cptda_cpt_date_archives_feed', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_publish_future_posts', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_publish_future_cpt', array( $this->utils, 'return_bool' ) );
 		remove_filter( 'cptda_flush_rewrite_rules', array( $this->utils, 'return_bool' ) );
@@ -76,6 +78,35 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 
 
 	/**
+	 * Test cptda_date_archives_feed filter is set to true (by default).
+	 */
+	function test_cptda_date_archives_feed_filter_bool() {
+		global $wp_rewrite;
+		add_filter( 'cptda_date_archives_feed', array( $this->utils, 'return_bool' ) );
+		$this->utils->init();
+		$rewrite = new CPTDA_Rewrite();
+		$rewrite->setup_archives();
+		$rewrite->generate_rewrite_rules( $wp_rewrite );
+		$this->assertTrue( $this->utils->boolean );
+		$this->utils->boolean = null;
+	}
+
+	/**
+	 * Test cptda_cpt_date_archives_feed filter is set to true (by default).
+	 */
+	function test_cptda_cpt_date_archives_feed_filter_bool() {
+		global $wp_rewrite;
+		add_filter( 'cptda_cpt_date_archives_feed', array( $this->utils, 'return_bool' ) );
+		$this->utils->init();
+		$rewrite = new CPTDA_Rewrite();
+		$rewrite->setup_archives();
+		$rewrite->generate_rewrite_rules( $wp_rewrite );
+		$this->assertTrue( $this->utils->boolean );
+		$this->utils->boolean = null;
+	}
+
+
+	/**
 	 * Test cptda_publish_future_posts filter is set to true (by default).
 	 */
 	function test_cptda_publish_future_posts_filter_bool() {
@@ -100,9 +131,9 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 			'post_date' => date( 'Y-m-d H:i:s', time() + YEAR_IN_SECONDS ),
 			'post_type' => 'cpt',
 		);
-	
+
 		$post_id = $this->factory->post->create( $args );
-	
+
 		$this->assertTrue( $this->utils->boolean );
 		$this->utils->boolean = null;
 	}

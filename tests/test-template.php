@@ -64,7 +64,7 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 
 		$this->assertEquals( $templates, $this->templates );
 	}
-	
+
 
 	/**
 	 * Test dummy theme templates
@@ -166,12 +166,12 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 	function get_template() {
 		$template = false;
 		if ( is_post_type_archive()  && $template = get_post_type_archive_template() ) :
-		elseif ( is_date()           && $template = get_date_template() ) :
-		elseif ( is_archive()        && $template = get_archive_template() ) :
-		else :
-			$template = get_index_template();
-		endif;
-		return cptda_date_template_include( $template );
+			elseif ( is_date()           && $template = get_date_template() ) :
+				elseif ( is_archive()        && $template = get_archive_template() ) :
+					else :
+						$template = get_index_template();
+					endif;
+				return cptda_date_template_include( $template );
 	}
 
 

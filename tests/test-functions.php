@@ -190,7 +190,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$post_type = cptda_get_date_archive_cpt();
 		$post_type = cptda_get_admin_post_types();
 		$archives  = cptda_get_archives( 'post_type=cpt&echo=0' );
-		//$calendar  = cptda_get_calendar( 'cpt', true, false );
+		$calendar  = cptda_get_calendar( 'cpt', true, false );
 
 		$out = ob_get_clean();
 
