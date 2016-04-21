@@ -1,18 +1,19 @@
 # Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=develop)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
 
-Version:           2.3.0-alpha  
+Version:           2.3.0  
 Requires at least: 3.9  
 Tested up to:      4.5  
 
 Add date archives to WordPress custom post types
 
 ### Plugin Description
-Add Date archives to custom post types right in the dashboard itself. This plugin can be used, among other things, as a super simple events calendar.
+Add Date archives to custom post types right in the dashboard itself. This plugin provides a calendar and archives widget to display your date archives as a super simple events calendar.
 
 Features
-* Submenus for each custom post type to add the date archives
+
+* Adds a date archives submenu for each custom post type
 * Allow scheduled posts with future dates to be published like normal posts
-* Selection of a post type inside the calendar and archive widgets
+* Calendar and archive widget.
 * Use theme templates specific for custom post type date archives
 
 Example url for a custom post type `events` date archive.
@@ -20,7 +21,7 @@ Example url for a custom post type `events` date archive.
 https://example.com/events/2015/06/12
 ```
 
-WordPress doesn't support date archives with [pretty permalinks](https://codex.wordpress.org/Using_Permalinks#Permalink_Types) for custom post types. This plugin provides the rewrite rules needed for custom post types to also have date archives with pretty permalinks.
+WordPress doesn't support [pretty permalinks](https://codex.wordpress.org/Using_Permalinks#Permalink_Types) date archives for custom post types. This plugin creates the rewrite rules needed for custom post types to also have pretty permalinks date archives.
 
 The cpt date archives use the same theme template files as normal date archives. Extra [template files](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Theme-Template-Files) and [template functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions) are available for use in the custom post type date archives.
 
@@ -43,6 +44,7 @@ For more information about this plugin see the [Wiki](https://github.com/keesiem
 * [Theme Template Files](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Theme-Template-Files)
 * [Custom Post Types](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types)
 * [Filters](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Filters)
+* [Feeds](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Feeds)
 
 ## Developers
 This is the development repository for the Custom Post Type Date Archives plugin.
