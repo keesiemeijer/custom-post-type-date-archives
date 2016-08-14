@@ -1,8 +1,8 @@
-# Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=master)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
+# Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=develop)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
 
-Version:           2.3.0  
-Requires at least: 3.9  
-Tested up to:      4.5  
+Version:           2.3.1  
+Requires at least: 4.0  
+Tested up to:      4.6  
 
 Add date archives to WordPress custom post types
 

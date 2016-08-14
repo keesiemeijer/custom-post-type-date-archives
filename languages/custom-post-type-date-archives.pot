@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Date Archives 2.3.0\n"
+"Project-Id-Version: Custom Post Type Date Archives 2.3.1-alpha\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2016-04-21 14:21:20+00:00\n"
+"POT-Creation-Date: 2016-08-14 11:48:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -148,87 +148,87 @@ msgstr ""
 msgid "Show post count?"
 msgstr ""
 
-#: includes/widgets.php:54
+#: includes/widgets.php:56
 msgid "A monthly archive of your site&#8217;s Posts."
 msgstr ""
 
-#: includes/widgets.php:55 includes/widgets.php:61 includes/widgets.php:220
+#: includes/widgets.php:60 includes/widgets.php:66 includes/widgets.php:225
 msgid "Archives"
 msgstr ""
 
-#: includes/widgets.php:98
+#: includes/widgets.php:103
 msgid "Select Year"
 msgstr ""
 
-#: includes/widgets.php:101
+#: includes/widgets.php:106
 msgid "Select Month"
 msgstr ""
 
-#: includes/widgets.php:104
+#: includes/widgets.php:109
 msgid "Select Week"
 msgstr ""
 
-#: includes/widgets.php:107
+#: includes/widgets.php:112
 msgid "Select Day"
 msgstr ""
 
-#: includes/widgets.php:110
+#: includes/widgets.php:115
 msgid "Select Post"
 msgstr ""
 
-#: includes/widgets.php:170
+#: includes/widgets.php:175
 msgid "Alphabetical"
 msgstr ""
 
-#: includes/widgets.php:171
+#: includes/widgets.php:176
 msgid "Daily"
 msgstr ""
 
-#: includes/widgets.php:172
+#: includes/widgets.php:177
 msgid "Monthly"
 msgstr ""
 
-#: includes/widgets.php:173
+#: includes/widgets.php:178
 msgid "Post By Post"
 msgstr ""
 
-#: includes/widgets.php:174
+#: includes/widgets.php:179
 msgid "Weekly"
 msgstr ""
 
-#: includes/widgets.php:175
+#: includes/widgets.php:180
 msgid "Yearly"
 msgstr ""
 
-#: includes/widgets.php:180
+#: includes/widgets.php:185
 msgid "Ascending"
 msgstr ""
 
-#: includes/widgets.php:181
+#: includes/widgets.php:186
 msgid "Descending"
 msgstr ""
 
-#: includes/widgets.php:186
+#: includes/widgets.php:191
 msgid "Custom"
 msgstr ""
 
-#: includes/widgets.php:187
+#: includes/widgets.php:192
 msgid "HTML"
 msgstr ""
 
-#: includes/widgets.php:188
+#: includes/widgets.php:193
 msgid "Option"
 msgstr ""
 
-#: includes/widgets.php:198 includes/widgets.php:279
+#: includes/widgets.php:203 includes/widgets.php:289
 msgid "Post"
 msgstr ""
 
-#: includes/widgets.php:221 includes/widgets.php:226
+#: includes/widgets.php:226 includes/widgets.php:236
 msgid "Calendar"
 msgstr ""
 
-#: includes/widgets.php:225
+#: includes/widgets.php:232
 msgid "A calendar of your site&#8217;s Posts."
 msgstr ""
 

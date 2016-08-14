@@ -51,7 +51,12 @@ class CPTDA_Widget_Archives extends WP_Widget {
 
 
 	public function __construct() {
-		$widget_ops = array( 'classname' => 'widget_archive', 'description' => __( 'A monthly archive of your site&#8217;s Posts.' ) );
+		$widget_ops = array(
+			'classname' => 'widget_archive',
+			'description' => __( 'A monthly archive of your site&#8217;s Posts.' ),
+			'customize_selective_refresh' => true,
+		);
+
 		parent::__construct( 'archives', __( 'Archives' ), $widget_ops );
 
 		$this->plugin = cptda_date_archives();
@@ -222,7 +227,12 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 			'post_type'       => 'post',
 		);
 
-		$widget_ops = array( 'classname' => 'widget_calendar', 'description' => __( 'A calendar of your site&#8217;s Posts.' ) );
+		$widget_ops = array(
+			'classname' => 'widget_calendar',
+			'description' => __( 'A calendar of your site&#8217;s Posts.' ),
+			'customize_selective_refresh' => true,
+		);
+
 		parent::__construct( 'calendar', __( 'Calendar' ), $widget_ops );
 	}
 

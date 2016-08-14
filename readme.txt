@@ -1,9 +1,9 @@
 === Custom Post Type Date Archives ===
 Contributors: keesiemeijer
 Tags: post type,date,archives
-Requires at least: 3.9
-Tested up to: 4.5
-Stable tag:  2.3.0
+Requires at least: 4.0
+Tested up to: 4.6
+Stable tag:  2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 3. The Archives widget
 
 == Changelog ==
+= 2.3.1 =
+* Enhancement
+	* Add selective refresh for widgets in the customizer
+
 = 2.3.0 =
 * Enhancement
 	* Let WordPress create the rewrite rules for the date archives.
@@ -74,4 +78,4 @@ Initial Commit
 
 == Upgrade Notice ==
 = 2.2.1 =
-This update will let WordPress create the rewrite rules for the date archives for more reliability.
+This update adds selective refresh for widgets in the customizer. Tested with WordPress 4.6
