@@ -23,6 +23,7 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 	}
 
+
 	/**
 	 * Reset post type on teardown.
 	 */
@@ -77,7 +78,6 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 	}
 
 
-
 	/**
 	 * Test created rewrite rules without a feed
 	 */
@@ -112,13 +112,7 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 	function test_rules_rewrite_false() {
 		global $wp_rewrite;
 
-		$args = array(
-			'public' => true,
-			'has_archive'           => true,
-			'publicly_queryable'    => true,
-			'rewrite'               => false,
-			'capability_type'       => 'page',
-			'label' => 'Custom Post Type' );
+		$args = array( 'public' => true, 'has_archive' => true, 'rewrite' => false );
 
 		register_post_type( 'cpt', $args );
 		$this->utils->setup( 'cpt' );
@@ -126,8 +120,8 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 		$cptda_rewrite = new CPTDA_Rewrite();
 		$cptda_rewrite->setup_archives();
 		$wp_rewrite->rules = array();
-		$rules = $cptda_rewrite->generate_rewrite_rules( $wp_rewrite );
 
-		$this->assertEquals( array(), $rules->rules );
+		$rules = $cptda_rewrite->generate_rewrite_rules( $wp_rewrite );
+		$this->assertEmpty( $rules->rules );
 	}
 }
