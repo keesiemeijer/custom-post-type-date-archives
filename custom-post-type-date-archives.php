@@ -42,7 +42,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	final class Custom_Post_Type_Date_Archives {
 
 	/**
-	 *
+	 * Plugin instance.
 	 *
 	 * @var Plugin instance
 	 * @since 1.0
@@ -50,7 +50,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	private static $instance;
 
 	/**
-	 *
+	 * Post type.
 	 *
 	 * @var Post type object
 	 * @since 1.0
@@ -58,12 +58,20 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	public $post_type;
 
 	/**
+	 * Rewrite object
 	 *
-	 *
-	 * @var Post type object
+	 * @var Rewrite object
 	 * @since 1.0
 	 */
 	public $rewrite;
+
+	/**
+	 * Replace default WP core widgets.
+	 *
+	 * @since 2.3.2
+	 * @var bool
+	 */
+	public $replace_widgets = true;
 
 	/**
 	 * Main Custom_Post_Type_Date_Archives Instance
