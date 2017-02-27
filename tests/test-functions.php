@@ -11,7 +11,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	private $utils;
 
-
 	/**
 	 * Set up.
 	 */
@@ -22,7 +21,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils = new CPTDA_Test_Utils( $this->factory );
 	}
 
-
 	/**
 	 * Reset post type on teardown.
 	 */
@@ -31,7 +29,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils->unregister_post_type();
 		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
 	}
-
 
 	/**
 	 * Test cptda_is_cpt_date() on a custom post type date archive.
@@ -72,7 +69,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	function test_cptda_is_date_post_type_false() {
 		$this->assertFalse( cptda_is_date_post_type( 'post' ) );
 	}
-
 
 	/**
 	 * Test cptda_is_date_post_type() for post type post without archive.
@@ -117,6 +113,66 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Test test archives output.
+	 */
+	function test_cptda_get_archives() {
+		global $wp_locale;
+		$this->utils->init();
+		$year = (int) date( "Y" ) -1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$url = cptda_get_month_link( $year, $month, 'cpt' );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			$expected .= trim( get_archives_link( $url, $text ) ) . "\n";
+		}
+
+		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
+
+		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
+	}
+
+	/**
+	 * Test test calendar output.
+	 */
+	function test_cptda_get_calendar() {
+		global $wp_locale;
+		$this->utils->init();
+		$year = (int) date( "Y" ) -1;
+
+		$expected = '';
+		foreach ( array( '03', '01' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+		}
+
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+		$this->assertContains( '>&laquo; Mar<', $calendar );
+		$this->assertNotContains( '<td><a ', $calendar );
+
+		$this->go_to( '?post_type=cpt&year='. $year . '&monthnum=3' );
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+		$this->assertContains( "Posts published on March 20, $year", $calendar );
+		$this->assertContains( '<td><a ', $calendar );
+		$this->assertContains( cptda_get_day_link( $year, 3, 20, 'cpt' ) , $calendar );
+		$this->assertContains( '>&laquo; Jan<', $calendar );
+
+		$this->go_to( '?post_type=cpt&year='. $year . '&monthnum=2' );
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+		$this->assertContains( '>&laquo; Jan<', $calendar );
+		$this->assertContains( '>Mar &raquo;<', $calendar );
+		$this->assertNotContains( '<td><a ', $calendar );
+
+		$this->go_to( '?post_type=cpt&year='. $year . '&monthnum=1' );
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+		$this->assertContains( "Posts published on January 20, $year", $calendar );
+		$this->assertContains( '<td><a ', $calendar );
+		$this->assertContains( cptda_get_day_link( $year, 1, 20, 'cpt' ) , $calendar );
+		$this->assertContains( '>Mar &raquo;<', $calendar );
+	}
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
@@ -127,7 +183,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils->unregister_post_type( 'no_date_archives' );
 	}
 
-
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
@@ -135,7 +190,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils->init();
 		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
-
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
@@ -146,7 +200,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->assertEquals( array( 'publish', 'future' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
 
-
 	/**
 	 * Test cptda_get_admin_post_types
 	 */
@@ -154,7 +207,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils->future_init();
 		$this->assertEquals( array( 'cpt' => 'Custom Post Type' ), cptda_get_admin_post_types( 'cpt' ) );
 	}
-
 
 	/**
 	 * Test cptda_get_admin_post_types for post type not publicly queryable.
@@ -165,7 +217,6 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 		$this->utils->setup( 'cpt' );
 		$this->assertEmpty( cptda_get_admin_post_types( 'cpt' ) );
 	}
-
 
 	/**
 	 * Tests for functions that should not output anything.
