@@ -38,11 +38,11 @@ class KM_CPTDA_Tests_Widgets extends WP_UnitTestCase {
 
 		$this->assertArrayHasKey( 'CPTDA_Widget_Archives', $wp_widget_factory->widgets );
 		$this->assertArrayHasKey( 'CPTDA_Widget_Calendar', $wp_widget_factory->widgets );
+		$this->assertArrayHasKey( 'CPTDA_Widget_Recent_Posts', $wp_widget_factory->widgets );
 	}
 
 	/**
 	 * Test output from widget.
-	 *
 	 */
 	function test_archives_widget_output() {
 
@@ -70,7 +70,6 @@ class KM_CPTDA_Tests_Widgets extends WP_UnitTestCase {
 		);
 
 		$instance = array( 'post_type' => 'cpt' );
-		$widget->_set( 2 );
 		$widget->widget( $args, $instance );
 		$output = ob_get_clean();
 
@@ -112,7 +111,6 @@ EOF;
 		);
 
 		$instance = array( 'post_type' => 'cpt' );
-		$widget->_set( 2 );
 		$widget->widget( $args, $instance );
 		$output = ob_get_clean();
 
@@ -124,6 +122,96 @@ EOF;
 <section><h2>Archives</h2><div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
 EOF;
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
+	}
+
+	/**
+	 * Test output from recent posts widget.
+	 */
+	function test_recent_posts_widget_output() {
+
+		global $wp_locale;
+		$this->utils->init();
+		$year = (int) date( "Y" ) -1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$title = get_the_title( $post );
+			$url   = get_the_permalink( $post );
+			$expected .= '<li><a href="' . $url . '">' . $title . '</a></li>';
+		}
+
+		$widget = new CPTDA_Widget_Recent_Posts();
+
+		ob_start();
+		$args = array(
+			'before_widget' => '<section>',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2>',
+			'after_title'   => '</h2>',
+		);
+
+		$instance = array( 'post_type' => 'cpt' );
+		$widget->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		$this->assertContains( '<h2>Recent Posts</h2>', $output );
+		$this->assertContains( '<section>', $output );
+		$this->assertContains( '</section>', $output );
+		$this->assertContains( $url, $output );
+
+		$expected = <<<EOF
+<section><h2>Recent Posts</h2><ul>{$expected}</ul></section>
+EOF;
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
+	}
+
+	/**
+	 * Test output from recent posts widget.
+	 */
+	function test_recent_posts_future_posts_only() {
+
+		global $wp_locale;
+		$this->utils->init();
+		$year = (int) date( "Y" );
+
+		$args = array( 'post_date' => "$year-02-20 00:00:00", 'post_type' => 'cpt' );
+		$post_1 = $this->factory->post->create( $args );
+
+		$args = array( 'post_date' => ( $year +1 ) . "-02-20 00:00:00", 'post_type' => 'cpt' );
+		$post_2 = $this->factory->post->create( $args );
+
+		$args = array(
+			'before_widget' => '<section>',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2>',
+			'after_title'   => '</h2>',
+		);
+
+		$instance = array( 'post_type' => 'cpt', 'status_future' => true );
+
+		$widget = new CPTDA_Widget_Recent_Posts();
+		ob_start();
+		$widget->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		$this->assertEmpty( $output );
+
+		wp_publish_post( $post_2 );
+
+		$widget_2 = new CPTDA_Widget_Recent_Posts();
+		ob_start();
+		$widget_2->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		$title = get_the_title( $post_2 );
+		$url   = get_the_permalink( $post_2 );
+		$expected = '<li><a href="' . $url . '">' . $title . '</a></li>';
+		$expected = <<<EOF
+<section><h2>Recent Posts</h2><ul>{$expected}</ul></section>
+EOF;
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
 	/**
@@ -147,6 +235,8 @@ EOF;
 		$widget   = new CPTDA_Widget_Calendar();
 		$this->assertEquals( 'calendar', $widget->id_base );
 
+		$widget = new CPTDA_Widget_Recent_Posts();
+		$this->assertEquals( 'recent-posts', $widget->id_base );
 
 		add_filter( 'cptda_replace_default_core_widgets', '__return_false' );
 
@@ -157,5 +247,8 @@ EOF;
 
 		$widget   = new CPTDA_Widget_Calendar();
 		$this->assertEquals( 'cptda_calendar', $widget->id_base );
+
+		$widget = new CPTDA_Widget_Recent_Posts();
+		$this->assertEquals( 'cptda_recent-posts', $widget->id_base );
 	}
 }
