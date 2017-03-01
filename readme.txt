@@ -3,7 +3,7 @@ Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag:  2.4.0
+Stable tag:  2.4.1-alpha
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
