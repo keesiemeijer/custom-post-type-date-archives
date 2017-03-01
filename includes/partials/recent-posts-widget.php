@@ -19,7 +19,7 @@
 	<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo esc_attr( $number ); ?>" size="3" />
 </p>
 <p>
-	<input class="checkbox" type="checkbox" <?php checked( $instance['status_future'], true ); ?> id="<?php echo $this->get_field_id( 'status_future' ); ?>" name="<?php echo $this->get_field_name( 'status_future' ); ?>"><br/>
+	<input class="checkbox" type="checkbox" <?php checked( $instance['status_future'], true ); ?> id="<?php echo $this->get_field_id( 'status_future' ); ?>" name="<?php echo $this->get_field_name( 'status_future' ); ?>">
 	<label for="<?php echo $this->get_field_id( 'status_future' ); ?>"><?php _e( 'Show posts with future dates only?', 'custom-post-type-date-archives' ); ?></label>
 </p>
 <p>
