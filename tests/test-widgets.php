@@ -214,6 +214,44 @@ EOF;
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
+		/**
+	 * Test output from recent posts widget.
+	 */
+	function test_recent_posts_no_posts_found() {
+
+		global $wp_locale;
+		$this->utils->init();
+
+		$args = array(
+			'before_widget' => '<section>',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h2>',
+			'after_title'   => '</h2>',
+		);
+
+		$instance = array( 'post_type' => 'cpt' );
+
+		$widget = new CPTDA_Widget_Recent_Posts();
+		ob_start();
+		$widget->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		// No posts created
+		$this->assertEmpty( $output );
+
+		$instance['message'] = 'no posts found';
+		$widget_2 = new CPTDA_Widget_Recent_Posts();
+		ob_start();
+		$widget_2->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		$expected = <<<EOF
+<section><h2>Recent Posts</h2><p>no posts found</p></section>
+EOF;
+		// No posts found message is displayed.
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
+	}
+
 	/**
 	 * Test **not** replacing WordPress core default widgets.
 	 */
