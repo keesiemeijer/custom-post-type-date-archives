@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see WP_Query::is_date()
  * @since 1.0
- * @param unknown
  * @return bool
  */
 function cptda_is_cpt_date() {
@@ -111,6 +110,7 @@ function cptda_get_date_archive_cpt() {
  * Get custom post type date archive post stati for a specific post type.
  *
  * @since 1.1
+ * @param  string $post_type Post type.
  * @return array Array with post stati for the post type.
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
@@ -125,7 +125,7 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	 * Filter post stati for a custom post type with date archives
 	 *
 	 * @since 1.1
-	 * @param unknown $stati array Array with post stati for a custom post type with date archives
+	 * @param array $post_status Array with post stati for a custom post type with date archives
 	 */
 	$post_status = apply_filters( 'cptda_post_stati', $post_status, $post_type );
 	return $post_status;

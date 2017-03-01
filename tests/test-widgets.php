@@ -214,7 +214,7 @@ EOF;
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
-		/**
+	/**
 	 * Test output from recent posts widget.
 	 */
 	function test_recent_posts_no_posts_found() {
