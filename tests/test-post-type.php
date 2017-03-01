@@ -107,7 +107,7 @@ class KM_CPTDA_Post_Type extends WP_UnitTestCase {
 	 */
 	function test_cpt_rewrite_slug_rewrite_false() {
 		global $wp_rewrite;
-		$args = array( 'public' => true, 'has_archive' => true, 'rewrite' => false, 'label' => 'Custom Post Type' );
+		$args = array( 'public' => true, 'has_archive' => true, 'rewrite' => false );
 		register_post_type( 'cpt', $args );
 		$this->utils->setup( 'cpt' );
 		$post_type = get_post_type_object( 'cpt' );

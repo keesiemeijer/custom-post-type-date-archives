@@ -164,14 +164,17 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 
 
 	function get_template() {
-		$template = false;
-		if ( is_post_type_archive()  && $template = get_post_type_archive_template() ) :
-			elseif ( is_date()           && $template = get_date_template() ) :
-				elseif ( is_archive()        && $template = get_archive_template() ) :
-					else :
-						$template = get_index_template();
-					endif;
-				return cptda_date_template_include( $template );
+		if ( is_post_type_archive() && get_post_type_archive_template() ) {
+			$template = get_post_type_archive_template();
+		} elseif ( is_date() && get_date_template() ) {
+			$template = get_date_template();
+		} elseif ( is_archive() && get_archive_template() ) {
+			$template = get_archive_template();
+		} else {
+			$template = get_index_template();
+		}
+
+		return cptda_date_template_include( $template );
 	}
 
 

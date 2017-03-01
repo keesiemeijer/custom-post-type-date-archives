@@ -23,6 +23,7 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 		$this->utils->set_permalink_structure( 'blog/%postname%/' );
 	}
 
+
 	/**
 	 * Reset post type on teardown.
 	 */
@@ -30,6 +31,66 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 		parent::tearDown();
 		$this->utils->unregister_post_type();
 		remove_filter( "cptda_cpt_date_archives_feed", '__return_false' );
+	}
+
+
+	/**
+	 * Test date permastruct with_front false
+	 */
+	function test_rewrite_date_permastruct_with_front_false() {
+		$this->utils->init( 'cpt', 'publish', array( 'with_front' => false ) );
+
+		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
+		$this->assertEquals( 'cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+	}
+
+
+	/**
+	 * Test date permastruct %day%/%monthnum%/%year%/ rewrite
+	 */
+	function test_rewrite_date_permastruct() {
+		$this->utils->set_permalink_structure( 'blog/%day%/%monthnum%/%year%/' );
+		$this->utils->init( 'cpt', 'publish' );
+
+		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
+		$this->assertEquals( 'blog/cpt/%day%/%monthnum%/%year%', $rewrite->get_date_permastruct() );
+	}
+
+
+	/**
+	 * Test date permastruct with /%post_id%/ as third token
+	 */
+	function test_rewrite_date_permastruct_post_id() {
+		$this->utils->set_permalink_structure( 'blog/%category%/%postname%/%post_id%/' );
+		$this->utils->init( 'cpt', 'publish' );
+
+		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
+		$this->assertEquals( 'blog/cpt/date/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+	}
+
+
+	/**
+	 * Test date permastruct with slug my-cpt
+	 */
+	function test_rewrite_date_permastruct_rewrite_slug() {
+		$this->utils->init( 'cpt', 'publish', array( 'slug' => 'my-cpt' ) );
+
+		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
+		$this->assertEquals( 'blog/my-cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+	}
+
+
+	/**
+	 * Test date permastruct with rewrite set to false
+	 */
+	function test_rewrite_date_permastruct_rewrite_false() {
+		$args = array( 'public' => true, 'has_archive' => true, 'rewrite'  => false );
+
+		register_post_type( 'cpt', $args );
+		$this->utils->setup( 'cpt' );
+		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
+
+		$this->assertEmpty( $rewrite->get_date_permastruct() );
 	}
 
 
@@ -77,7 +138,6 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 	}
 
 
-
 	/**
 	 * Test created rewrite rules without a feed
 	 */
@@ -112,13 +172,7 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 	function test_rules_rewrite_false() {
 		global $wp_rewrite;
 
-		$args = array(
-			'public' => true,
-			'has_archive'           => true,
-			'publicly_queryable'    => true,
-			'rewrite'               => false,
-			'capability_type'       => 'page',
-			'label' => 'Custom Post Type' );
+		$args = array( 'public' => true, 'has_archive' => true, 'rewrite' => false );
 
 		register_post_type( 'cpt', $args );
 		$this->utils->setup( 'cpt' );
@@ -126,8 +180,8 @@ class KM_CPTDA_Tests_Rewrite extends WP_UnitTestCase {
 		$cptda_rewrite = new CPTDA_Rewrite();
 		$cptda_rewrite->setup_archives();
 		$wp_rewrite->rules = array();
-		$rules = $cptda_rewrite->generate_rewrite_rules( $wp_rewrite );
 
-		$this->assertEquals( array(), $rules->rules );
+		$rules = $cptda_rewrite->generate_rewrite_rules( $wp_rewrite );
+		$this->assertEmpty( $rules->rules );
 	}
 }

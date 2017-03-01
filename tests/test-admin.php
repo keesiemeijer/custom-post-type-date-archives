@@ -43,7 +43,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 		$this->utils->init();
 		$admin = new CPTDA_Admin();
 		$admin->cptda_admin_menu();
-		$expected = 'http://example.org/wp-admin/edit.php?post_type=cpt&#038;page=date-archives-cpt';
+		$expected = admin_url( 'edit.php?post_type=cpt&#038;page=date-archives-cpt' );
 		$this->assertEquals( $expected, menu_page_url( 'date-archives-cpt', false ) );
 	}
 

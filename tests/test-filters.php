@@ -138,4 +138,14 @@ class KM_CPTDA_Tests_Filters extends WP_UnitTestCase {
 		$this->utils->boolean = null;
 	}
 
+	/**
+	 * Test cptda_replace_default_core_widgets filter is set to true (by default).
+	 */
+	function test_cptda_replace_default_core_widgets_bool() {
+		add_filter( 'cptda_replace_default_core_widgets', array( $this->utils, 'return_bool' ) );
+		cptda_register_widgets();
+		$this->assertTrue( $this->utils->boolean );
+		$this->utils->boolean = null;
+	}
+
 }
