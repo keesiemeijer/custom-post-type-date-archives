@@ -31,7 +31,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		/* Set up defaults. */
 		$this->defaults = array(
 			'title'         => '',
-			'posts_empty'   => '',
+			'message'   => '',
 			'number'        => 5,
 			'show_date'     => false,
 			'status_future' => false,
@@ -86,9 +86,9 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		}
 
 		$post_type     = trim( (string) $instance['post_type'] );
+		$message       = trim( (string) $instance['message'] ) ;
 		$show_date     = (bool) $instance['show_date'];
 		$status_future = (bool) $instance['status_future'];
-		$posts_empty   = trim( $instance['posts_empty'] ) ;
 		$widget_start  = $args['before_widget'] . $title;
 
 		$query_args = array(
@@ -100,9 +100,14 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		);
 
 		if ( $status_future ) {
+			$today = getdate();
 			$query_args['date_query']  = array(
 				array(
-					'after'     => 'now',
+					'after' => array(
+						'year'  => $today['year'],
+						'month' => $today['mon'],
+						'day'   => $today['mday'],
+					),
 					'inclusive' => true,
 				) );
 		}
@@ -122,16 +127,16 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			echo $widget_start;
 			include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
 			echo $args['after_widget'];
-			// Reset the global $the_post as this query will have stomped on it
-			wp_reset_postdata();
-
 		} else {
-			if ( $posts_empty ) {
+			if ( $message ) {
 				echo $widget_start;
-				echo apply_filters( 'the_content', $posts_empty );
+				echo apply_filters( 'the_content', $message );
 				echo $args['after_widget'];
 			}
 		}
+
+		// Reset the global $the_post as the query might have stomped on it.
+		wp_reset_postdata();
 	}
 
 	/**
@@ -147,11 +152,16 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['title']         = sanitize_text_field( $new_instance['title'] );
-		$instance['posts_empty']   = sanitize_text_field( $new_instance['posts_empty'] );
+		$instance['title']         = sanitize_text_field( (string) $new_instance['title'] );
 		$instance['number']        = (int) $new_instance['number'];
 		$instance['show_date']     = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
 		$instance['status_future'] = isset( $new_instance['status_future'] ) ? (bool) $new_instance['status_future'] : false;
+
+		if ( current_user_can( 'unfiltered_html' ) ) {
+			$instance['message'] = (string) $new_instance['message'];
+		} else {
+			$instance['message'] = wp_kses_post( (string) $new_instance['message'] );
+		}
 
 		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'names' );
 		$post_types[] = 'post';
@@ -174,11 +184,12 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$instance        = wp_parse_args( (array) $instance, $this->defaults );
-		$title           = esc_attr( $instance['title'] );
-		$posts_empty     = esc_attr( $instance['posts_empty'] );
+		$title           = sanitize_text_field( (string) $instance['title'] );
+		$message         = trim( (string) $instance['message'] );
+		$post_type       = trim( (string) $instance['post_type'] );
 		$number          = absint( $instance['number'] );
 		$show_date       = (bool) $instance['show_date'];
-		$post_type       = (string) $instance['post_type'];
+		$status          = (bool) $instance['status_future'];
 		$show_post_types = false;
 		$post_types      = $this->plugin->post_type->get_date_archive_post_types( 'labels' );
 		if ( !empty( $post_types ) ) {
