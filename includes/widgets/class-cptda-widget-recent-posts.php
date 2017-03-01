@@ -31,7 +31,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		/* Set up defaults. */
 		$this->defaults = array(
 			'title'         => '',
-			'message'   => '',
+			'message'       => '',
 			'number'        => 5,
 			'show_date'     => false,
 			'status_future' => false,
@@ -39,8 +39,8 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		);
 
 		$widget_ops = array(
-			'classname' => 'widget_recent_entries',
-			'description' => __( 'Your site&#8217;s most recent Posts.' ),
+			'classname'                   => 'widget_recent_entries',
+			'description'                 => __( 'Your site&#8217;s most recent Posts.' ),
 			'customize_selective_refresh' => true,
 		);
 
