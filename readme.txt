@@ -1,9 +1,9 @@
 === Custom Post Type Date Archives ===
 Contributors: keesiemeijer
-Tags: post type,date,archives
+Tags: post type,date,archives,events,calendar
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag:  2.4.0-beta1
+Stable tag:  2.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 1. Date archives settings page for the custom post type Products.
 2. The Calendar widget
 3. The Archives widget
+4. The Recent Posts widget
 
 == Changelog ==
 = 2.4.0 =
