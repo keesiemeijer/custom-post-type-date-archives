@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -59,26 +59,26 @@ function cptda_is_date_post_type( $post_type = '' ) {
  * Check if a post type is valid to be used as date archive post type
  *
  * @since 2.3.0
- * @param string $post_type Post type name
- * @return boolean            True if it's a valid post type
+ * @param string $post_type Post type name.
+ * @return boolean True if it's a valid post type
  */
 function cptda_is_valid_post_type( $post_type ) {
 
-	$post_type = get_post_type_object ( trim( (string) $post_type ) );
+	$post_type = get_post_type_object( trim( (string) $post_type ) );
 
-	if ( !( isset( $post_type->public ) && $post_type->public ) ) {
+	if ( ! ( isset( $post_type->public ) && $post_type->public ) ) {
 		return false;
 	}
 
-	if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
+	if ( ! ( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
 		return false;
 	}
 
-	if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
+	if ( ! ( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
 		return false;
 	}
 
-	if ( !isset( $post_type->_builtin ) ) {
+	if ( ! isset( $post_type->_builtin ) ) {
 		return false;
 	}
 
@@ -117,7 +117,7 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 
 	$post_status = array( 'publish' );
 
-	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
+	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
 		return $post_status;
 	}
 
@@ -174,7 +174,7 @@ function cptda_get_admin_post_types( $type = 'names' ) {
  */
 function cptda_get_post_type_base( $post_type = '' ) {
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
