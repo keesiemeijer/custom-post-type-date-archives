@@ -36,7 +36,7 @@ function cptda_register_widgets() {
 	 * Wheter to replace WordPress core default widgets with plugin widgets.
 	 *
 	 * @since 2.3.2
-	 * @param bool    $replace_widgets Replace WordPress core default widgets if true. Default true
+	 * @param bool $replace_widgets Replace WordPress core default widgets if true. Default true
 	 */
 	$replace_widgets = apply_filters( 'cptda_replace_default_core_widgets', true );
 

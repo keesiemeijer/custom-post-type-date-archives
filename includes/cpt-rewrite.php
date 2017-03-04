@@ -96,7 +96,7 @@ class CPTDA_CPT_Rewrite {
 	/**
 	 * Returns the base permalink structure of a custom post type.
 	 *
-	 * @param  string $post_type Post Type.
+	 * @param string $post_type Post Type.
 	 * @return string            Post type permalink structure base.
 	 */
 	private function get_cpt_base_permastruct( $post_type ) {

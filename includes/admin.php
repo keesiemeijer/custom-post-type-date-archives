@@ -55,7 +55,7 @@ class CPTDA_Admin {
 		 * Filter whether to add admin pages to custom post type menus
 		 *
 		 * @since 2.1.0
-		 * @param bool    $pages Add admin pages to custom post types. Default true
+		 * @param bool $pages Add admin pages to custom post types. Default true
 		 */
 		$pages = apply_filters( 'cpda_add_admin_pages', true );
 		if ( ! $pages ) {
@@ -68,7 +68,7 @@ class CPTDA_Admin {
 			 * Filter whether to add an admin page to a specific custom post type
 			 *
 			 * @since 2.1.0
-			 * @param bool    $page Add an admin page for a specific post type. Default true
+			 * @param bool $page Add an admin page for a specific post type. Default true
 			 */
 			$page = apply_filters( "cpda_add_admin_page_{$post_type}", true );
 

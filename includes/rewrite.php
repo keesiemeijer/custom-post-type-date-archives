@@ -173,7 +173,7 @@ class CPTDA_Rewrite {
 		 * Filter whether feeds are added to date archives.
 		 *
 		 * @since 2.3.0
-		 * @param bool    $feed Add a feed for post type date archives. Default true
+		 * @param bool $feed Add a feed for post type date archives. Default true
 		 */
 		$feed = (bool) apply_filters( 'cptda_date_archives_feed', true );
 
@@ -184,7 +184,7 @@ class CPTDA_Rewrite {
 		/**
 		 * Filter adding rewrite rules for post type date archives feed.
 		 *
-		 * @param bool    $feed Add a feed for a post type date archive. Default true.
+		 * @param bool $feed Add a feed for a post type date archive. Default true.
 		 */
 		$feed = (bool) apply_filters( "cptda_{$post_type}_date_archives_feed", true );
 

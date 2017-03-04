@@ -50,8 +50,8 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $yearlink Permalink for the year archive.
-	 * @param int     $year     Year for the archive.
+	 * @param string $yearlink Permalink for the year archive.
+	 * @param int    $year     Year for the archive.
 	 */
 	return apply_filters( 'cptda_get_year_link', $yearlink, $year );
 }
@@ -99,9 +99,9 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $monthlink Permalink for the month archive.
-	 * @param int     $year      Year for the archive.
-	 * @param int     $month     The month for the archive.
+	 * @param string $monthlink Permalink for the month archive.
+	 * @param int    $year      Year for the archive.
+	 * @param int    $month     The month for the archive.
 	 */
 	return apply_filters( 'cptda_get_month_link', $monthlink, $year, $month );
 }
@@ -155,10 +155,10 @@ function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $daylink Permalink for the day archive.
-	 * @param int     $year    Year for the archive.
-	 * @param int     $month   Month for the archive.
-	 * @param int     $day     The day for the archive.
+	 * @param string $daylink Permalink for the day archive.
+	 * @param int    $year    Year for the archive.
+	 * @param int    $month   Month for the archive.
+	 * @param int    $day     The day for the archive.
 	 */
 	return apply_filters( 'cptda_get_day_link', $daylink, $year, $month, $day );
 }

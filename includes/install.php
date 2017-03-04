@@ -40,7 +40,7 @@ register_deactivation_hook( CPT_DATE_ARCHIVES_PLUGIN_FILE, 'cptda_deactivate_plu
  *     index.php
  *
  * @since 1.0
- * @param string  $template Template file.
+ * @param string $template Template file.
  * @return string Template file.
  */
 function cptda_date_template_include( $template ) {

@@ -155,7 +155,7 @@ class CPTDA_Post_Types {
 		 * Filter whether to publish posts with future dates as normal posts.
 		 *
 		 * @since 1.0
-		 * @param bool    $publish Default true.
+		 * @param bool $publish Default true.
 		 */
 		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
 
@@ -184,7 +184,7 @@ class CPTDA_Post_Types {
 		 * Filter whether to publish posts with future dates from a specific post type.
 		 *
 		 * @since 1.2
-		 * @param bool    $publish Default true.
+		 * @param bool $publish Default true.
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {
