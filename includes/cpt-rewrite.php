@@ -68,7 +68,7 @@ class CPTDA_CPT_Rewrite {
 		// Reset values.
 		$this->reset_permastruct();
 
-		if ( empty( $wp_rewrite->permalink_structure ) || !cptda_is_valid_post_type( $post_type ) ) {
+		if ( empty( $wp_rewrite->permalink_structure ) || ! cptda_is_valid_post_type( $post_type ) ) {
 			return;
 		}
 
@@ -107,7 +107,7 @@ class CPTDA_CPT_Rewrite {
 
 		if ( $permastruct ) {
 			$base = str_replace( "%{$post_type}%", '', (string) $permastruct );
-			$base = trim( $base, '/' ) ;
+			$base = trim( $base, '/' );
 		} else {
 			$this->reset_permastruct();
 		}
@@ -150,7 +150,7 @@ class CPTDA_CPT_Rewrite {
 
 		foreach ( $endians as $endian ) {
 			if ( false !== strpos( $this->permalink_structure, $endian ) ) {
-				$date_endian= $endian;
+				$date_endian = $endian;
 				break;
 			}
 		}
@@ -167,7 +167,7 @@ class CPTDA_CPT_Rewrite {
 		preg_match_all( '/%.+?%/', $this->permalink_structure, $tokens );
 		$tok_index = 1;
 		foreach ( (array) $tokens[0] as $token ) {
-			if ( '%post_id%' == $token && ( $tok_index <= 3 ) ) {
+			if ( '%post_id%' === $token && ( $tok_index <= 3 ) ) {
 				$front = $front . 'date/';
 				break;
 			}

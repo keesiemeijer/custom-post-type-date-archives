@@ -10,7 +10,7 @@
 					</legend>
 					<label for="date_archives">
 						<input name="date_archives" id="date_archives" type="checkbox" value="1" 
-						<?php echo isset( $settings['date_archives'][$post_type] ) ? ' checked="checked"' : ''; ?> />
+						<?php echo isset( $settings['date_archives'][ $post_type ] ) ? ' checked="checked"' : ''; ?> />
 						<?php _e('Add date archives', 'custom-post-type-date-archives') ?><br/>
 					</label>
 					<p class="description"><?php printf( __( 'Add date archives to the custom post type %s', 'custom-post-type-date-archives' ), $label ); ?></p>
@@ -26,7 +26,7 @@
 					</legend>
 					<label for="publish_future_posts">
 						<input name="publish_future_posts" id="publish_future_posts" type="checkbox" value="1" 
-						<?php echo isset( $settings['publish_future_posts'][$post_type] ) ? ' checked="checked"' : ''; ?> />
+						<?php echo isset( $settings['publish_future_posts'][ $post_type ] ) ? ' checked="checked"' : ''; ?> />
 						<?php _e('Publish posts with future dates', 'custom-post-type-date-archives') ?><br/>
 					</label>
 					<p class="description">
@@ -36,5 +36,5 @@
 			</td>
 		</tr>
 	</table>
-    <?php submit_button(); ?>
+	<?php submit_button(); ?>
 </form>

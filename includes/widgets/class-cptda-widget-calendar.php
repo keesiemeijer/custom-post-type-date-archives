@@ -46,13 +46,13 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 			'customize_selective_refresh' => true,
 		);
 
-		if( $this->plugin->replace_widgets ) {
-			parent::__construct( 'calendar', __('Calendar'), $widget_ops );		
+		if ( $this->plugin->replace_widgets ) {
+			parent::__construct( 'calendar', __( 'Calendar' ), $widget_ops );
 		} else {
-			$title = __('Custom Post Type Calendar', 'custom-post-type-date-archives');
+			$title = __( 'Custom Post Type Calendar', 'custom-post-type-date-archives' );
 			$widget_ops['description'] = __( 'A calendar of your site&#8217;s custom post type Posts.' );
 			parent::__construct( 'cptda_calendar', $title, $widget_ops );
-		}			
+		}
 	}
 
 	public function widget( $args, $instance ) {
@@ -95,7 +95,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		$post_types[] = 'post';
 
 		$instance['post_type'] = $new_instance['post_type'];
-		if ( !in_array( $new_instance['post_type'], $post_types ) ) {
+		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
 			$instance['post_type'] = 'post';
 		}
 
@@ -110,7 +110,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		$post_type   = isset( $instance['post_type'] ) ?  (string) $instance['post_type'] : 'post';
 
 		$show_post_types = false;
-		if ( !empty( $post_types ) ) {
+		if ( ! empty( $post_types ) ) {
 			$show_post_types = true;
 			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
 		}

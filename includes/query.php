@@ -24,7 +24,7 @@ add_action( 'pre_get_posts', 'cptda_pre_get_posts', 9 );
  */
 function cptda_pre_get_posts( $query ) {
 
-	if ( !is_admin() && $query->is_main_query() && cptda_is_cpt_date() ) {
+	if ( ! is_admin() && $query->is_main_query() && cptda_is_cpt_date() ) {
 		$post_type = $query->get( 'post_type' );
 		$query->set( 'post_status', cptda_get_cpt_date_archive_stati( $post_type ) );
 	}
@@ -42,7 +42,7 @@ add_action( 'wp', 'cptda_handle_404' );
 function cptda_handle_404() {
 	global $wp_query;
 
-	if (  !is_admin() && !is_paged() && cptda_is_cpt_date() && !$wp_query->posts  ) {
+	if ( ! is_admin() && ! is_paged() && cptda_is_cpt_date() && ! $wp_query->posts  ) {
 		$wp_query->set_404();
 		status_header( 404 );
 		nocache_headers();

@@ -82,7 +82,7 @@ class CPTDA_Rewrite {
 		 */
 		$flush = apply_filters( 'cptda_flush_rewrite_rules', true );
 
-		if ( !is_admin() && $flush && $this->is_new_rewrite_rules() ) {
+		if ( ! is_admin() && $flush && $this->is_new_rewrite_rules() ) {
 			// New cpt date archive rewrite rules found.
 			$this->flush_rules();
 		}
@@ -142,7 +142,7 @@ class CPTDA_Rewrite {
 
 		// Add post type to query vars.
 		foreach ( $date_rewrite as $rule => $vars ) {
-			$date_rewrite[$rule] = str_replace( "{$wp_rewrite->index}?", "{$wp_rewrite->index}?post_type={$post_type}&", $vars );
+			$date_rewrite[ $rule ] = str_replace( "{$wp_rewrite->index}?", "{$wp_rewrite->index}?post_type={$post_type}&", $vars );
 		}
 
 		return $date_rewrite;
@@ -175,9 +175,9 @@ class CPTDA_Rewrite {
 		 * @since 2.3.0
 		 * @param bool    $feed Add a feed for post type date archives. Default true
 		 */
-		$feed = (bool) apply_filters( "cptda_date_archives_feed", true );
+		$feed = (bool) apply_filters( 'cptda_date_archives_feed', true );
 
-		if ( !$feed ) {
+		if ( ! $feed ) {
 			return false;
 		}
 
@@ -218,11 +218,11 @@ class CPTDA_Rewrite {
 		$rules = $this->get_rewrite_rules();
 
 		// restore the $wp_rewrite object.
-		$wp_rewrite  = $wp_rewrite_temp;
+		$wp_rewrite = $wp_rewrite_temp;
 
 		// Check if the rewrite rule or query exists.
 		foreach ( $rules as $rule => $query ) {
-			if ( !in_array( $query, $rewrite_rules ) || !key_exists( $rule, $rewrite_rules ) ) {
+			if ( ! in_array( $query, $rewrite_rules ) || ! key_exists( $rule, $rewrite_rules ) ) {
 				// Doesn't exist.
 				return true;
 			}

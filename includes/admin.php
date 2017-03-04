@@ -58,7 +58,7 @@ class CPTDA_Admin {
 		 * @param bool    $pages Add admin pages to custom post types. Default true
 		 */
 		$pages = apply_filters( 'cpda_add_admin_pages', true );
-		if ( !$pages ) {
+		if ( ! $pages ) {
 			return;
 		}
 
@@ -72,7 +72,7 @@ class CPTDA_Admin {
 			 */
 			$page = apply_filters( "cpda_add_admin_page_{$post_type}", true );
 
-			if ( !$page ) {
+			if ( ! $page ) {
 				continue;
 			}
 
@@ -126,7 +126,7 @@ class CPTDA_Admin {
 
 		$old_settings = get_option( 'custom_post_type_date_archives' );
 
-		if ( empty( $old_settings ) || !is_array( $old_settings ) ) {
+		if ( empty( $old_settings ) || ! is_array( $old_settings ) ) {
 			$old_settings = $defaults;
 		}
 
@@ -140,7 +140,7 @@ class CPTDA_Admin {
 			$settings = $this->merge_settings( $old_settings, (array) $_POST, $post_type );
 			$message  = __( 'Settings Saved', 'custom-post-type-date-archives' );
 
-			add_settings_error ( 'update', 'update', $message, 'updated' );
+			add_settings_error( 'update', 'update', $message, 'updated' );
 		} else {
 			$settings = $old_settings;
 		}
@@ -179,7 +179,7 @@ class CPTDA_Admin {
 		foreach ( (array) $settings as $key => $setting ) {
 			unset( $settings[ $key ][ $post_type ] );
 			if ( isset( $new_settings[ $key ] ) ) {
-				$settings[ $key ][ $post_type] = 1;
+				$settings[ $key ][ $post_type ] = 1;
 			}
 		}
 		return $settings;
@@ -196,12 +196,12 @@ class CPTDA_Admin {
 	private function remove_invalid_post_types( $settings ) {
 
 		foreach ( (array) $settings as $key => $setting ) {
-			if ( !is_array( $setting ) || empty( $setting ) ) {
+			if ( ! is_array( $setting ) || empty( $setting ) ) {
 				continue;
 			}
 
 			foreach ( $setting as $post_type => $value ) {
-				if ( !in_array( $post_type , array_keys( $this->post_types ) ) ) {
+				if ( ! in_array( $post_type , array_keys( $this->post_types ) ) ) {
 					unset( $settings[ $key ][ $post_type ] );
 				}
 			}
@@ -223,9 +223,9 @@ class CPTDA_Admin {
 		$post_type   = $this->get_current_post_type();
 		$label       = isset( $post_types[ $post_type ] ) ? $post_types[ $post_type ] : $post_type;
 
-		if ( !$post_type ) {
+		if ( ! $post_type ) {
 			$error = __( 'Could not find the post type for the current screen.', 'custom-post-type-date-archives' );
-			add_settings_error ( 'post_type', 'post_type', $error, 'error' );
+			add_settings_error( 'post_type', 'post_type', $error, 'error' );
 		}
 
 		$settings = $this->get_settings( $post_type );
@@ -249,7 +249,7 @@ class CPTDA_Admin {
 		global $wp_rewrite;
 
 		$post_type = $this->get_current_post_type();
-		if ( !$post_type ) {
+		if ( ! $post_type ) {
 			return;
 		}
 
@@ -268,8 +268,8 @@ class CPTDA_Admin {
 		$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 		$daylink = $cpt_rewrite->get_day_permastruct();
 
-		if ( !empty( $daylink ) ) {
 		// Create example link.
+		if ( ! empty( $daylink ) ) {
 			$daylink = str_replace( '%year%', $date['year'], $daylink );
 			$daylink = str_replace( '%monthnum%', zeroise( intval( $date['mon'] ), 2 ), $daylink );
 			$daylink = str_replace( '%day%', zeroise( intval( $date['mday'] ), 2 ), $daylink );
@@ -292,7 +292,7 @@ class CPTDA_Admin {
 		$screen->add_help_tab( array(
 				'id' => 'cptda_date_archive',
 				'title' => __( 'Date Archives' ),
-				'content' => $content
+				'content' => $content,
 			)
 		);
 	}

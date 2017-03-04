@@ -86,7 +86,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		}
 
 		$post_type     = trim( (string) $instance['post_type'] );
-		$message       = trim( (string) $instance['message'] ) ;
+		$message       = trim( (string) $instance['message'] );
 		$show_date     = (bool) $instance['show_date'];
 		$status_future = (bool) $instance['status_future'];
 		$widget_start  = $args['before_widget'] . $title;
@@ -96,7 +96,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			'post_status'         => cptda_get_cpt_date_archive_stati( $post_type ),
 			'posts_per_page'      => $number,
 			'no_found_rows'       => true,
-			'ignore_sticky_posts' => true
+			'ignore_sticky_posts' => true,
 		);
 
 		if ( $status_future ) {
@@ -109,7 +109,8 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 						'day'   => $today['mday'],
 					),
 					'inclusive' => true,
-				) );
+				),
+			);
 		}
 
 		/**
@@ -167,7 +168,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$post_types[] = 'post';
 
 		$instance['post_type'] = $new_instance['post_type'];
-		if ( !in_array( $new_instance['post_type'], $post_types ) ) {
+		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
 			$instance['post_type'] = 'post';
 		}
 
@@ -192,7 +193,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$status          = (bool) $instance['status_future'];
 		$show_post_types = false;
 		$post_types      = $this->plugin->post_type->get_date_archive_post_types( 'labels' );
-		if ( !empty( $post_types ) ) {
+		if ( ! empty( $post_types ) ) {
 			$show_post_types = true;
 			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
 		}

@@ -26,18 +26,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 function cptda_get_year_link( $year, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
-	if ( !$year ) {
+	if ( ! $year ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
 	}
 
 	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 	$yearlink = $cpt_rewrite->get_year_permastruct();
 
-	if ( !empty( $yearlink ) ) {
+	if ( ! empty( $yearlink ) ) {
 		$yearlink = str_replace( '%year%', $year, $yearlink );
 		$yearlink = home_url( user_trailingslashit( $yearlink, 'year' ) );
 	} else {
@@ -70,19 +70,22 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 function cptda_get_month_link( $year, $month, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
-	if ( !$year )
+	if ( ! $year ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
-	if ( !$month )
+	}
+
+	if ( ! $month ) {
 		$month = gmdate( 'm', current_time( 'timestamp' ) );
+	}
 
 	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 	$monthlink = $cpt_rewrite->get_month_permastruct();
 
-	if ( !empty( $monthlink ) ) {
+	if ( ! empty( $monthlink ) ) {
 		$monthlink = str_replace( '%year%', $year, $monthlink );
 		$monthlink = str_replace( '%monthnum%', zeroise( intval( $month ), 2 ), $monthlink );
 		$monthlink = home_url( user_trailingslashit( $monthlink, 'month' ) );
@@ -118,21 +121,26 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	global $wp_rewrite;
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
-	if ( !$year )
+	if ( ! $year ) {
 		$year = gmdate( 'Y', current_time( 'timestamp' ) );
-	if ( !$month )
+	}
+
+	if ( ! $month ) {
 		$month = gmdate( 'm', current_time( 'timestamp' ) );
-	if ( !$day )
+	}
+
+	if ( ! $day ) {
 		$day = gmdate( 'j', current_time( 'timestamp' ) );
+	}
 
 	$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 	$daylink = $cpt_rewrite->get_day_permastruct();
 
-	if ( !empty( $daylink ) ) {
+	if ( ! empty( $daylink ) ) {
 		$daylink = str_replace( '%year%', $year, $daylink );
 		$daylink = str_replace( '%monthnum%', zeroise( intval( $month ), 2 ), $daylink );
 		$daylink = str_replace( '%day%', zeroise( intval( $day ), 2 ), $daylink );
