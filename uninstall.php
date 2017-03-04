@@ -11,6 +11,7 @@
 
 // Exit if accessed directly
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
+// Exit if accessed directly.
 
 global $wp_rewrite;
 $wp_rewrite->flush_rules();

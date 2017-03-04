@@ -9,7 +9,7 @@
  * @since       1.1
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,7 +20,7 @@ add_action( 'pre_get_posts', 'cptda_pre_get_posts', 9 );
  * Include the post status 'future' for post types that support it.
  *
  * @since 1.1
- * @return void
+ * @param WP_Query $query The WP_Query instance (passed by reference).
  */
 function cptda_pre_get_posts( $query ) {
 

@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -30,12 +30,14 @@ class CPTDA_Rewrite {
 	 */
 	private $post_types;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		// Setup the rewrite class after the post types are set up
 		// Priority 15 is after setting up post types.
 		add_action( 'wp_loaded', array( $this, 'setup_archives' ), 15 );
 	}
-
 
 	/**
 	 * Sets up custom post type date archives.
@@ -56,7 +58,6 @@ class CPTDA_Rewrite {
 		$this->setup_archive_rewrite_rules();
 	}
 
-
 	/**
 	 * Set up date archive rewrite rules
 	 *
@@ -67,7 +68,6 @@ class CPTDA_Rewrite {
 
 		// The custom post type date archive rewrite rules are added when the rewrite rules are flushed.
 		// Or when the rewrite rules are generated.
-
 		// Add the custom post type date archive rewrite rules when the rewrite rules are generated.
 		add_action( 'generate_rewrite_rules', array( $this, 'generate_rewrite_rules' ) );
 
@@ -88,12 +88,11 @@ class CPTDA_Rewrite {
 		}
 	}
 
-
 	/**
 	 * Adds all custom post types date archive rewrite rules to the current rewrite rules.
 	 *
 	 * @since 1.0
-	 * @param object  $wp_rewrite WP_Rewrite object.
+	 * @param object $wp_rewrite WP_Rewrite object.
 	 * @return object WP_Rewrite object.
 	 */
 	public function generate_rewrite_rules( $wp_rewrite ) {
@@ -103,7 +102,6 @@ class CPTDA_Rewrite {
 		}
 		return $wp_rewrite;
 	}
-
 
 	/**
 	 * Returns date rewrite rules for all custom post types that support date archives.
@@ -124,13 +122,11 @@ class CPTDA_Rewrite {
 		return $rules;
 	}
 
-
 	/**
 	 * Returns rewrite rules
 	 *
 	 * @since 2.3.0
-	 * @param string  $post_type Post type to return rewrite rules for
-	 * @param array   $archive   Type of archive to get the rules for (year, month day).
+	 * @param string $post_type Post type to return rewrite rules for.
 	 */
 	private function get_rules( $post_type ) {
 		global $wp_rewrite;
@@ -144,7 +140,7 @@ class CPTDA_Rewrite {
 
 		$date_rewrite = $wp_rewrite->generate_rewrite_rules( $date_permastuct , EP_DATE, true, $feeds );
 
-		// Add post type to query vars
+		// Add post type to query vars.
 		foreach ( $date_rewrite as $rule => $vars ) {
 			$date_rewrite[$rule] = str_replace( "{$wp_rewrite->index}?", "{$wp_rewrite->index}?post_type={$post_type}&", $vars );
 		}
@@ -152,25 +148,23 @@ class CPTDA_Rewrite {
 		return $date_rewrite;
 	}
 
-
 	/**
 	 * Returns date permastruct for a custom post type
 	 *
 	 * @since 2.3.0
-	 * @param string|bool Custom post type date permastruct or false
+	 *
+	 * @param string $post_type Post type.
 	 */
 	private function get_date_permastruct( $post_type ) {
 		$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 		return $cpt_rewrite->get_date_permastruct();
 	}
 
-
 	/**
 	 * Check if acustom post type has date archive feeds.
 	 *
 	 * @since 2.3.0
-	 * @param string  $post_type Post type.
-	 * @param array   $archive   Date archive vars.
+	 * @param string $post_type Post type.
 	 * @return bool True if post type date archive has a feed.
 	 */
 	private function archive_has_feed( $post_type ) {
@@ -197,7 +191,6 @@ class CPTDA_Rewrite {
 		return $feed;
 	}
 
-
 	/**
 	 * Checks if the date rewrite rules for custom post types exist.
 	 * The date rules exist if they're already in the current rewrite rules.
@@ -209,7 +202,6 @@ class CPTDA_Rewrite {
 		global $wp_rewrite;
 
 		$rewrite_rules = get_option( 'rewrite_rules', $wp_rewrite->rules );
-
 
 		if ( empty( $rewrite_rules ) ) {
 			// Can't compare against the current rewrite rules. Lets bail.
@@ -249,9 +241,6 @@ class CPTDA_Rewrite {
 	 */
 	private function flush_rules() {
 		global $wp_rewrite;
-
-		// Uncomment the following to see when rules are flushed.
-		// echo 'The Custom Post Type Date Archives plugin flushed the rewrite rules';
 
 		$wp_rewrite->flush_rules();
 	}

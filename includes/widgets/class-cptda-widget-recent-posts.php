@@ -61,9 +61,9 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @since 2.8.0
 	 * @access public
 	 *
-	 * @param array   $args     Display arguments including 'before_title', 'after_title',
+	 * @param array $args     Display arguments including 'before_title', 'after_title',
 	 *                        'before_widget', and 'after_widget'.
-	 * @param array   $instance Settings for the current Recent Posts widget instance.
+	 * @param array $instance Settings for the current Recent Posts widget instance.
 	 */
 	public function widget( $args, $instance ) {
 		if ( ! isset( $args['widget_id'] ) ) {

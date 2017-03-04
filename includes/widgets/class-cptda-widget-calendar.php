@@ -67,7 +67,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		if ( $title ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		
+
 		if ( 0 === self::$instance ) {
 			echo '<div id="calendar_wrap" class="calendar_wrap">';
 		} else {

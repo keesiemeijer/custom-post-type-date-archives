@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,7 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0
  *
- * @param int|bool $year False for current year or year for permalink.
+ * @param int|bool $year      False for current year or year for permalink.
+ * @param string   $post_type Post type.
  * @return string
  */
 function cptda_get_year_link( $year, $post_type = '' ) {
@@ -61,8 +62,9 @@ function cptda_get_year_link( $year, $post_type = '' ) {
  *
  * @since 1.0
  *
- * @param bool|int $year  False for current year. Integer of year.
- * @param bool|int $month False for current month. Integer of month.
+ * @param bool|int $year      False for current year. Integer of year.
+ * @param bool|int $month     False for current month. Integer of month.
+ * @param string   $post_type Post type.
  * @return string
  */
 function cptda_get_month_link( $year, $month, $post_type = '' ) {
@@ -107,9 +109,10 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
  *
  * @since 1.0
  *
- * @param bool|int $year  False for current year. Integer of year.
- * @param bool|int $month False for current month. Integer of month.
- * @param bool|int $day   False for current day. Integer of day.
+ * @param bool|int $year      False for current year. Integer of year.
+ * @param bool|int $month     False for current month. Integer of month.
+ * @param bool|int $day       False for current day. Integer of day.
+ * @param string   $post_type Post type.
  * @return string
  */
 function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {

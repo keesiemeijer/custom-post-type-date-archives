@@ -9,7 +9,7 @@
  * @since       2.1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -22,9 +22,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class CPTDA_Admin {
 
+	/**
+	 * Custom Post Types.
+	 *
+	 * @var array
+	 */
 	private $post_types;
+
+	/**
+	 * Flush the rewrite rules when old settings are updated.
+	 *
+	 * @var bool
+	 */
 	private $flush_rewrite;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'cptda_admin_menu' ) );
 		add_action( 'shutdown', array( $this, 'shutdown' ) );
@@ -71,7 +85,7 @@ class CPTDA_Admin {
 				array( $this, 'admin_menu' )
 			);
 
-			// Adds a help tab when admin page loads
+			// Adds a help tab when admin page loads.
 			add_action( 'load-' . $hook, array( $this, 'add_help_tab' ) );
 		}
 	}
@@ -100,7 +114,7 @@ class CPTDA_Admin {
 	/**
 	 * Returns the settings for the current admin page post type.
 	 *
-	 * @param string  $post_type Current admin page post type.
+	 * @param string $post_type Current admin page post type.
 	 * @return array Current post type settings
 	 */
 	public function get_settings( $post_type = '' ) {
@@ -131,10 +145,10 @@ class CPTDA_Admin {
 			$settings = $old_settings;
 		}
 
-		// Remove values not in defaults
+		// Remove values not in defaults.
 		$settings = array_intersect_key( $settings, $defaults );
 
-		// Removes invalid post types (e.g. post types that no longer exist)
+		// Removes invalid post types (e.g. post types that no longer exist).
 		$settings = $this->remove_invalid_post_types( $settings );
 
 		// Flush rewrite rules on shutdown action if date archives were removed.
@@ -143,7 +157,7 @@ class CPTDA_Admin {
 			$this->flush_rewrite = true;
 		}
 
-		// Save new settings
+		// Save new settings.
 		if ( $old_settings != $settings ) {
 			update_option( 'custom_post_type_date_archives', $settings );
 		}
@@ -155,9 +169,9 @@ class CPTDA_Admin {
 	/**
 	 * Merge settings from a current post type admin page with the old settings
 	 *
-	 * @param array   $settings     Old settings.
-	 * @param array   $new_settings New settings.
-	 * @param string  $post_type    Current admin page post type.
+	 * @param array  $settings     Old settings.
+	 * @param array  $new_settings New settings.
+	 * @param string $post_type    Current admin page post type.
 	 * @return array               Settings with new settings merged.
 	 */
 	public function merge_settings( $settings, $new_settings, $post_type ) {
@@ -176,7 +190,7 @@ class CPTDA_Admin {
 	 * Remove invalid post types from settings.
 	 * e.g. Removes post types that no longer exist or don't have an archive (anymore).
 	 *
-	 * @param array   $settings Settings.
+	 * @param array $settings Settings.
 	 * @return array Settings with invalid post types removed.
 	 */
 	private function remove_invalid_post_types( $settings ) {
@@ -241,21 +255,21 @@ class CPTDA_Admin {
 
 		$label = isset( $this->post_types[ $post_type ] ) ?  $this->post_types[ $post_type ] : $post_type;
 
-		// current date
+		// Current date.
 		$date = getdate();
 
-		// Get date from last post
+		// Get date from last post.
 		$post = get_posts( "post_type={$post_type}&posts_per_page=1" );
 		if ( isset( $post[0]->post_date ) && $post[0]->post_date ) {
 			$date = getdate( strtotime( $post[0]->post_date ) );
 		}
 
-		// Get day rewrite permastruct
+		// Get day rewrite permastruct.
 		$cpt_rewrite = new CPTDA_CPT_Rewrite( $post_type );
 		$daylink = $cpt_rewrite->get_day_permastruct();
 
-		// Create example link
 		if ( !empty( $daylink ) ) {
+		// Create example link.
 			$daylink = str_replace( '%year%', $date['year'], $daylink );
 			$daylink = str_replace( '%monthnum%', zeroise( intval( $date['mon'] ), 2 ), $daylink );
 			$daylink = str_replace( '%day%', zeroise( intval( $date['mday'] ), 2 ), $daylink );
@@ -274,7 +288,7 @@ class CPTDA_Admin {
 
 		$screen = get_current_screen();
 
-		// Add help tab
+		// Add help tab.
 		$screen->add_help_tab( array(
 				'id' => 'cptda_date_archive',
 				'title' => __( 'Date Archives' ),
