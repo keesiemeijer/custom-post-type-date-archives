@@ -9,12 +9,12 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// load widget classes
+// Load widget classes.
 require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets/class-cptda-widget-archives.php';
 require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets/class-cptda-widget-calendar.php';
 require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets/class-cptda-widget-recent-posts.php';
@@ -36,7 +36,7 @@ function cptda_register_widgets() {
 	 * Wheter to replace WordPress core default widgets with plugin widgets.
 	 *
 	 * @since 2.3.2
-	 * @param bool    $replace_widgets Replace WordPress core default widgets if true. Default true
+	 * @param bool $replace_widgets Replace WordPress core default widgets if true. Default true
 	 */
 	$replace_widgets = apply_filters( 'cptda_replace_default_core_widgets', true );
 

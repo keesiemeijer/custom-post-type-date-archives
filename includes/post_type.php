@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -28,7 +28,6 @@ class CPTDA_Post_Types {
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
 	}
-
 
 	/**
 	 * Sets up properties with custom post types that support date archives.
@@ -58,14 +57,13 @@ class CPTDA_Post_Types {
 				$this->publish_future[] = $name;
 			}
 
-			if ( !post_type_supports( $name, 'date-archives' ) ) {
+			if ( ! post_type_supports( $name, 'date-archives' ) ) {
 				unset( $this->date_post_types[ $name ] );
 			}
 		}
 
 		$this->publish_scheduled_posts();
 	}
-
 
 	/**
 	 * Reset post type properties.
@@ -77,7 +75,6 @@ class CPTDA_Post_Types {
 		$this->date_post_types = array();
 		$this->publish_future  = array();
 	}
-
 
 	/**
 	 * Setup post types from admin page settings.
@@ -95,12 +92,11 @@ class CPTDA_Post_Types {
 		$this->setup_admin_post_type_support( $archives );
 	}
 
-
 	/**
-	 * Set up admin settings post type support
+	 * Set up admin settings post type support.
 	 *
 	 * @since 2.3.0
-	 * @param array   $archives Admin archives settings
+	 * @param array $archives Admin archives settings.
 	 * @return void
 	 */
 	private function setup_admin_post_type_support( $archives ) {
@@ -108,7 +104,7 @@ class CPTDA_Post_Types {
 
 		foreach ( $supports  as $support ) {
 
-			if ( !( isset( $archives[ $support ] ) && !empty( $archives[ $support ] ) ) ) {
+			if ( ! ( isset( $archives[ $support ] ) && ! empty( $archives[ $support ] ) ) ) {
 				continue;
 			}
 
@@ -118,18 +114,17 @@ class CPTDA_Post_Types {
 		}
 	}
 
-
 	/**
 	 * Add support to post type from admin settings
 	 *
 	 * @since 2.1.0
-	 * @param array   $archives Array with date archive post types
-	 * @param string  $support  Type of support. 'date_archives' or 'publish_future_posts'
+	 * @param array  $archives Array with date archive post types.
+	 * @param string $support  Type of support. 'date_archives' or 'publish_future_posts'.
 	 * @return void
 	 */
 	private function add_admin_post_type_support( $archives, $support = 'date-archives' ) {
 
-		if ( empty( $archives ) || !is_array( $archives ) ) {
+		if ( empty( $archives ) || ! is_array( $archives ) ) {
 			return;
 		}
 
@@ -143,7 +138,6 @@ class CPTDA_Post_Types {
 			}
 		}
 	}
-
 
 	/**
 	 * Sets up post types were scheduled posts are published.
@@ -161,11 +155,11 @@ class CPTDA_Post_Types {
 		 * Filter whether to publish posts with future dates as normal posts.
 		 *
 		 * @since 1.0
-		 * @param bool    $publish Default true.
+		 * @param bool $publish Default true.
 		 */
 		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
 
-		if ( !$publish ) {
+		if ( ! $publish ) {
 			return;
 		}
 
@@ -175,12 +169,11 @@ class CPTDA_Post_Types {
 		}
 	}
 
-
 	/**
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
 	 * @since 1.2
-	 * @param int     $post_id Post ID.
+	 * @param int $post_id Post ID.
 	 * @return void
 	 */
 	public function _future_post_hook( $post_id ) {
@@ -191,7 +184,7 @@ class CPTDA_Post_Types {
 		 * Filter whether to publish posts with future dates from a specific post type.
 		 *
 		 * @since 1.2
-		 * @param bool    $publish Default true.
+		 * @param bool $publish Default true.
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {
@@ -199,12 +192,11 @@ class CPTDA_Post_Types {
 		}
 	}
 
-
 	/**
 	 * Returns post types that support date archives.
 	 *
 	 * @since 1.0
-	 * @param string  $type Type of return array.
+	 * @param string $type Type of return array.
 	 * @return string Array of post types that support post types.
 	 */
 	public function get_date_archive_post_types( $type = 'names' ) {
@@ -218,7 +210,7 @@ class CPTDA_Post_Types {
 		if ( 'labels' === $type ) {
 			$post_types = array();
 			foreach ( $this->date_post_types as $key => $value ) {
-				$post_types[$key] = esc_attr( $value->labels->menu_name );
+				$post_types[ $key ] = esc_attr( $value->labels->menu_name );
 			}
 		}
 
@@ -226,7 +218,7 @@ class CPTDA_Post_Types {
 			$post_types = $this->publish_future;
 		}
 
-		if ( !empty( $this->date_post_types ) && ( 'names' === $type ) ) {
+		if ( ! empty( $this->date_post_types ) && ( 'names' === $type ) ) {
 			$post_types = wp_list_pluck( $this->date_post_types, 'name' );
 		}
 

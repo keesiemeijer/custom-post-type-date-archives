@@ -9,7 +9,7 @@
  * @since       2.3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,7 +46,11 @@ class CPTDA_CPT_Rewrite {
 	 */
 	private $date_structure;
 
-
+	/**
+	 * Constructor
+	 *
+	 * @param string $post_type Post Type.
+	 */
 	public function __construct( $post_type = '' ) {
 		$this->init( trim( (string) $post_type ) );
 	}
@@ -55,16 +59,16 @@ class CPTDA_CPT_Rewrite {
 	 * Set's up the class properties
 	 *
 	 * @since 2.3.0
-	 * @param string  $post_type Post type name
+	 * @param string $post_type Post type name.
 	 * @return void
 	 */
 	private function init( $post_type ) {
 		global $wp_rewrite;
 
-		// Reset values
+		// Reset values.
 		$this->reset_permastruct();
 
-		if ( empty( $wp_rewrite->permalink_structure ) || !cptda_is_valid_post_type( $post_type ) ) {
+		if ( empty( $wp_rewrite->permalink_structure ) || ! cptda_is_valid_post_type( $post_type ) ) {
 			return;
 		}
 
@@ -73,19 +77,28 @@ class CPTDA_CPT_Rewrite {
 		$this->front = $this->get_cpt_base_permastruct( $post_type );
 	}
 
-
+	/**
+	 * Reset the permastructs
+	 */
 	public function reset_permastruct() {
 		$this->permalink_structure = '';
 		$this->front               = '';
 		$this->date_structure      = '';
 	}
 
-
+	/**
+	 * Public function to get the base permalink structure
+	 */
 	public function get_base_permastruct() {
 		return $this->front;
 	}
 
-
+	/**
+	 * Returns the base permalink structure of a custom post type.
+	 *
+	 * @param string $post_type Post Type.
+	 * @return string            Post type permalink structure base.
+	 */
 	private function get_cpt_base_permastruct( $post_type ) {
 		global $wp_rewrite;
 
@@ -94,7 +107,7 @@ class CPTDA_CPT_Rewrite {
 
 		if ( $permastruct ) {
 			$base = str_replace( "%{$post_type}%", '', (string) $permastruct );
-			$base = trim( $base, '/' ) ;
+			$base = trim( $base, '/' );
 		} else {
 			$this->reset_permastruct();
 		}
@@ -102,8 +115,26 @@ class CPTDA_CPT_Rewrite {
 		return $base;
 	}
 
-
-
+	/**
+	 * Retrieves date permalink structure, with year, month, and day.
+	 *
+	 * The permalink structure for the date, if not set already depends on the
+	 * permalink structure. It can be one of three formats. The first is year,
+	 * month, day; the second is day, month, year; and the last format is month,
+	 * day, year. These are matched against the permalink structure for which
+	 * one is used. If none matches, then the default will be used, which is
+	 * year, month, day.
+	 *
+	 * Prevents post ID and date permalinks from overlapping. In the case of
+	 * post_id, the date permalink will be prepended with front permalink with
+	 * 'date/' before the actual permalink to form the complete date permalink
+	 * structure.
+	 *
+	 * @since 2.3.0
+	 * @access public
+	 *
+	 * @return string|false False on no permalink structure. Date permalink structure.
+	 */
 	public function get_date_permastruct() {
 
 		if ( empty( $this->permalink_structure ) || empty( $this->front ) ) {
@@ -119,7 +150,7 @@ class CPTDA_CPT_Rewrite {
 
 		foreach ( $endians as $endian ) {
 			if ( false !== strpos( $this->permalink_structure, $endian ) ) {
-				$date_endian= $endian;
+				$date_endian = $endian;
 				break;
 			}
 		}
@@ -136,7 +167,7 @@ class CPTDA_CPT_Rewrite {
 		preg_match_all( '/%.+?%/', $this->permalink_structure, $tokens );
 		$tok_index = 1;
 		foreach ( (array) $tokens[0] as $token ) {
-			if ( '%post_id%' == $token && ( $tok_index <= 3 ) ) {
+			if ( '%post_id%' === $token && ( $tok_index <= 3 ) ) {
 				$front = $front . 'date/';
 				break;
 			}

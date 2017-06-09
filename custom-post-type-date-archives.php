@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Post Type Date Archives
-Version:  2.4.0
+Version:  2.4.1-alpha
 Plugin URI: https://wordpress.org/plugins/custom-post-type-date-archives
 Description: This plugin allows you to add date archives to custom post types. It also adds extra options to the archive, calendar and recent posts widget.
 Author: keesiemijer
@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 
 		// Plugin version
 		if ( ! defined( 'CPT_DATE_ARCHIVES_VERSION' ) ) {
-			define( 'CPT_DATE_ARCHIVES_VERSION', '2.4.0' );
+			define( 'CPT_DATE_ARCHIVES_VERSION', '2.4.1-alpha' );
 		}
 
 		// Plugin Folder Path

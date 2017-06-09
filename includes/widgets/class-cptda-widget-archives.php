@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -36,7 +36,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			'type'            => 'monthly',
 			'order'           => 'DESC',
 			'format'          => 'html',
-			'show_post_count' => false
+			'show_post_count' => false,
 		);
 
 		$widget_ops = array(
@@ -45,10 +45,10 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			'customize_selective_refresh' => true,
 		);
 
-		if( $this->plugin->replace_widgets ) {
+		if ( $this->plugin->replace_widgets ) {
 			parent::__construct( 'archives', __( 'Archives' ), $widget_ops );
 		} else {
-			$title = __('Custom Post Type Archives', 'custom-post-type-date-archives');
+			$title = __( 'Custom Post Type Archives', 'custom-post-type-date-archives' );
 			$widget_ops['description'] = __( 'A monthly archive of your site&#8217;s custom post type Posts.' );
 			parent::__construct( 'cptda_archives', $title, $widget_ops );
 		}
@@ -66,8 +66,9 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		echo $sidebar['before_widget'];
 
 		/* If a title was input by the user, display it. */
-		if ( !empty( $args['title'] ) )
+		if ( ! empty( $args['title'] ) ) {
 			echo $sidebar['before_title'] . apply_filters( 'widget_title',  $args['title'], $instance, $this->id_base ) . $sidebar['after_title'];
+		}
 
 		/* Get the archives list. */
 		if ( cptda_is_date_post_type( $args['post_type'] ) ) {
@@ -77,38 +78,29 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		}
 
 		/* If the archives should be shown in a <select> drop-down. */
-		if ( 'option' == $args['format'] ) {
+		if ( 'option' === $args['format'] ) {
 
 			/* Create a title for the drop-down based on the archive type. */
-			if ( 'yearly' == $args['type'] )
+			if ( 'yearly' === $args['type'] ) {
 				$option_title = esc_html__( 'Select Year', 'custom-post-type-date-archives' );
-
-			elseif ( 'monthly' == $args['type'] )
+			} elseif ( 'monthly' === $args['type'] ) {
 				$option_title = esc_html__( 'Select Month', 'custom-post-type-date-archives' );
-
-			elseif ( 'weekly' == $args['type'] )
+			} elseif ( 'weekly' === $args['type'] ) {
 				$option_title = esc_html__( 'Select Week', 'custom-post-type-date-archives' );
-
-			elseif ( 'daily' == $args['type'] )
+			} elseif ( 'daily' === $args['type'] ) {
 				$option_title = esc_html__( 'Select Day', 'custom-post-type-date-archives' );
-
-			elseif ( 'postbypost' == $args['type'] || 'alpha' == $args['type'] )
+			} elseif ( 'postbypost' === $args['type'] || 'alpha' === $args['type'] ) {
 				$option_title = esc_html__( 'Select Post', 'custom-post-type-date-archives' );
+			}
 
 			/* Output the <select> element and each <option>. */
 			echo '<p><select name="archive-dropdown" onchange=\'document.location.href=this.options[this.selectedIndex].value;\'>';
 			echo '<option value="">' . $option_title . '</option>';
 			echo $archives;
 			echo '</select></p>';
-		}
-
-		/* If the format should be an unordered list. */
-		elseif ( 'html' == $args['format'] ) {
+		} elseif ( 'html' === $args['format'] ) {
 			echo '<ul>' . $archives . '</ul>';
-		}
-
-		/* All other formats. */
-		else {
+		} else {
 			echo $archives;
 		}
 
@@ -118,7 +110,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
 		/* Strip tags. */
-		$instance['title']  = strip_tags( $new_instance['title']  );
+		$instance['title']  = strip_tags( $new_instance['title'] );
 
 		/* Whitelist options. */
 		$type       = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
@@ -127,8 +119,8 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'names' );
 		$post_types[] = 'post';
 
-		$instance['post_type'] =  $new_instance['post_type'];
-		if ( !in_array( $new_instance['post_type'], $post_types ) ) {
+		$instance['post_type'] = $new_instance['post_type'];
+		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
 			$instance['post_type'] = 'post';
 		}
 
@@ -158,28 +150,28 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			'monthly'    => esc_attr__( 'Monthly',      'custom-post-type-date-archives' ),
 			'postbypost' => esc_attr__( 'Post By Post', 'custom-post-type-date-archives' ),
 			'weekly'     => esc_attr__( 'Weekly',       'custom-post-type-date-archives' ),
-			'yearly'     => esc_attr__( 'Yearly',       'custom-post-type-date-archives' )
+			'yearly'     => esc_attr__( 'Yearly',       'custom-post-type-date-archives' ),
 		);
 
 		/* Create an array of order options. */
 		$order = array(
 			'ASC'  => esc_attr__( 'Ascending',  'custom-post-type-date-archives' ),
-			'DESC' => esc_attr__( 'Descending', 'custom-post-type-date-archives' )
+			'DESC' => esc_attr__( 'Descending', 'custom-post-type-date-archives' ),
 		);
 
 		/* Create an array of archive formats. */
 		$format = array(
 			'custom' => esc_attr__( 'Custom', 'custom-post-type-date-archives' ),
 			'html'   => esc_attr__( 'HTML',   'custom-post-type-date-archives' ),
-			'option' => esc_attr__( 'Option', 'custom-post-type-date-archives' )
+			'option' => esc_attr__( 'Option', 'custom-post-type-date-archives' ),
 		);
 
-		$post_type =  ( isset( $instance['post_type'] ) ) ?  (string) $instance['post_type'] : 'post';
+		$post_type = ( isset( $instance['post_type'] ) ) ? (string) $instance['post_type'] : 'post';
 
 		$show_post_types = false;
 		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'labels' );
 
-		if ( !empty( $post_types ) ) {
+		if ( ! empty( $post_types ) ) {
 			$show_post_types = true;
 			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
 		}

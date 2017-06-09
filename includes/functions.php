@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -40,7 +40,7 @@ function cptda_is_cpt_date() {
 /**
  * Checks if the post type supports date archives.
  *
- * @param string  $post_type Post type name.
+ * @param string $post_type Post type name.
  * @return bool Returns true when the post type supports date archives.
  */
 function cptda_is_date_post_type( $post_type = '' ) {
@@ -59,26 +59,26 @@ function cptda_is_date_post_type( $post_type = '' ) {
  * Check if a post type is valid to be used as date archive post type
  *
  * @since 2.3.0
- * @param string  $post_type Post type name
- * @return boolean            True if it's a valid post type
+ * @param string $post_type Post type name.
+ * @return boolean True if it's a valid post type
  */
 function cptda_is_valid_post_type( $post_type ) {
 
-	$post_type = get_post_type_object ( trim( (string) $post_type ) );
+	$post_type = get_post_type_object( trim( (string) $post_type ) );
 
-	if ( !( isset( $post_type->public ) && $post_type->public ) ) {
+	if ( ! ( isset( $post_type->public ) && $post_type->public ) ) {
 		return false;
 	}
 
-	if ( !( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
+	if ( ! ( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
 		return false;
 	}
 
-	if ( !( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
+	if ( ! ( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
 		return false;
 	}
 
-	if ( !isset( $post_type->_builtin ) ) {
+	if ( ! isset( $post_type->_builtin ) ) {
 		return false;
 	}
 
@@ -110,14 +110,14 @@ function cptda_get_date_archive_cpt() {
  * Get custom post type date archive post stati for a specific post type.
  *
  * @since 1.1
- * @param  string $post_type Post type.
+ * @param string $post_type Post type.
  * @return array Array with post stati for the post type.
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 
 	$post_status = array( 'publish' );
 
-	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
+	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
 		return $post_status;
 	}
 
@@ -136,7 +136,7 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
  * Returns public post types that have archives and are displayed in the admin menu.
  *
  * @since 2.1.0
- * @param string  $type Return type 'names' or 'objects'.
+ * @param string $type Return type 'names' or 'objects'.
  * @return array|object Post types.
  */
 function cptda_get_admin_post_types( $type = 'names' ) {
@@ -169,12 +169,12 @@ function cptda_get_admin_post_types( $type = 'names' ) {
  * Gets the post type base slug.
  *
  * @since 2.3.0
- * @param string  $post_type Post type.
+ * @param string $post_type Post type.
  * @return string Post type base (front + slug).
  */
 function cptda_get_post_type_base( $post_type = '' ) {
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}
 
@@ -281,8 +281,8 @@ function cptda_get_archives( $args = '' ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $sql_where Portion of SQL query containing the WHERE clause.
-	 * @param array   $r         An array of default arguments.
+	 * @param string $sql_where Portion of SQL query containing the WHERE clause.
+	 * @param array  $r         An array of default arguments.
 	 */
 	$where = apply_filters( 'cptda_getarchives_where', "WHERE post_type = '" . esc_sql( $post_type ) . "' AND {$post_status}", $r );
 
@@ -291,8 +291,8 @@ function cptda_get_archives( $args = '' ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $sql_join Portion of SQL query containing JOIN clause.
-	 * @param array   $r        An array of default arguments.
+	 * @param string $sql_join Portion of SQL query containing JOIN clause.
+	 * @param array  $r        An array of default arguments.
 	 */
 	$join = apply_filters( 'cptda_getarchives_join', '', $r );
 
@@ -443,8 +443,8 @@ function cptda_get_archives( $args = '' ) {
  * @global array     $posts
  *
  * @param bool $post_type Post type.
- * @param bool $initial Optional, default is true. Use initial calendar names.
- * @param bool $echo    Optional, default is true. Set to false for return.
+ * @param bool $initial   Optional, default is true. Use initial calendar names.
+ * @param bool $echo      Optional, default is true. Set to false for return.
  * @return string|void String when retrieving.
  */
 function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
