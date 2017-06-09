@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Date Archives 2.4.1-alpha\n"
+"Project-Id-Version: Custom Post Type Date Archives 2.4.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2017-03-01 13:38:44+00:00\n"
+"POT-Creation-Date: 2017-06-09 09:02:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,20 +34,20 @@ msgstr ""
 msgid "Custom Post Type Date Archives"
 msgstr ""
 
-#: includes/admin.php:68 includes/admin.php:206 includes/admin.php:280
+#: includes/admin.php:82 includes/admin.php:220 includes/admin.php:294
 #: includes/partials/admin-form.php:5
 msgid "Date Archives"
 msgstr ""
 
-#: includes/admin.php:127
+#: includes/admin.php:141
 msgid "Settings Saved"
 msgstr ""
 
-#: includes/admin.php:213
+#: includes/admin.php:227
 msgid "Could not find the post type for the current screen."
 msgstr ""
 
-#: includes/admin.php:269
+#: includes/admin.php:283
 msgid "plugin documentation"
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "A monthly archive of your site&#8217;s custom post type Posts."
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:84
+#: includes/widgets/class-cptda-widget-archives.php:85
 msgid "Select Year"
 msgstr ""
 
@@ -202,65 +202,65 @@ msgstr ""
 msgid "Select Month"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:90
+#: includes/widgets/class-cptda-widget-archives.php:89
 msgid "Select Week"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:93
+#: includes/widgets/class-cptda-widget-archives.php:91
 msgid "Select Day"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:96
+#: includes/widgets/class-cptda-widget-archives.php:93
 msgid "Select Post"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:156
+#: includes/widgets/class-cptda-widget-archives.php:148
 msgid "Alphabetical"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:157
+#: includes/widgets/class-cptda-widget-archives.php:149
 msgid "Daily"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:158
+#: includes/widgets/class-cptda-widget-archives.php:150
 msgid "Monthly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:159
+#: includes/widgets/class-cptda-widget-archives.php:151
 msgid "Post By Post"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:160
+#: includes/widgets/class-cptda-widget-archives.php:152
 msgid "Weekly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:161
+#: includes/widgets/class-cptda-widget-archives.php:153
 msgid "Yearly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:166
+#: includes/widgets/class-cptda-widget-archives.php:158
 msgid "Ascending"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:167
+#: includes/widgets/class-cptda-widget-archives.php:159
 msgid "Descending"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:172
+#: includes/widgets/class-cptda-widget-archives.php:164
 msgid "Custom"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:173
+#: includes/widgets/class-cptda-widget-archives.php:165
 msgid "HTML"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:174
+#: includes/widgets/class-cptda-widget-archives.php:166
 msgid "Option"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:184
+#: includes/widgets/class-cptda-widget-archives.php:176
 #: includes/widgets/class-cptda-widget-calendar.php:115
-#: includes/widgets/class-cptda-widget-recent-posts.php:197
+#: includes/widgets/class-cptda-widget-recent-posts.php:198
 msgid "Post"
 msgstr ""
 
