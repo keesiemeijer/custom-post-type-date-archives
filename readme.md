@@ -30,7 +30,7 @@ The cpt date archives use the same theme template files as the normal WordPress 
 
 **Notice** Custom post types must be [registered](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types) to have archives and be publicly queryable for this plugin to add the date archives.
 
-![Settings Page](/../screenshots/screenshot-1.png?raw=true)
+![Settings Page](https://user-images.githubusercontent.com/1436618/28248708-23656246-6a49-11e7-9591-fdfc63a65ae8.png)
 
 ## Documentation
 For more information about this plugin see the [Wiki](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki)
@@ -44,6 +44,7 @@ For more information about this plugin see the [Wiki](https://github.com/keesiem
   * [Update Scheduled Posts with Post Status Published](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#update-scheduled-posts-with-post-status-published)
   * [Reschedule Published Posts with a Future Date](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#reschedule-published-posts-with-a-future-date)
   * [Display Scheduled Posts in the Date Archives Only](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts#display-scheduled-posts-in-the-date-archives-only)
+* [Calendars](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Calendars)
 * [Theme Template Files](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Theme-Template-Files)
 * [Custom Post Types](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Custom-Post-Types)
 * [Filters](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Filters)
