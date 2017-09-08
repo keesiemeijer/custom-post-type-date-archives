@@ -16,7 +16,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 	 * Set up.
 	 */
 	function setUp() {
-
 		parent::setUp();
 		$this->theme = trailingslashit( get_stylesheet_directory() );
 
@@ -40,7 +39,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->utils = new CPTDA_Test_Utils( $this->factory );
 	}
 
-
 	/**
 	 * Reset post type on teardown.
 	 */
@@ -49,7 +47,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->utils->unregister_post_type();
 		$this->unlink_templates();
 	}
-
 
 	function test_theme() {
 		$my_theme = wp_get_theme();
@@ -64,7 +61,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 
 		$this->assertEquals( $templates, $this->templates );
 	}
-
 
 	/**
 	 * Test dummy theme templates
@@ -95,7 +91,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->assertEquals( 'archive-cpt.php', basename( $template ) );
 	}
 
-
 	/**
 	 * Test date.php template
 	 *
@@ -107,7 +102,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$template = $this->get_template();
 		$this->assertEquals( 'date.php', basename( $template ) );
 	}
-
 
 	/**
 	 * Test date-cptda-archive.php template
@@ -122,7 +116,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->assertEquals( 'date-cptda-archive.php', basename( $template ) );
 	}
 
-
 	/**
 	 * Test date-cpt.php template
 	 *
@@ -136,7 +129,6 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->assertEquals( 'date-cpt.php', basename( $template ) );
 	}
 
-
 	/**
 	 * Test archive.php template for post type post
 	 *
@@ -149,19 +141,18 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		$this->assertEquals( 'archive.php', basename( $template ) );
 	}
 
-
 	function go_to_date_archive( $post_type = 'cpt' ) {
 		$this->utils->init();
 		$posts  = $this->utils->create_posts( $post_type );
 		$_posts = get_posts( "post_type={$post_type}&posts_per_page=-1" );
 		$year   = get_the_date( 'Y', $_posts[0] );
+
 		if ( 'post' === $post_type ) {
 			$this->go_to( "?year=" . $year  );
 		} else {
 			$this->go_to( "?post_type={$post_type}&year=" . $year  );
 		}
 	}
-
 
 	function get_template() {
 		if ( is_post_type_archive() && get_post_type_archive_template() ) {
@@ -177,19 +168,25 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 		return cptda_date_template_include( $template );
 	}
 
-
 	function create_templates( $templates ) {
 		foreach ( $templates as $template ) {
-			if ( !file_exists( $this->theme . "{$template}.php" ) ) {
+			if ( ! file_exists( $this->theme . "{$template}.php" ) ) {
 				$file = fopen( $this->theme . "{$template}.php", "w" );
 				fclose( $file );
 			}
 		}
 	}
 
-
 	function unlink_templates() {
-		foreach ( $this->templates as $template ) {
+
+		$templates = array(
+			'archive-cpt',
+			'date',
+			'date-cptda-archive',
+			'date-cpt',
+		);
+
+		foreach ( $templates as $template ) {
 			if ( file_exists( $this->theme . "{$template}.php" ) ) {
 				unlink( $this->theme . "{$template}.php" );
 			}

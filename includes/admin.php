@@ -153,7 +153,7 @@ class CPTDA_Admin {
 
 		// Flush rewrite rules on shutdown action if date archives were removed.
 		$flush = isset( $settings['date_archives'][ $post_type ] ) ? false : true;
-		if ( $flush && isset( $old_settings['date_archives'][ $post_type ] )  ) {
+		if ( $flush && isset( $old_settings['date_archives'][ $post_type ] ) ) {
 			$this->flush_rewrite = true;
 		}
 
@@ -219,9 +219,9 @@ class CPTDA_Admin {
 		echo '<div class="wrap">';
 		echo '<h1>' . __( 'Date Archives', 'custom-post-type-date-archives' ) . '</h1>';
 
-		$post_types  = $this->post_types;
-		$post_type   = $this->get_current_post_type();
-		$label       = isset( $post_types[ $post_type ] ) ? $post_types[ $post_type ] : $post_type;
+		$post_types = $this->post_types;
+		$post_type  = $this->get_current_post_type();
+		$label      = isset( $post_types[ $post_type ] ) ? $post_types[ $post_type ] : $post_type;
 
 		if ( ! $post_type ) {
 			$error = __( 'Could not find the post type for the current screen.', 'custom-post-type-date-archives' );
@@ -253,7 +253,7 @@ class CPTDA_Admin {
 			return;
 		}
 
-		$label = isset( $this->post_types[ $post_type ] ) ?  $this->post_types[ $post_type ] : $post_type;
+		$label = isset( $this->post_types[ $post_type ] ) ? $this->post_types[ $post_type ] : $post_type;
 
 		// Current date.
 		$date = getdate();
@@ -289,7 +289,8 @@ class CPTDA_Admin {
 		$screen = get_current_screen();
 
 		// Add help tab.
-		$screen->add_help_tab( array(
+		$screen->add_help_tab(
+			array(
 				'id' => 'cptda_date_archive',
 				'title' => __( 'Date Archives' ),
 				'content' => $content,

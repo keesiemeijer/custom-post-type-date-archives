@@ -36,7 +36,6 @@ function cptda_is_cpt_date() {
 	return false;
 }
 
-
 /**
  * Checks if the post type supports date archives.
  *
@@ -104,7 +103,6 @@ function cptda_get_date_archive_cpt() {
 
 	return '';
 }
-
 
 /**
  * Get custom post type date archive post stati for a specific post type.
@@ -228,7 +226,7 @@ function cptda_get_archives( $args = '' ) {
 
 	$post_type = sanitize_key( trim( (string) $r['post_type'] ) );
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		unset( $r['post_type'] );
 		if ( $r['echo'] ) {
 			wp_get_archives( $r );
@@ -272,7 +270,7 @@ function cptda_get_archives( $args = '' ) {
 	}
 
 	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	$post_status = ( is_array( $post_status ) && !empty( $post_status ) ) ? $post_status : array( 'publish' );
+	$post_status = ( is_array( $post_status ) && ! empty( $post_status ) ) ? $post_status : array( 'publish' );
 	$post_status = array_map( 'esc_sql', $post_status );
 	$post_status = "post_status IN ('" . implode( "', '", $post_status ) . "')";
 
@@ -450,12 +448,12 @@ function cptda_get_archives( $args = '' ) {
 function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 
-	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
+	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
 		return;
 	}
 
 	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	$post_status = ( is_array( $post_status ) && !empty( $post_status ) ) ? $post_status : array( 'publish' );
+	$post_status = ( is_array( $post_status ) && ! empty( $post_status ) ) ? $post_status : array( 'publish' );
 	$post_status = array_map( 'esc_sql', $post_status );
 	$post_status = "post_status IN ('" . implode( "', '", $post_status ) . "')";
 
@@ -567,21 +565,21 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tr>';
 
 	if ( $previous ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) .
 			'</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 	}
 
-	$calendar_output .= "\n\t\t".'<td class="pad">&nbsp;</td>';
+	$calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
 
 	if ( $next ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) .
 			' &raquo;</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
 	}
 
 	$calendar_output .= '
@@ -607,7 +605,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	// See how much we should pad in the beginning
 	$pad = calendar_week_mod( date( 'w', $unixmonth ) - $week_begins );
 	if ( 0 != $pad ) {
-		$calendar_output .= "\n\t\t".'<td colspan="'. esc_attr( $pad ) .'" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
 	}
 
 	$newrow = false;
@@ -649,7 +647,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	$pad = 7 - calendar_week_mod( date( 'w', mktime( 0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins );
 	if ( $pad != 0 && $pad != 7 ) {
-		$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr( $pad ) .'">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 	}
 	$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
 

@@ -32,7 +32,7 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 
 
 	/**
-	 * Test non existant date archive .
+	 * Test non existant date archive.
 	 */
 	function test_404() {
 		$this->utils->init();
@@ -40,7 +40,7 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 		if ( isset( $_posts[0] ) ) {
 			$year  = get_the_date( 'Y', $_posts[0] );
-			$this->go_to( '?post_type=cpt&year='. ( $year + 1 ) );
+			$this->go_to( '?post_type=cpt&year=' . ( $year + 1 ) );
 			$this->assertQueryTrue( 'is_404' );
 		} else {
 			$this->fail( "Posts not created" );

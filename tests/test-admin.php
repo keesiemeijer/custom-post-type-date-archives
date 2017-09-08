@@ -16,7 +16,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin.php';
 	}
 
-
 	/**
 	 * Set up.
 	 */
@@ -72,7 +71,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 		$this->assertEquals( $expected, $merged );
 	}
 
-
 	/**
 	 * Test merging admin page settings. Remove a value
 	 */
@@ -111,7 +109,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
 	}
-
 
 	/**
 	 * Test merging admin page settings. Remove a invalid post type and key

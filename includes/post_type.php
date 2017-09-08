@@ -84,7 +84,6 @@ class CPTDA_Post_Types {
 	 */
 	private function setup_admin_post_types() {
 		$archives = get_option( 'custom_post_type_date_archives' );
-
 		if ( empty( $archives ) ) {
 			return;
 		}
@@ -158,7 +157,6 @@ class CPTDA_Post_Types {
 		 * @param bool $publish Default true.
 		 */
 		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
-
 		if ( ! $publish ) {
 			return;
 		}
@@ -177,7 +175,6 @@ class CPTDA_Post_Types {
 	 * @return void
 	 */
 	public function _future_post_hook( $post_id ) {
-
 		$post = get_post( $post_id );
 
 		/**

@@ -48,7 +48,7 @@ class KM_CPTDA_Tests_Widgets extends WP_UnitTestCase {
 
 		global $wp_locale;
 		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -90,7 +90,7 @@ EOF;
 
 		global $wp_locale;
 		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -98,7 +98,7 @@ EOF;
 			$post = $this->factory->post->create( $args );
 		}
 
-		$this->go_to( '?post_type=cpt&year='. $year . '&monthnum=3' );
+		$this->go_to( '?post_type=cpt&year=' . $year . '&monthnum=3' );
 		$calendar = cptda_get_calendar( 'cpt', true, false );
 		$widget   = new CPTDA_Widget_Calendar( 'calendar', __( 'Calendar' ) );
 
@@ -131,7 +131,7 @@ EOF;
 
 		global $wp_locale;
 		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -179,7 +179,7 @@ EOF;
 		$args = array( 'post_date' => "$year-02-20 00:00:00", 'post_type' => 'cpt' );
 		$post_1 = $this->factory->post->create( $args );
 
-		$args = array( 'post_date' => ( $year +1 ) . "-02-20 00:00:00", 'post_type' => 'cpt' );
+		$args = array( 'post_date' => ( $year + 1 ) . "-02-20 00:00:00", 'post_type' => 'cpt' );
 		$post_2 = $this->factory->post->create( $args );
 
 		$args = array(
@@ -259,7 +259,7 @@ EOF;
 
 		global $wp_locale;
 		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
