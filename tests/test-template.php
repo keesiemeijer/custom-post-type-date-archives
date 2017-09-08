@@ -6,6 +6,14 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 
 	private $theme;
 
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		symlink( CPTDA_TEST_THEMES_DIR . '/themes/cptda-test-theme', WP_CONTENT_DIR . '/themes/cptda-test-theme' );
+	}
+
+	public static function wpTearDownAfterClass() {
+		unlink( WP_CONTENT_DIR . '/themes/cptda-test-theme' );
+	}
+
 	/**
 	 * Set up.
 	 */
