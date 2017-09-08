@@ -200,22 +200,62 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test cptda_get_admin_post_types
+	 * Test cptda_get_post_types
+	 *
 	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	function test_cptda_get_admin_post_types() {
-		$this->utils->future_init();
-		$this->assertEquals( array( 'cpt' => 'Custom Post Type' ), cptda_get_admin_post_types( 'cpt' ) );
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
+	function test_cptda_get_post_types() {
+		$this->future_init();
+		$this->assertEquals( array( 'cpt' => 'Custom Post Type' ), cptda_get_post_types( 'labels', 'publish_future' ) );
 	}
 
 	/**
-	 * Test cptda_get_admin_post_types for post type not publicly queryable.
+	 * Test cptda_get_post_types for post type not publicly queryable.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
+	 */
+	function test_cptda_get_post_types_not_publicly_queryable() {
+		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
+		register_post_type( 'cpt', $args );
+		$this->cpt_setup( 'cpt' );
+		$this->assertEmpty( cptda_get_post_types() );
+	}
+
+	/**
+	 * Test cptda_get_post_types for admin post types.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 */
+	function test_cptda_get_admin_post_types() {
+		$this->init();
+		$args = array( 'public' => true, 'has_archive' => true );
+
+		// Disable in menu
+		$args['show_in_menu'] = false;
+		register_post_type( 'cpt_2', $args );
+		$this->cpt_setup( 'cpt_2' );
+
+		$this->assertEquals( array( 'cpt' ), cptda_get_post_types( 'names', 'admin' ) );
+	}
+
+	/**
+	 * Test cptda_is_valid_post_type.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
+	 */
+	function test_cptda_is_valid_post_type() {
+		$args = array( 'public' => true, 'has_archive' => true, );
+		register_post_type( 'cpt', $args );
+		$this->cpt_setup( 'cpt' );
+		$this->assertTrue( cptda_is_valid_post_type( 'cpt' ) );
+	}
+
+	/**
+	 * Test cptda_is_valid_post_type for post type not publicly queryable.
+	 *
 	 * @depends test_cptda_is_valid_post_type
 	 */
-	function test_cptda_get_admin_post_types_not_publicly_queryable() {
+	function test_cptda_is_valid_post_type_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
 		register_post_type( 'cpt', $args );
 		$this->cpt_setup( 'cpt' );
@@ -245,7 +285,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$is_date   = cptda_is_cpt_date();
 		$is_posts  = cptda_is_date_post_type( 'cpt' );
 		$post_type = cptda_get_date_archive_cpt();
-		$post_type = cptda_get_admin_post_types();
+		$post_type = cptda_get_post_types();
 		$archives  = cptda_get_archives( 'post_type=cpt&echo=0' );
 		$calendar  = cptda_get_calendar( 'cpt', true, false );
 

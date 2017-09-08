@@ -91,7 +91,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 
-		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'names' );
+		$post_types = $this->plugin->post_type->get_post_types( 'names' );
 		$post_types[] = 'post';
 
 		$instance['post_type'] = $new_instance['post_type'];
@@ -106,7 +106,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		/* Merge the user-selected arguments with the defaults. */
 		$instance    = wp_parse_args( (array) $instance, $this->defaults );
 		$title       = esc_attr__( strip_tags( $instance['title'] ) );
-		$post_types  = $this->plugin->post_type->get_date_archive_post_types( 'labels' );
+		$post_types  = $this->plugin->post_type->get_post_types( 'labels' );
 		$post_type   = isset( $instance['post_type'] ) ?  (string) $instance['post_type'] : 'post';
 
 		$show_post_types = false;

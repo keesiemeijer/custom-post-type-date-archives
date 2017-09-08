@@ -168,6 +168,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	private function includes() {
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/cpt-rewrite.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/functions.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/deprecated.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';

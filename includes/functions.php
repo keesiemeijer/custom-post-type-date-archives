@@ -15,6 +15,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Returns public custom post types.
+ *
+ * @since 2.1.0
+ * @param string $type    Accepts 'names', 'lables' or 'objects' Default 'names'.
+ * @param string $context Accepts 'admin', 'publish_future' and 'date_archive'. Default 'date_archive'.
+ *                        Use 'admin' for post types that are registered to appear in the admin menu.
+ *                        Use 'publish_future' for post types that publish future posts.
+ *                        Use 'date_archive' for post types that have date archives (Default).
+ *
+ * @return array|object Post types depending on context.
+ */
+function cptda_get_post_types( $type = 'names', $context = 'date_archive' ) {
+	$instance = cptda_date_archives();
+	return $instance->post_type->get_post_types( $type, $context );
+}
+
+/**
  * Is the query for a custom post type date archive?
  *
  * @see WP_Query::is_date()
@@ -43,11 +60,7 @@ function cptda_is_cpt_date() {
  * @return bool Returns true when the post type supports date archives.
  */
 function cptda_is_date_post_type( $post_type = '' ) {
-
-	$instance   = cptda_date_archives();
-	$post_types = $instance->post_type->get_date_archive_post_types( 'names' );
-
-	if ( in_array( (string) $post_type, $post_types ) ) {
+	if ( in_array( (string) $post_type, cptda_get_post_types( 'names' ) ) ) {
 		return cptda_is_valid_post_type( $post_type );
 	}
 
@@ -128,40 +141,6 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	$post_status = apply_filters( 'cptda_post_stati', $post_status, $post_type );
 	return $post_status;
 }
-
-
-/**
- * Returns public post types that have archives and are displayed in the admin menu.
- *
- * @since 2.1.0
- * @param string $type Return type 'names' or 'objects'.
- * @return array|object Post types.
- */
-function cptda_get_admin_post_types( $type = 'names' ) {
-
-	$args = array(
-		'public'             => true,
-		'publicly_queryable' => true,
-		'show_ui'            => true,
-		'show_in_menu'       => true,
-		'has_archive'        => true,
-		'_builtin'           => false,
-	);
-
-	$post_types = get_post_types( $args, 'objects', 'and' );
-
-	if ( 'objects' === $type ) {
-		return $post_types;
-	}
-
-	foreach ( $post_types as $key => $post_type ) {
-		$post_types[ $key ] = esc_attr( $post_type->labels->menu_name );
-	}
-
-	return $post_types;
-}
-
-
 
 /**
  * Gets the post type base slug.

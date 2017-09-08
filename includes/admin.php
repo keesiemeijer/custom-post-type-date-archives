@@ -49,7 +49,7 @@ class CPTDA_Admin {
 	 * Adds a settings page for this plugin.
 	 */
 	public function cptda_admin_menu() {
-		$this->post_types = cptda_get_admin_post_types();
+		$this->post_types = cptda_get_post_types( 'labels', 'admin' );
 
 		/**
 		 * Filter whether to add admin pages to custom post type menus

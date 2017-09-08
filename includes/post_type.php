@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CPTDA_Post_Types {
 
 	private $date_post_types = array();
+	private $admin_post_types = array();
 	private $publish_future  = array();
 
 	public function __construct() {
@@ -39,22 +40,13 @@ class CPTDA_Post_Types {
 	 */
 	public function setup() {
 
-		$this->reset_post_types();
+		$this->setup_post_types();
 		$this->setup_admin_post_types();
-
-		$args = array(
-			'public'             => true,
-			'publicly_queryable' => true,
-			'has_archive'        => true,
-			'_builtin'           => false,
-		);
-
-		$this->date_post_types = get_post_types( $args, 'objects', 'and' );
 
 		foreach ( (array) $this->date_post_types as $name => $post_type ) {
 
 			if ( post_type_supports( $name, 'publish-future-posts' ) ) {
-				$this->publish_future[] = $name;
+				$this->publish_future[ $name ] = $post_type;
 			}
 
 			if ( ! post_type_supports( $name, 'date-archives' ) ) {
@@ -66,14 +58,40 @@ class CPTDA_Post_Types {
 	}
 
 	/**
+	 * Setup post types.
+	 *
+	 * @since 2.4.1
+	 */
+	function setup_post_types() {
+		$this->reset_post_types();
+
+		$args = array(
+			'public'             => true,
+			'publicly_queryable' => true,
+			'has_archive'        => true,
+			'_builtin'           => false,
+		);
+
+		$this->date_post_types = get_post_types( $args, 'objects', 'and' );
+
+		$args = array(
+			'show_ui'      => true,
+			'show_in_menu' => true,
+		);
+
+		$this->admin_post_types = wp_list_filter( $this->date_post_types, $args, 'AND' );
+	}
+
+	/**
 	 * Reset post type properties.
 	 *
 	 * @since 2.1.0
 	 * @return void
 	 */
 	function reset_post_types() {
-		$this->date_post_types = array();
-		$this->publish_future  = array();
+		$this->date_post_types  = array();
+		$this->admin_post_types = array();
+		$this->publish_future   = array();
 	}
 
 	/**
@@ -127,9 +145,9 @@ class CPTDA_Post_Types {
 			return;
 		}
 
-		$post_types = cptda_get_admin_post_types();
+		$post_types = $this->get_post_types( 'names', 'admin' );
 
-		foreach ( $post_types as $post_type => $value ) {
+		foreach ( $post_types as $post_type ) {
 			if ( in_array( $post_type, $archives ) ) {
 				add_post_type_support( $post_type, $support );
 			} else {
@@ -146,7 +164,8 @@ class CPTDA_Post_Types {
 	 */
 	private function publish_scheduled_posts() {
 
-		if ( empty( $this->publish_future ) ) {
+		$future_types = $this->get_post_types( 'names', 'publish_future' );
+		if ( empty( $future_types ) ) {
 			return;
 		}
 
@@ -161,7 +180,7 @@ class CPTDA_Post_Types {
 			return;
 		}
 
-		foreach ( $this->publish_future as $name ) {
+		foreach ( $future_types as $name ) {
 			remove_action( "future_{$name}", '_future_post_hook' );
 			add_action( "future_{$name}", array( $this, '_future_post_hook' ) );
 		}
@@ -196,30 +215,42 @@ class CPTDA_Post_Types {
 	 * @param string $type Type of return array.
 	 * @return string Array of post types that support post types.
 	 */
-	public function get_date_archive_post_types( $type = 'names' ) {
+	public function get_post_types( $type = 'names', $context = 'date_archive' ) {
 
-		$post_types = array();
+		$date_post_types = array();
+
+		switch ( $context ) {
+			case 'admin':
+			$post_types = $this->admin_post_types;
+			break;
+			case 'publish_future':
+			$post_types = $this->publish_future;
+			break;
+			default:
+			$post_types = $this->date_post_types;
+			break;
+		}
+
+		if ( empty( $post_types ) ) {
+			return array();
+		}
 
 		if ( 'objects' === $type ) {
-			$post_types = $this->date_post_types;
+			$date_post_types = $post_types;
 		}
 
 		if ( 'labels' === $type ) {
-			$post_types = array();
-			foreach ( $this->date_post_types as $key => $value ) {
-				$post_types[ $key ] = esc_attr( $value->labels->menu_name );
+			foreach ( $post_types as $key => $value ) {
+				$date_post_types[ $key ] = esc_attr( $value->labels->menu_name );
 			}
 		}
 
-		if ( 'publish_future' === $type ) {
-			$post_types = $this->publish_future;
+		if ( 'names' === $type ) {
+			$date_post_types = wp_list_pluck( $post_types, 'name', null );
+			$date_post_types = array_values( $date_post_types );
 		}
 
-		if ( ! empty( $this->date_post_types ) && ( 'names' === $type ) ) {
-			$post_types = wp_list_pluck( $this->date_post_types, 'name' );
-		}
-
-		return $post_types;
+		return $date_post_types;
 	}
 
 }
