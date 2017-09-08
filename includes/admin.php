@@ -77,11 +77,11 @@ class CPTDA_Admin {
 			}
 
 			$hook = add_submenu_page(
-				'edit.php?post_type=' . urlencode( $post_type ),
+				'edit.php?post_type=' . $post_type,
 				__( 'Custom Post Type Date Archives', 'custom-post-type-date-archives' ),
 				__( 'Date Archives', 'custom-post-type-date-archives' ),
 				'manage_options',
-				'date-archives-' . urlencode( $post_type ),
+				'date-archives-' . $post_type,
 				array( $this, 'admin_menu' )
 			);
 
@@ -215,10 +215,6 @@ class CPTDA_Admin {
 	 * Admin page output.
 	 */
 	public function admin_menu() {
-
-		echo '<div class="wrap">';
-		echo '<h1>' . __( 'Date Archives', 'custom-post-type-date-archives' ) . '</h1>';
-
 		$post_types = $this->post_types;
 		$post_type  = $this->get_current_post_type();
 		$label      = isset( $post_types[ $post_type ] ) ? $post_types[ $post_type ] : $post_type;
@@ -226,19 +222,13 @@ class CPTDA_Admin {
 		if ( ! $post_type ) {
 			$error = __( 'Could not find the post type for the current screen.', 'custom-post-type-date-archives' );
 			add_settings_error( 'post_type', 'post_type', $error, 'error' );
-		}
-
-		$settings = $this->get_settings( $post_type );
-		settings_errors();
-
-		if ( isset( $error ) ) {
+			include 'partials/admin-error.php';
 			return;
 		}
 
-		include 'partials/admin-form.php';
-		include 'partials/admin-info.php';
+		$settings = $this->get_settings( $post_type );
 
-		echo '</div>';
+		include 'partials/admin-form.php';
 	}
 
 
