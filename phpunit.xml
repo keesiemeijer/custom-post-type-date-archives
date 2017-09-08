@@ -8,6 +8,7 @@
 	>
 	<testsuites>
 		<testsuite>
+			<file>tests/test-testcase.php</file>
 			<file>tests/test-post-type.php</file>
 			<file>tests/test-functions.php</file>
 			<file>tests/test-query.php</file>
