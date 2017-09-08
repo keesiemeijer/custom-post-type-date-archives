@@ -2,14 +2,8 @@
 /**
  * Tests CPT date archive template used
  */
-class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
+class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 
-	/**
-	 * Utils object to create posts with terms to test with.
-	 *
-	 * @var object
-	 */
-	private $utils;
 	private $theme;
 
 	/**
@@ -44,7 +38,7 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->utils->unregister_post_type();
+		$this->unregister_post_type();
 		$this->unlink_templates();
 	}
 
@@ -142,8 +136,8 @@ class KM_CPTDA_Tests_Template extends WP_UnitTestCase {
 	}
 
 	function go_to_date_archive( $post_type = 'cpt' ) {
-		$this->utils->init();
-		$posts  = $this->utils->create_posts( $post_type );
+		$this->init();
+		$posts  = $this->create_posts( $post_type );
 		$_posts = get_posts( "post_type={$post_type}&posts_per_page=-1" );
 		$year   = get_the_date( 'Y', $_posts[0] );
 

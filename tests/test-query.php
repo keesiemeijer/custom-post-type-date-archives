@@ -2,32 +2,14 @@
 /**
  * Tests CPT date archive queries
  */
-class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
-
-	/**
-	 * Utils object to create posts with terms to test with.
-	 *
-	 * @var object
-	 */
-	private $utils;
-
-
-	/**
-	 * Set up.
-	 */
-	function setUp() {
-		parent::setUp();
-
-		// Use the utils class to create posts with terms
-		$this->utils = new CPTDA_Test_Utils( $this->factory );
-	}
+class KM_CPTDA_Tests_Query extends CPTDA_UnitTestCase {
 
 	/**
 	 * Reset post type on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->utils->unregister_post_type();
+		$this->unregister_post_type();
 	}
 
 
@@ -35,8 +17,8 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 	 * Test non existant date archive.
 	 */
 	function test_404() {
-		$this->utils->init();
-		$posts = $this->utils->create_posts();
+		$this->init();
+		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 		if ( isset( $_posts[0] ) ) {
 			$year  = get_the_date( 'Y', $_posts[0] );
@@ -52,8 +34,8 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 	 * Test date archives for published custom post type posts.
 	 */
 	function test_date_archive() {
-		$this->utils->init();
-		$posts = $this->utils->create_posts();
+		$this->init();
+		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
@@ -70,8 +52,8 @@ class KM_CPTDA_Tests_Query extends WP_UnitTestCase {
 	 * Test future date archives for future custom post type posts.
 	 */
 	function test_future_date_archive() {
-		$this->utils->future_init();
-		$posts = $this->utils->create_posts();
+		$this->future_init();
+		$posts = $this->create_posts();
 		$future_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 		if ( isset( $future_posts[0] ) ) {
 			$post_year  = get_the_date( 'Y', $future_posts[0] );

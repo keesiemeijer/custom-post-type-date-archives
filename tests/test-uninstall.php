@@ -3,7 +3,7 @@
 /**
  * Tests for uninstall.php
  */
-class KM_CPTDA_Tests_Uninstall extends WP_UnitTestCase {
+class KM_CPTDA_Tests_Uninstall extends CPTDA_UnitTestCase {
 
 	/**
 	 * Tests uninstall deletes option.

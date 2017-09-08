@@ -2,31 +2,14 @@
 /**
  * Tests for public plugin functions
  */
-class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
-
-	/**
-	 * Utils object to create posts to test with.
-	 *
-	 * @var object
-	 */
-	private $utils;
-
-	/**
-	 * Set up.
-	 */
-	function setUp() {
-		parent::setUp();
-
-		// Use the utils class to create posts with terms
-		$this->utils = new CPTDA_Test_Utils( $this->factory );
-	}
+class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Reset post type on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->utils->unregister_post_type();
+		$this->unregister_post_type();
 		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
 	}
 
@@ -34,8 +17,8 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_is_cpt_date() on a custom post type date archive.
 	 */
 	function test_cptda_is_cpt_date() {
-		$this->utils->init();
-		$posts = $this->utils->create_posts();
+		$this->init();
+		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
@@ -59,7 +42,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_is_date_post_type().
 	 */
 	function test_cptda_is_date_post_type() {
-		$this->utils->init();
+		$this->init();
 		$this->assertTrue( cptda_is_date_post_type( 'cpt' ) );
 	}
 
@@ -76,7 +59,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	function test_cptda_is_date_post_type_no_archive() {
 		$args = array( 'public' => true, 'has_archive' => false );
 		register_post_type( 'cpt', $args );
-		$this->utils->setup( 'cpt' );
+		$this->cpt_setup( 'cpt' );
 		$this->assertFalse( cptda_is_date_post_type( 'cpt' ) );
 	}
 
@@ -84,8 +67,8 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_get_date_archive_cpt() current post type archive.
 	 */
 	function test_cptda_get_date_archive_cpt() {
-		$this->utils->init();
-		$posts = $this->utils->create_posts();
+		$this->init();
+		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
@@ -101,7 +84,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_get_date_archive_cpt() on normal date archive.
 	 */
 	function test_cptda_get_date_archive_cpt_post() {
-		$posts = $this->utils->create_posts( 'post' );
+		$posts = $this->create_posts( 'post' );
 		$_posts = get_posts( 'posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
@@ -118,7 +101,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_cptda_get_archives() {
 		global $wp_locale;
-		$this->utils->init();
+		$this->init();
 		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
@@ -140,7 +123,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_cptda_get_calendar() {
 		global $wp_locale;
-		$this->utils->init();
+		$this->init();
 		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
@@ -178,16 +161,16 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_not_supported_custom_post_type_stati() {
-		$this->utils->register_post_type( 'no_date_archives' );
+		$this->register_post_type( 'no_date_archives' );
 		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'no_date_archives' ) );
-		$this->utils->unregister_post_type( 'no_date_archives' );
+		$this->unregister_post_type( 'no_date_archives' );
 	}
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_post_status_publish() {
-		$this->utils->init();
+		$this->init();
 		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
 
@@ -195,7 +178,7 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_post_status_future() {
-		$this->utils->future_init();
+		$this->future_init();
 		add_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10 , 2 );
 		$this->assertEquals( array( 'publish', 'future' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
@@ -214,8 +197,8 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	function test_cptda_get_admin_post_types_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
 		register_post_type( 'cpt', $args );
-		$this->utils->setup( 'cpt' );
-		$this->assertEmpty( cptda_get_admin_post_types( 'cpt' ) );
+		$this->cpt_setup( 'cpt' );
+		$this->assertFalse( cptda_is_valid_post_type( 'cpt' ) );
 	}
 
 	/**
@@ -223,8 +206,8 @@ class KM_CPTDA_Tests_Functions extends WP_UnitTestCase {
 	 */
 	function test_empty_output() {
 
-		$this->utils->init();
-		$posts = $this->utils->create_posts();
+		$this->init();
+		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {

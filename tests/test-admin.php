@@ -2,14 +2,7 @@
 /**
  * Tests CPT admin page
  */
-class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
-
-	/**
-	 * Utils object to create posts with terms to test with.
-	 *
-	 * @var object
-	 */
-	private $utils;
+class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 
 	public static function setUpBeforeClass() {
 		update_option( 'siteurl', 'http://example.com' );
@@ -22,8 +15,6 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	function setUp() {
 		parent::setUp();
 		wp_set_current_user( $this->factory->user->create( array( 'role' => 'administrator' ) ) );
-		// Use the utils class to create posts with terms
-		$this->utils = new CPTDA_Test_Utils( $this->factory );
 	}
 
 	/**
@@ -31,7 +22,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->utils->unregister_post_type();
+		$this->unregister_post_type();
 	}
 
 
@@ -39,7 +30,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 * Test if admin url exists.
 	 */
 	function test_admin_page() {
-		$this->utils->init();
+		$this->init();
 		$admin = new CPTDA_Admin();
 		$admin->cptda_admin_menu();
 		$expected = admin_url( 'edit.php?post_type=cpt&#038;page=date-archives-cpt' );
@@ -51,8 +42,8 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 * Test merging admin page settings.
 	 */
 	function test_admin_merge_page_settings_add_value() {
-		$this->utils->init();
-		$this->utils->init( 'cpt_2' );
+		$this->init();
+		$this->init( 'cpt_2' );
 		$admin = new CPTDA_Admin();
 
 		$expected =  array(
@@ -75,7 +66,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 * Test merging admin page settings. Remove a value
 	 */
 	function test_admin_merge_page_settings_remove_value() {
-		$this->utils->init();
+		$this->init();
 		$admin = new CPTDA_Admin();
 
 		$expected =  array(
@@ -99,7 +90,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 * Test merging admin page default settings
 	 */
 	function test_admin_get_settings_default() {
-		$this->utils->init();
+		$this->init();
 		$admin = new CPTDA_Admin();
 
 		$expected =  array(
@@ -114,7 +105,7 @@ class KM_CPTDA_Tests_Admin extends WP_UnitTestCase {
 	 * Test merging admin page settings. Remove a invalid post type and key
 	 */
 	function test_admin_get_settings_invalid_post_type() {
-		$this->utils->init();
+		$this->init();
 		$admin = new CPTDA_Admin();
 		$admin->cptda_admin_menu();
 
