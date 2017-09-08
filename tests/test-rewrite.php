@@ -25,6 +25,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date permastruct with_front false
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rewrite_date_permastruct_with_front_false() {
 		$this->init( 'cpt', 'publish', array( 'with_front' => false ) );
@@ -36,6 +38,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date permastruct %day%/%monthnum%/%year%/ rewrite
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rewrite_date_permastruct() {
 		$this->set_permalink_structure( 'blog/%day%/%monthnum%/%year%/' );
@@ -48,6 +52,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date permastruct with /%post_id%/ as third token
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rewrite_date_permastruct_post_id() {
 		$this->set_permalink_structure( 'blog/%category%/%postname%/%post_id%/' );
@@ -60,6 +66,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date permastruct with slug my-cpt
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rewrite_date_permastruct_rewrite_slug() {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'my-cpt' ) );
@@ -71,6 +79,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date permastruct with rewrite set to false
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_rewrite_date_permastruct_rewrite_false() {
 		$args = array( 'public' => true, 'has_archive' => true, 'rewrite'  => false );
@@ -85,6 +95,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test created rewrite rules.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rules() {
 		global $wp_rewrite, $wp_version;
@@ -128,7 +140,9 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 
 	/**
-	 * Test created rewrite rules without a feed
+	 * Test created rewrite rules without a feed.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_rules_without_feed() {
 		global $wp_rewrite;
@@ -157,6 +171,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test created rewrite with rewrite set to false
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_rules_rewrite_false() {
 		global $wp_rewrite;

@@ -25,9 +25,10 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 		$this->unregister_post_type();
 	}
 
-
 	/**
 	 * Test if admin url exists.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_page() {
 		$this->init();
@@ -37,9 +38,10 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 		$this->assertEquals( $expected, menu_page_url( 'date-archives-cpt', false ) );
 	}
 
-
 	/**
 	 * Test merging admin page settings.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_add_value() {
 		$this->init();
@@ -64,6 +66,8 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings. Remove a value
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_remove_value() {
 		$this->init();
@@ -85,9 +89,10 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 		$this->assertEquals( $expected, $merged );
 	}
 
-
 	/**
 	 * Test merging admin page default settings
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_get_settings_default() {
 		$this->init();
@@ -103,6 +108,8 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings. Remove a invalid post type and key
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_get_settings_invalid_post_type() {
 		$this->init();

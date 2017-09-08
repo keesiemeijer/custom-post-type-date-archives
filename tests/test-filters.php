@@ -23,6 +23,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cpda_add_admin_pages filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpda_add_admin_pages_filter_bool() {
 		add_filter( 'cpda_add_admin_pages', array( $this, 'return_bool' ) );
@@ -36,6 +38,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cpda_add_admin_page_{$post_type} filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpda_add_admin_page_cpt_filter_bool() {
 		add_filter( 'cpda_add_admin_page_cpt', array( $this, 'return_bool' ) );
@@ -49,6 +53,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_flush_rewrite_rules filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_flush_rewrite_rules_filter_bool() {
 		add_filter( 'cptda_flush_rewrite_rules', array( $this, 'return_bool' ) );
@@ -62,6 +68,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_date_archives_feed filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_date_archives_feed_filter_bool() {
 		global $wp_rewrite;
@@ -76,6 +84,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_cpt_date_archives_feed filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_cpt_date_archives_feed_filter_bool() {
 		global $wp_rewrite;
@@ -91,6 +101,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_publish_future_posts filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_cptda_publish_future_posts_filter_bool() {
 		add_filter( 'cptda_publish_future_posts', array( $this, 'return_bool' ) );
@@ -104,6 +116,8 @@ class KM_CPTDA_Tests_Filters extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_publish_future_cpt filter is set to true (by default).
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_cptda_publish_future_cpt_filter_bool() {
 

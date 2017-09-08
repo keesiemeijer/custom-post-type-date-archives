@@ -72,11 +72,13 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->assertEquals( $templates, $this->templates );
 	}
 
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 
 	/**
 	 * Test archive-cpt.php template
 	 *
 	 * @depends KM_CPTDA_Tests_Template::test_theme
+	 * @depends KM_CPTDA_Tests_Template::test_date_archives
 	 */
 	function test_template_archive_cpt() {
 		$this->create_templates( array( 'archive', 'archive-cpt' ) );
@@ -89,6 +91,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 	 * Test date.php template
 	 *
 	 * @depends KM_CPTDA_Tests_Template::test_theme
+	 * @depends KM_CPTDA_Tests_Template::test_date_archives
 	 */
 	function test_template_date() {
 		$this->create_templates( array( 'archive', 'archive-cpt', 'date' ) );
