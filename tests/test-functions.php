@@ -82,23 +82,48 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		if ( isset( $_posts[0] ) ) {
 			$year  = get_the_date( 'Y', $_posts[0] );
 			$this->go_to( '?post_type=cpt&year=' . $year  );
-			$this->assertEquals( 'cpt', cptda_get_date_archive_cpt() );
+			$expected   = cptda_get_queried_date_archive_post_type();
+			$deprecated = cptda_get_date_archive_cpt();
+
+			$this->assertEquals( 'cpt', $expected );
+			$this->assertEquals( $expected, $deprecated );
 		} else {
 			$this->fail( "Posts not created" );
 		}
 	}
 
 	/**
-	 * Test cptda_get_date_archive_cpt() on normal date archive.
+	 * Test cptda_get_queried_date_archive_post_type() current post type archive.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
-	function test_cptda_get_date_archive_cpt_post() {
+	function test_cptda_get_queried_date_archive_post_type() {
+		$this->init();
+		$posts = $this->create_posts();
+		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
+
+		if ( isset( $_posts[0] ) ) {
+			$year  = get_the_date( 'Y', $_posts[0] );
+			$this->go_to( '?post_type=cpt&year=' . $year  );
+			$this->assertEquals( 'cpt', cptda_get_queried_date_archive_post_type() );
+		} else {
+			$this->fail( "Posts not created" );
+		}
+	}
+
+	/**
+	 * Test cptda_get_queried_date_archive_post_type() on normal date archive.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts
+	 */
+	function test_cptda_get_queried_date_archive_post_type_post() {
 		$posts = $this->create_posts( 'post' );
 		$_posts = get_posts( 'posts_per_page=-1' );
 
 		if ( isset( $_posts[0] ) ) {
 			$year  = get_the_date( 'Y', $_posts[0] );
 			$this->go_to( '?year=' . $year  );
-			$this->assertEmpty( cptda_get_date_archive_cpt() );
+			$this->assertEmpty( cptda_get_queried_date_archive_post_type() );
 		} else {
 			$this->fail( "Posts not created" );
 		}

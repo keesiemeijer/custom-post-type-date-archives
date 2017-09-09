@@ -49,7 +49,7 @@ function cptda_date_template_include( $template ) {
 		return $template;
 	}
 
-	$post_type   = sanitize_key ( cptda_get_date_archive_cpt() );
+	$post_type   = sanitize_key ( cptda_get_queried_date_archive_post_type() );
 	$templates   = array();
 	$templates[] = get_query_template( "date-{$post_type}" );
 	$templates[] = get_query_template( "date-cptda-archive" );
