@@ -22,9 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class CPTDA_Post_Types {
 
-	private $date_post_types = array();
+	private $date_post_types  = array();
 	private $admin_post_types = array();
-	private $publish_future  = array();
+	private $publish_future   = array();
 
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
@@ -212,10 +212,10 @@ class CPTDA_Post_Types {
 	 * Returns post types that support date archives.
 	 *
 	 * @since 1.0
-	 * @param string $type Type of return array.
+	 * @param string $format Type of return array.
 	 * @return string Array of post types that support post types.
 	 */
-	public function get_post_types( $type = 'names', $context = 'date_archive' ) {
+	public function get_post_types( $format = 'names', $context = 'date_archive' ) {
 
 		$date_post_types = array();
 
@@ -235,17 +235,17 @@ class CPTDA_Post_Types {
 			return array();
 		}
 
-		if ( 'objects' === $type ) {
+		if ( 'objects' === $format ) {
 			$date_post_types = $post_types;
 		}
 
-		if ( 'labels' === $type ) {
+		if ( 'labels' === $format ) {
 			foreach ( $post_types as $key => $value ) {
 				$date_post_types[ $key ] = esc_attr( $value->labels->menu_name );
 			}
 		}
 
-		if ( 'names' === $type ) {
+		if ( 'names' === $format ) {
 			$date_post_types = wp_list_pluck( $post_types, 'name', null );
 			$date_post_types = array_values( $date_post_types );
 		}
