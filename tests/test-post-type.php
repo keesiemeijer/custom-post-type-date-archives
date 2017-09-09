@@ -12,46 +12,12 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->set_permalink_structure( 'blog/%postname%/' );
 	}
 
-
 	/**
 	 * Reset post type on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
 		$this->unregister_post_type();
-	}
-
-
-	/**
-	 * Test if custom post type posts are created.
-	 */
-	function test_published_posts() {
-		$posts = $this->create_posts();
-		$this->assertEquals( 7, count( $posts ) );
-	}
-
-
-	/**
-	 * Test if posts are created with post status publish.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	 */
-	function test_published_posts_init() {
-		$this->init();
-		$posts = $this->create_posts();
-		$this->assertEquals( 7, count( $posts ) );
-	}
-
-
-	/**
-	 * Test if posts with future dates are created with post status publish.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
-	 */
-	function test_published_posts_future_init() {
-		$this->future_init();
-		$posts = $this->create_posts();
-		$this->assertEquals( 13, count( $posts ) );
 	}
 
 	/**
@@ -65,7 +31,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->assertEquals( 'blog/cpt', $slug );
 	}
 
-
 	/**
 	 * Test slug
 	 *
@@ -78,7 +43,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->assertEquals( 'cpt', $slug );
 	}
 
-
 	/**
 	 * Test rewrite slug
 	 *
@@ -89,7 +53,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'blog/rewrite', $slug );
 	}
-
 
 	/**
 	 * Test rewrite slug without front
@@ -102,7 +65,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$slug = cptda_get_post_type_base( 'cpt' );
 		$this->assertEquals( 'rewrite', $slug );
 	}
-
 
 	/**
 	 * Test rewrite set to false

@@ -96,7 +96,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 	/**
 	 * Test created rewrite rules.
 	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_rules() {
 		global $wp_rewrite, $wp_version;
@@ -142,7 +142,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 	/**
 	 * Test created rewrite rules without a feed.
 	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_rules_without_feed() {
 		global $wp_rewrite;
