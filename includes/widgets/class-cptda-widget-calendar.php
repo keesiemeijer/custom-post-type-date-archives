@@ -107,7 +107,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		$instance    = wp_parse_args( (array) $instance, $this->defaults );
 		$title       = esc_attr__( strip_tags( $instance['title'] ) );
 		$post_types  = $this->plugin->post_type->get_post_types( 'labels' );
-		$post_type   = isset( $instance['post_type'] ) ?  (string) $instance['post_type'] : 'post';
+		$post_type   = isset( $instance['post_type'] ) ? (string) $instance['post_type'] : 'post';
 
 		$show_post_types = false;
 		if ( ! empty( $post_types ) ) {

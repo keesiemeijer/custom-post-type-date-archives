@@ -18,6 +18,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 
 	protected $plugin;
 	protected $defaults;
+	protected $include;
 
 	/**
 	 * Sets up a new Recent Posts widget instance.
@@ -34,8 +35,16 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			'message'       => '',
 			'number'        => 5,
 			'show_date'     => false,
-			'status_future' => false,
+			'include'       => 'all',
 			'post_type'     => 'post',
+		);
+
+		$this->include = array(
+			'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
+			'future' => __( 'posts with future dates only', 'custom-post-type-date-archives' ),
+			'year'   => __( 'posts from the current year', 'custom-post-type-date-archives' ),
+			'month'  => __( 'posts from the current month', 'custom-post-type-date-archives' ),
+			'day'    => __( 'posts from today', 'custom-post-type-date-archives' ),
 		);
 
 		$widget_ops = array(
@@ -70,7 +79,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			$args['widget_id'] = $this->id;
 		}
 
-		$instance = wp_parse_args( $instance, $this->defaults );
+		$instance = $this->get_instance_settings( $instance );
 		$title    = ( ! empty( $instance['title'] ) ) ? $instance['title'] : __( 'Recent Posts' );
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
@@ -86,9 +95,9 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		}
 
 		$post_type     = trim( (string) $instance['post_type'] );
+		$include       = trim( (string) $instance['include'] );
 		$message       = trim( (string) $instance['message'] );
 		$show_date     = (bool) $instance['show_date'];
-		$status_future = (bool) $instance['status_future'];
 		$widget_start  = $args['before_widget'] . $title;
 
 		$query_args = array(
@@ -99,18 +108,34 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			'ignore_sticky_posts' => true,
 		);
 
-		if ( $status_future ) {
-			$today = getdate();
-			$query_args['date_query']  = array(
-				array(
-					'after' => array(
-						'year'  => $today['year'],
-						'month' => $today['mon'],
-						'day'   => $today['mday'],
-					),
-					'inclusive' => true,
-				),
-			);
+		$today = getdate();
+		$date  = array(
+			'year'  => $today['year'],
+			'month' => $today['mon'],
+			'day'   => $today['mday'],
+		);
+
+		$date_query = array();
+
+		switch ( $include ) {
+			case 'future':
+			$date_query = array( 'after' => $date );
+			break;
+			case 'year':
+			unset( $date['month'], $date['day'] );
+			$date_query = array( $date );
+			break;
+			case 'month':
+			unset( $date['day'] );
+			$date_query = array( $date );
+			break;
+			case 'day':
+			$date_query = array( $date );
+			break;
+		}
+
+		if ( ( 'all' !== $include ) && $date_query ) {
+			$query_args['date_query']  = array( $date_query );
 		}
 
 		/**
@@ -156,7 +181,6 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$instance['title']         = sanitize_text_field( (string) $new_instance['title'] );
 		$instance['number']        = (int) $new_instance['number'];
 		$instance['show_date']     = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
-		$instance['status_future'] = isset( $new_instance['status_future'] ) ? (bool) $new_instance['status_future'] : false;
 
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$instance['message'] = (string) $new_instance['message'];
@@ -172,6 +196,14 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			$instance['post_type'] = 'post';
 		}
 
+		$instance['include'] = $new_instance['include'];
+		if ( ! in_array( $new_instance['include'], array_keys( $this->include ) ) ) {
+			$instance['include'] = 'all';
+		}
+
+		// Back compat.
+		unset( $instance['status_future'] );
+
 		return $instance;
 	}
 
@@ -184,13 +216,16 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @param array $instance Current settings.
 	 */
 	public function form( $instance ) {
-		$instance        = wp_parse_args( (array) $instance, $this->defaults );
-		$title           = sanitize_text_field( (string) $instance['title'] );
-		$message         = trim( (string) $instance['message'] );
-		$post_type       = trim( (string) $instance['post_type'] );
-		$number          = absint( $instance['number'] );
-		$show_date       = (bool) $instance['show_date'];
-		$status          = (bool) $instance['status_future'];
+
+		$instance  = $this->get_instance_settings( $instance );
+
+		$title     = sanitize_text_field( (string) $instance['title'] );
+		$message   = trim( (string) $instance['message'] );
+		$post_type = trim( (string) $instance['post_type'] );
+		$number    = absint( $instance['number'] );
+		$show_date = (bool) $instance['show_date'];
+		$include   = trim( (string) $instance['include'] );
+
 		$show_post_types = false;
 		$post_types      = $this->plugin->post_type->get_post_types( 'labels' );
 		if ( ! empty( $post_types ) ) {
@@ -199,5 +234,23 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-widget.php';
+	}
+
+	/**
+	 * Gets instance settings.
+	 *
+	 * Merges instance settings with defaults and applies back compatibility.
+	 *
+	 * @param array $instance Settings for the current Recent Posts widget instance.
+	 * @return @return array All Recent Posts widget instance settings with back compat applied.
+	 */
+	function get_instance_settings( $instance ) {
+
+		// 'status_future' was removed and replaced by 'include'
+		if ( isset( $instance['status_future'] ) && ! isset( $instance['include'] ) ) {
+			$instance['include'] = $instance['status_future'] ? 'future' : 'all';
+		}
+
+		return wp_parse_args( (array) $instance, $this->defaults );
 	}
 }
