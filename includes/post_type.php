@@ -6,7 +6,7 @@
  * @subpackage  Classes/Post_Types
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0
+ * @since       1.0.0
  */
 
 // Exit if accessed directly.
@@ -22,9 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class CPTDA_Post_Types {
 
-	private $date_post_types  = array();
-	private $admin_post_types = array();
-	private $publish_future   = array();
+	private $post_types = array();
 
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
@@ -35,25 +33,12 @@ class CPTDA_Post_Types {
 	 * Checks if 'date-archives' support was added to custom post types.
 	 * see: http://codex.wordpress.org/Function_Reference/add_post_type_support
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function setup() {
-
-		$this->setup_post_types();
+		$this->post_types = $this->get_public_post_types();
 		$this->setup_admin_post_types();
-
-		foreach ( (array) $this->date_post_types as $name => $post_type ) {
-
-			if ( post_type_supports( $name, 'publish-future-posts' ) ) {
-				$this->publish_future[ $name ] = $post_type;
-			}
-
-			if ( ! post_type_supports( $name, 'date-archives' ) ) {
-				unset( $this->date_post_types[ $name ] );
-			}
-		}
-
 		$this->publish_scheduled_posts();
 	}
 
@@ -62,9 +47,7 @@ class CPTDA_Post_Types {
 	 *
 	 * @since 2.4.1
 	 */
-	function setup_post_types() {
-		$this->reset_post_types();
-
+	private function get_public_post_types() {
 		$args = array(
 			'public'             => true,
 			'publicly_queryable' => true,
@@ -72,26 +55,7 @@ class CPTDA_Post_Types {
 			'_builtin'           => false,
 		);
 
-		$this->date_post_types = get_post_types( $args, 'objects', 'and' );
-
-		$args = array(
-			'show_ui'      => true,
-			'show_in_menu' => true,
-		);
-
-		$this->admin_post_types = wp_list_filter( $this->date_post_types, $args, 'AND' );
-	}
-
-	/**
-	 * Reset post type properties.
-	 *
-	 * @since 2.1.0
-	 * @return void
-	 */
-	function reset_post_types() {
-		$this->date_post_types  = array();
-		$this->admin_post_types = array();
-		$this->publish_future   = array();
+		return get_post_types( $args, 'objects', 'and' );
 	}
 
 	/**
@@ -189,7 +153,7 @@ class CPTDA_Post_Types {
 	/**
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
-	 * @since 1.2
+	 * @since 1.2.0
 	 * @param int $post_id Post ID.
 	 * @return void
 	 */
@@ -199,7 +163,7 @@ class CPTDA_Post_Types {
 		/**
 		 * Filter whether to publish posts with future dates from a specific post type.
 		 *
-		 * @since 1.2
+		 * @since 1.2.0
 		 * @param bool $publish Default true.
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
@@ -209,25 +173,57 @@ class CPTDA_Post_Types {
 	}
 
 	/**
-	 * Returns post types that support date archives.
+	 * Filters array of post types by support.
 	 *
-	 * @since 1.0
-	 * @param string $format Type of return array.
-	 * @return string Array of post types that support post types.
+	 * @since 2.4.1
+	 */
+	private function filter_by_support( $post_types, $support ) {
+		foreach ( (array) $post_types as $name => $post_type ) {
+			$supported = post_type_supports( $name, $support );
+			if ( ! $supported ) {
+				unset( $post_types[ $name ] );
+			}
+		}
+		return $post_types;
+	}
+
+	/**
+	 * Returns custom post types depending on format and context.
+	 *
+	 * Use context 'date_archive' to get custom post types that have date archives support (Default).
+	 * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
+	 * Use context 'publish_future' to get custom post types that publish future posts.
+	 *
+	 * @since 1.0.0
+	 * @param string $format  Accepts 'names', 'labels' or 'objects' Default 'names'.
+	 * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'. Default 'date_archive'.
+	 *
+	 * @return array Array with post types depending on format and context.
 	 */
 	public function get_post_types( $format = 'names', $context = 'date_archive' ) {
 
+		$post_types      = array();
 		$date_post_types = array();
+
+		if ( ! $this->post_types ) {
+			return array();
+		}
 
 		switch ( $context ) {
 			case 'admin':
-			$post_types = $this->admin_post_types;
+
+			$args = array(
+				'show_ui'      => true,
+				'show_in_menu' => true,
+			);
+
+			$post_types = wp_list_filter( $this->post_types, $args, 'AND' );
 			break;
 			case 'publish_future':
-			$post_types = $this->publish_future;
+			$post_types = $this->filter_by_support( $this->post_types, 'publish-future-posts' );
 			break;
 			default:
-			$post_types = $this->date_post_types;
+			$post_types = $this->filter_by_support( $this->post_types, 'date-archives' );
 			break;
 		}
 
