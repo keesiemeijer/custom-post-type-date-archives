@@ -67,4 +67,12 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 		$posts = $this->create_posts();
 		$this->assertEquals( 13, count( $posts ) );
 	}
+
+	/**
+	 * Test deleting admin page settings
+	 */
+	function test_delete_settings(){
+		$this->delete_settings();
+		$this->assertFalse( get_option( 'custom_post_type_date_archives' ) );
+	}
 }

@@ -162,7 +162,6 @@ function cptda_get_post_type_base( $post_type = '' ) {
 	return $rewrite->get_base_permastruct();
 }
 
-
 /**
  * Display archive links based on post type, type and format.
  *

@@ -13,6 +13,7 @@
 			<file>tests/test-functions.php</file>
 			<file>tests/test-query.php</file>
 			<file>tests/test-rewrite.php</file>
+			<file>tests/test-settings.php</file>
 			<file>tests/test-admin.php</file>
 			<file>tests/test-template.php</file>
 			<file>tests/test-filters.php</file>

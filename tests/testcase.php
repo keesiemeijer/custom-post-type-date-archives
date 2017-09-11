@@ -105,13 +105,12 @@ class CPTDA_UnitTestCase extends WP_UnitTestCase {
 		$plugin->post_type->setup();
 	}
 
-
 	function unregister_post_type( $post_type = 'cpt' ) {
 
 		global $wp_rewrite;
 
 		delete_option( 'rewrite_rules' );
-		delete_option( 'custom_post_type_date_archives' );
+		$this->delete_settings();
 
 		$plugin = cptda_date_archives();
 
@@ -134,6 +133,10 @@ class CPTDA_UnitTestCase extends WP_UnitTestCase {
 
 	function return_bool( $bool ) {
 		return $this->boolean = $bool;
+	}
+
+	function delete_settings() {
+		delete_option( 'custom_post_type_date_archives' );
 	}
 
 

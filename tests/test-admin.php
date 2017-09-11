@@ -5,7 +5,6 @@
 class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 
 	public static function setUpBeforeClass() {
-		update_option( 'siteurl', 'http://example.com' );
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin.php';
 	}
 
@@ -39,60 +38,10 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test merging admin page settings.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	 */
-	function test_admin_merge_page_settings_add_value() {
-		$this->init();
-		$this->init( 'cpt_2' );
-		$admin = new CPTDA_Admin();
-
-		$expected =  array(
-			'date_archives'        => array( 'cpt' => 1, 'cpt_2' => 1 ),
-			'publish_future_posts' => array( 'cpt' => 1 ),
-		);
-
-		$settings = $expected;
-		unset( $settings['date_archives']['cpt_2'] );
-
-		$new_settings = array(
-			'date_archives' => 1
-		);
-
-		$merged = $admin->merge_settings( $settings, $new_settings, 'cpt_2' );
-		$this->assertEquals( $expected, $merged );
-	}
-
-	/**
-	 * Test merging admin page settings. Remove a value
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	 */
-	function test_admin_merge_page_settings_remove_value() {
-		$this->init();
-		$admin = new CPTDA_Admin();
-
-		$expected =  array(
-			'date_archives'        => array(),
-			'publish_future_posts' => array( 'cpt' => 1 ),
-		);
-
-		$settings = $expected;
-		$settings['date_archives']['cpt'] = 1;
-
-		$new_settings = array(
-			'publish_future_posts' => 1
-		);
-
-		$merged = $admin->merge_settings( $settings, $new_settings, 'cpt' );
-		$this->assertEquals( $expected, $merged );
-	}
-
-	/**
 	 * Test merging admin page default settings
 	 *
 	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 * @depends KM_CPTDA_Tests_Settings::test_get_settings_defaults
 	 */
 	function test_admin_get_settings_default() {
 		$this->init();
@@ -110,6 +59,7 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 	 * Test merging admin page settings. Remove a invalid post type and key
 	 *
 	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 * @depends KM_CPTDA_Tests_Settings::test_get_settings_in_database
 	 */
 	function test_admin_get_settings_invalid_post_type() {
 		$this->init();
@@ -126,6 +76,37 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 		$option['invalid_key'] = 'hahaha';
 
 		update_option( 'custom_post_type_date_archives', $option );
+
+		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
+	}
+
+	/**
+	 * Test admin page settings with update
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
+	 * @depends KM_CPTDA_Tests_Testcase::test_delete_settings
+	 * @depends KM_CPTDA_Tests_Settings::test_get_settings_in_database
+	 *
+	 */
+	function test_admin_get_settings_when_updating() {
+		$this->init();
+		$admin = new CPTDA_Admin();
+		$admin->cptda_admin_menu();
+		$this->delete_settings();
+
+		// Fake the globals
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$_REQUEST['_wpnonce'] = wp_create_nonce( "custom_post_type_date_archives_cpt_nonce" );
+
+		// Fake "add date archives" selected
+		$_POST = array(
+			'date_archives' => 1,
+		);
+
+		$expected =  array(
+			'date_archives'        => array( 'cpt' => 1 ),
+			'publish_future_posts' => array(),
+		);
 
 		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
 	}

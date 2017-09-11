@@ -70,12 +70,15 @@ class CPTDA_Post_Types {
 	 * @return void
 	 */
 	private function setup_admin_post_types() {
-		$archives = get_option( 'custom_post_type_date_archives' );
-		if ( empty( $archives ) ) {
+
+		$settings = new CPTDA_Settings();
+		$admin_settings = $settings->get_settings();
+
+		if ( empty( $admin_settings ) ) {
 			return;
 		}
 
-		$this->setup_admin_post_type_support( $archives );
+		$this->setup_admin_post_type_support( $admin_settings );
 	}
 
 	/**

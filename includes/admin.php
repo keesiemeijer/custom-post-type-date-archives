@@ -44,7 +44,6 @@ class CPTDA_Admin {
 		add_action( 'shutdown', array( $this, 'shutdown' ) );
 	}
 
-
 	/**
 	 * Adds a settings page for this plugin.
 	 */
@@ -90,7 +89,6 @@ class CPTDA_Admin {
 		}
 	}
 
-
 	/**
 	 * Returns the post type for the current admin page.
 	 *
@@ -110,7 +108,6 @@ class CPTDA_Admin {
 		return false;
 	}
 
-
 	/**
 	 * Returns the settings for the current admin page post type.
 	 *
@@ -119,37 +116,20 @@ class CPTDA_Admin {
 	 */
 	public function get_settings( $post_type = '' ) {
 
-		$defaults = array(
-			'date_archives'        => array(),
-			'publish_future_posts' => array(),
-		);
-
-		$old_settings = get_option( 'custom_post_type_date_archives' );
-
-		if ( empty( $old_settings ) || ! is_array( $old_settings ) ) {
-			$old_settings = $defaults;
-		}
-
-		$old_settings = array_merge( $defaults, $old_settings );
+		$settings_obj = new CPTDA_Settings();
+		$old_settings = $settings_obj->get_settings();
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && ( 'POST' === $_SERVER['REQUEST_METHOD'] ) ) {
-
 			check_admin_referer( "custom_post_type_date_archives_{$post_type}_nonce" );
+			$new_settings = stripslashes_deep( $_POST );
 
-			$_POST    = stripslashes_deep( $_POST );
-			$settings = $this->merge_settings( $old_settings, (array) $_POST, $post_type );
 			$message  = __( 'Settings Saved', 'custom-post-type-date-archives' );
-
 			add_settings_error( 'update', 'update', $message, 'updated' );
+
+			$settings = $settings_obj->merge_settings( $old_settings, (array) $new_settings, $post_type );
 		} else {
 			$settings = $old_settings;
 		}
-
-		// Remove values not in defaults.
-		$settings = array_intersect_key( $settings, $defaults );
-
-		// Removes invalid post types (e.g. post types that no longer exist).
-		$settings = $this->remove_invalid_post_types( $settings );
 
 		// Flush rewrite rules on shutdown action if date archives were removed.
 		$flush = isset( $settings['date_archives'][ $post_type ] ) ? false : true;
@@ -164,52 +144,6 @@ class CPTDA_Admin {
 
 		return $settings;
 	}
-
-
-	/**
-	 * Merge settings from a current post type admin page with the old settings
-	 *
-	 * @param array  $settings     Old settings.
-	 * @param array  $new_settings New settings.
-	 * @param string $post_type    Current admin page post type.
-	 * @return array               Settings with new settings merged.
-	 */
-	public function merge_settings( $settings, $new_settings, $post_type ) {
-
-		foreach ( (array) $settings as $key => $setting ) {
-			unset( $settings[ $key ][ $post_type ] );
-			if ( isset( $new_settings[ $key ] ) ) {
-				$settings[ $key ][ $post_type ] = 1;
-			}
-		}
-		return $settings;
-	}
-
-
-	/**
-	 * Remove invalid post types from settings.
-	 * e.g. Removes post types that no longer exist or don't have an archive (anymore).
-	 *
-	 * @param array $settings Settings.
-	 * @return array Settings with invalid post types removed.
-	 */
-	private function remove_invalid_post_types( $settings ) {
-
-		foreach ( (array) $settings as $key => $setting ) {
-			if ( ! is_array( $setting ) || empty( $setting ) ) {
-				continue;
-			}
-
-			foreach ( $setting as $post_type => $value ) {
-				if ( ! in_array( $post_type , array_keys( $this->post_types ) ) ) {
-					unset( $settings[ $key ][ $post_type ] );
-				}
-			}
-		}
-
-		return $settings;
-	}
-
 
 	/**
 	 * Admin page output.
@@ -230,7 +164,6 @@ class CPTDA_Admin {
 
 		include 'partials/admin-form.php';
 	}
-
 
 	/**
 	 * Adds a help section on admin pages
@@ -284,7 +217,6 @@ class CPTDA_Admin {
 			)
 		);
 	}
-
 
 	/**
 	 * Flush rules if date archives are removed from a post type

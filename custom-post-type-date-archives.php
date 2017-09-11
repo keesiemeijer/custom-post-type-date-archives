@@ -92,6 +92,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->post_type = new CPTDA_Post_Types();
+
 			if ( is_admin() ) {
 				new CPTDA_Admin();
 			}
@@ -172,6 +173,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/settings.php';
 
 
 		if ( ! is_admin() ) {
