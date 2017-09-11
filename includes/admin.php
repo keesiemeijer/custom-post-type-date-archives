@@ -269,9 +269,6 @@ class CPTDA_Admin {
 			$sample_day_link = add_query_arg( 'post_type', $post_type, $daylink );
 		}
 
-		$scheduled_posts = '<a href="https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Scheduled-Posts">';
-		$scheduled_posts .= __( 'plugin documentation', 'custom-post-type-date-archives' ) . '</a>';
-
 		ob_start();
 		include 'partials/admin-help.php';
 		$content = ob_get_clean();
