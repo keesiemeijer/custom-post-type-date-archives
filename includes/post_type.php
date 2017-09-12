@@ -6,7 +6,7 @@
  * @subpackage  Classes/Post_Types
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0
+ * @since       1.0.0
  */
 
 // Exit if accessed directly.
@@ -22,8 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class CPTDA_Post_Types {
 
-	private $date_post_types = array();
-	private $publish_future  = array();
+	/**
+	 * Public post type objects.
+	 *
+	 * @var array
+	 */
+	private $post_types = array();
 
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
@@ -34,14 +38,21 @@ class CPTDA_Post_Types {
 	 * Checks if 'date-archives' support was added to custom post types.
 	 * see: http://codex.wordpress.org/Function_Reference/add_post_type_support
 	 *
-	 * @since 1.0
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function setup() {
-
-		$this->reset_post_types();
+		$this->post_types = $this->get_public_post_types();
 		$this->setup_admin_post_types();
+		$this->publish_scheduled_posts();
+	}
 
+	/**
+	 * Setup post types.
+	 *
+	 * @since 2.5.0
+	 */
+	private function get_public_post_types() {
 		$args = array(
 			'public'             => true,
 			'publicly_queryable' => true,
@@ -49,31 +60,7 @@ class CPTDA_Post_Types {
 			'_builtin'           => false,
 		);
 
-		$this->date_post_types = get_post_types( $args, 'objects', 'and' );
-
-		foreach ( (array) $this->date_post_types as $name => $post_type ) {
-
-			if ( post_type_supports( $name, 'publish-future-posts' ) ) {
-				$this->publish_future[] = $name;
-			}
-
-			if ( ! post_type_supports( $name, 'date-archives' ) ) {
-				unset( $this->date_post_types[ $name ] );
-			}
-		}
-
-		$this->publish_scheduled_posts();
-	}
-
-	/**
-	 * Reset post type properties.
-	 *
-	 * @since 2.1.0
-	 * @return void
-	 */
-	function reset_post_types() {
-		$this->date_post_types = array();
-		$this->publish_future  = array();
+		return get_post_types( $args, 'objects', 'and' );
 	}
 
 	/**
@@ -83,13 +70,15 @@ class CPTDA_Post_Types {
 	 * @return void
 	 */
 	private function setup_admin_post_types() {
-		$archives = get_option( 'custom_post_type_date_archives' );
 
-		if ( empty( $archives ) ) {
+		$settings = new CPTDA_Settings();
+		$admin_settings = $settings->get_settings();
+
+		if ( empty( $admin_settings ) ) {
 			return;
 		}
 
-		$this->setup_admin_post_type_support( $archives );
+		$this->setup_admin_post_type_support( $admin_settings );
 	}
 
 	/**
@@ -104,7 +93,7 @@ class CPTDA_Post_Types {
 
 		foreach ( $supports  as $support ) {
 
-			if ( ! ( isset( $archives[ $support ] ) && ! empty( $archives[ $support ] ) ) ) {
+			if ( ! ( isset( $archives[ $support ] ) && $archives[ $support ] ) ) {
 				continue;
 			}
 
@@ -128,9 +117,9 @@ class CPTDA_Post_Types {
 			return;
 		}
 
-		$post_types = cptda_get_admin_post_types();
+		$post_types = $this->get_post_types( 'names', 'admin' );
 
-		foreach ( $post_types as $post_type => $value ) {
+		foreach ( $post_types as $post_type ) {
 			if ( in_array( $post_type, $archives ) ) {
 				add_post_type_support( $post_type, $support );
 			} else {
@@ -147,7 +136,8 @@ class CPTDA_Post_Types {
 	 */
 	private function publish_scheduled_posts() {
 
-		if ( empty( $this->publish_future ) ) {
+		$future_types = $this->get_post_types( 'names', 'publish_future' );
+		if ( empty( $future_types ) ) {
 			return;
 		}
 
@@ -158,12 +148,11 @@ class CPTDA_Post_Types {
 		 * @param bool $publish Default true.
 		 */
 		$publish = (bool) apply_filters( 'cptda_publish_future_posts', true );
-
 		if ( ! $publish ) {
 			return;
 		}
 
-		foreach ( $this->publish_future as $name ) {
+		foreach ( $future_types as $name ) {
 			remove_action( "future_{$name}", '_future_post_hook' );
 			add_action( "future_{$name}", array( $this, '_future_post_hook' ) );
 		}
@@ -172,18 +161,17 @@ class CPTDA_Post_Types {
 	/**
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
-	 * @since 1.2
+	 * @since 1.2.0
 	 * @param int $post_id Post ID.
 	 * @return void
 	 */
 	public function _future_post_hook( $post_id ) {
-
 		$post = get_post( $post_id );
 
 		/**
 		 * Filter whether to publish posts with future dates from a specific post type.
 		 *
-		 * @since 1.2
+		 * @since 1.2.0
 		 * @param bool $publish Default true.
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
@@ -193,35 +181,91 @@ class CPTDA_Post_Types {
 	}
 
 	/**
-	 * Returns post types that support date archives.
+	 * Returns custom post types depending on format and context.
 	 *
-	 * @since 1.0
-	 * @param string $type Type of return array.
-	 * @return string Array of post types that support post types.
+	 * Use context 'date_archive' to get custom post types that have date archives support (Default).
+	 * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
+	 * Use context 'publish_future' to get custom post types that publish future posts.
+	 *
+	 * @since 2.5.0
+	 * @param string $format  Accepts 'names', 'labels' or 'objects' Default 'names'.
+	 * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'.
+	 *                        Default 'date_archive'. If no context is provided the default is used.
+	 *
+	 * @return array Array with post types depending on format and context.
 	 */
-	public function get_date_archive_post_types( $type = 'names' ) {
+	public function get_post_types( $format = 'names', $context = 'date_archive' ) {
 
-		$post_types = array();
-
-		if ( 'objects' === $type ) {
-			$post_types = $this->date_post_types;
+		$post_types = $this->get_post_types_by_context( $context );
+		if ( ! $post_types ) {
+			return array();
 		}
 
-		if ( 'labels' === $type ) {
-			$post_types = array();
-			foreach ( $this->date_post_types as $key => $value ) {
+		if ( 'labels' === $format ) {
+			foreach ( (array) $post_types as $key => $value ) {
 				$post_types[ $key ] = esc_attr( $value->labels->menu_name );
 			}
 		}
 
-		if ( 'publish_future' === $type ) {
-			$post_types = $this->publish_future;
+		if ( 'names' === $format ) {
+			$post_types = wp_list_pluck( $post_types, 'name', null );
+			$post_types = array_values( $post_types );
 		}
 
-		if ( ! empty( $this->date_post_types ) && ( 'names' === $type ) ) {
-			$post_types = wp_list_pluck( $this->date_post_types, 'name' );
+		return $post_types;
+	}
+
+	/**
+	 * Returns custom post type objects depending on context.
+	 *
+	 * Use context 'date_archive' to get custom post types that have date archives support (Default).
+	 * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
+	 * Use context 'publish_future' to get custom post types that publish future posts.
+	 *
+	 * @since 2.5.0
+	 * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'.
+	 *                        Default 'date_archive'. If no context is provided the default is used.
+	 * @return array Array with post type objects depending on context.
+	 */
+	public function get_post_types_by_context( $context = 'date_archive' ) {
+		switch ( $context ) {
+			case 'admin':
+				$args = array(
+					'show_ui'      => true,
+					'show_in_menu' => true,
+				);
+				$post_types = wp_list_filter( $this->post_types, $args, 'AND' );
+				break;
+			case 'publish_future':
+				$post_types = $this->filter_by_support( $this->post_types, 'publish-future-posts' );
+				break;
+			default:
+				$post_types = $this->filter_by_support( $this->post_types, 'date-archives' );
+				break;
 		}
 
+		return $post_types;
+	}
+
+	/**
+	 * Filters array of post types by support.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param array  $post_types Array with post type objects.
+	 * @param string $support    Support to filter by.
+	 * @return array Array with post types filtered by support.
+	 */
+	private function filter_by_support( $post_types, $support ) {
+		if ( ! is_array( $post_types ) ) {
+			return array();
+		}
+
+		foreach ( $post_types as $name => $post_type ) {
+			if ( ! post_type_supports( $name, $support ) ) {
+				unset( $post_types[ $name ] );
+			}
+		}
 		return $post_types;
 	}
 

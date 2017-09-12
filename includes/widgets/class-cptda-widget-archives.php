@@ -116,7 +116,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		$type       = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
 		$order      = array( 'ASC', 'DESC' );
 		$format     = array( 'custom', 'html', 'option' );
-		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'names' );
+		$post_types = $this->plugin->post_type->get_post_types( 'names' );
 		$post_types[] = 'post';
 
 		$instance['post_type'] = $new_instance['post_type'];
@@ -169,7 +169,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		$post_type = ( isset( $instance['post_type'] ) ) ? (string) $instance['post_type'] : 'post';
 
 		$show_post_types = false;
-		$post_types = $this->plugin->post_type->get_date_archive_post_types( 'labels' );
+		$post_types = $this->plugin->post_type->get_post_types( 'labels' );
 
 		if ( ! empty( $post_types ) ) {
 			$show_post_types = true;

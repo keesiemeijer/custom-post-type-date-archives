@@ -58,7 +58,7 @@ function cptda_get_year_link( $year, $post_type = '' ) {
 
 
 /**
- * Retrieve the permalink for custom post type month archives with year.
+ * Retrieve the permalink for custom post type month archives.
  *
  * @since 1.0
  *
@@ -108,7 +108,7 @@ function cptda_get_month_link( $year, $month, $post_type = '' ) {
 
 
 /**
- * Retrieve the permalink for custom post type day archives with year and month.
+ * Retrieve the permalink for custom post type day archives.
  *
  * @since 1.0
  *

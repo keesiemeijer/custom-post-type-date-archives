@@ -3,31 +3,14 @@
 /**
  * Tests for public plugin functions
  */
-class KM_CPTDA_Tests_Widgets extends WP_UnitTestCase {
-
-	/**
-	 * Utils object to create posts to test with.
-	 *
-	 * @var object
-	 */
-	private $utils;
-
-	/**
-	 * Set up.
-	 */
-	function setUp() {
-		parent::setUp();
-
-		// Use the utils class to create posts with terms
-		$this->utils = new CPTDA_Test_Utils( $this->factory );
-	}
+class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 
 	/**
 	 * Reset post type on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
-		$this->utils->unregister_post_type();
+		$this->unregister_post_type();
 	}
 
 	/**
@@ -43,12 +26,14 @@ class KM_CPTDA_Tests_Widgets extends WP_UnitTestCase {
 
 	/**
 	 * Test output from widget.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_archives_widget_output() {
 
 		global $wp_locale;
-		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -85,12 +70,14 @@ EOF;
 
 	/**
 	 * Test calendar widget output.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_calendar_widget_output() {
 
 		global $wp_locale;
-		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -98,7 +85,7 @@ EOF;
 			$post = $this->factory->post->create( $args );
 		}
 
-		$this->go_to( '?post_type=cpt&year='. $year . '&monthnum=3' );
+		$this->go_to( '?post_type=cpt&year=' . $year . '&monthnum=3' );
 		$calendar = cptda_get_calendar( 'cpt', true, false );
 		$widget   = new CPTDA_Widget_Calendar( 'calendar', __( 'Calendar' ) );
 
@@ -126,12 +113,14 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_widget_output() {
 
 		global $wp_locale;
-		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {
@@ -169,17 +158,19 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_future_posts_only() {
 
 		global $wp_locale;
-		$this->utils->init();
+		$this->init();
 		$year = (int) date( "Y" );
 
 		$args = array( 'post_date' => "$year-02-20 00:00:00", 'post_type' => 'cpt' );
 		$post_1 = $this->factory->post->create( $args );
 
-		$args = array( 'post_date' => ( $year +1 ) . "-02-20 00:00:00", 'post_type' => 'cpt' );
+		$args = array( 'post_date' => ( $year + 1 ) . "-02-20 00:00:00", 'post_type' => 'cpt' );
 		$post_2 = $this->factory->post->create( $args );
 
 		$args = array(
@@ -216,11 +207,13 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_no_posts_found() {
 
 		global $wp_locale;
-		$this->utils->init();
+		$this->init();
 
 		$args = array(
 			'before_widget' => '<section>',
@@ -254,12 +247,14 @@ EOF;
 
 	/**
 	 * Test **not** replacing WordPress core default widgets.
+	 *
+	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_not_replacing_core_widgets() {
 
 		global $wp_locale;
-		$this->utils->init();
-		$year = (int) date( "Y" ) -1;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
 		foreach ( array( '03', '02' ) as $month ) {

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Post Type Date Archives
-Version:  2.4.0
+Version:  2.5.0
 Plugin URI: https://wordpress.org/plugins/custom-post-type-date-archives
 Description: This plugin allows you to add date archives to custom post types. It also adds extra options to the archive, calendar and recent posts widget.
 Author: keesiemijer
@@ -91,7 +91,8 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-			self::$instance->post_type  = new CPTDA_Post_Types();
+			self::$instance->post_type = new CPTDA_Post_Types();
+
 			if ( is_admin() ) {
 				new CPTDA_Admin();
 			}
@@ -139,7 +140,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 
 		// Plugin version
 		if ( ! defined( 'CPT_DATE_ARCHIVES_VERSION' ) ) {
-			define( 'CPT_DATE_ARCHIVES_VERSION', '2.4.0' );
+			define( 'CPT_DATE_ARCHIVES_VERSION', '2.5.0' );
 		}
 
 		// Plugin Folder Path
@@ -168,12 +169,14 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 	private function includes() {
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/cpt-rewrite.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/functions.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/deprecated.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/settings.php';
 
 
-		if ( !is_admin() ) {
+		if ( ! is_admin() ) {
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/query.php';
 		} else {

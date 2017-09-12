@@ -45,11 +45,11 @@ register_deactivation_hook( CPT_DATE_ARCHIVES_PLUGIN_FILE, 'cptda_deactivate_plu
  */
 function cptda_date_template_include( $template ) {
 
-	if ( !cptda_is_cpt_date() ) {
+	if ( ! cptda_is_cpt_date() ) {
 		return $template;
 	}
 
-	$post_type   = sanitize_key ( cptda_get_date_archive_cpt() );
+	$post_type   = sanitize_key ( cptda_get_queried_date_archive_post_type() );
 	$templates   = array();
 	$templates[] = get_query_template( "date-{$post_type}" );
 	$templates[] = get_query_template( "date-cptda-archive" );
@@ -59,7 +59,7 @@ function cptda_date_template_include( $template ) {
 	$templates   = array_unique( array_filter( array_map( 'basename', $templates ) ) );
 	$template    = locate_template( $templates );
 
-	if ( !empty( $template ) ) {
+	if ( ! empty( $template ) ) {
 		return apply_filters( 'cptda_date_template_include', $template   );
 	}
 

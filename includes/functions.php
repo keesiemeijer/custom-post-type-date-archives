@@ -15,11 +15,73 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Returns custom post types depending on format and context.
+ *
+ * Use context 'date_archive' to get custom post types that have date archives support (Default).
+ * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
+ * Use context 'publish_future' to get custom post types that publish future posts.
+ *
+ * @since 2.5.0
+ * @param string $format  Accepts 'names', 'labels' or 'objects' Default 'names'.
+ * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'. Default 'date_archive'.
+ *
+ * @return array|object Array with post types depending on format and context.
+ */
+function cptda_get_post_types( $format = 'names', $context = 'date_archive' ) {
+	$instance = cptda_date_archives();
+	return $instance->post_type->get_post_types( $format, $context );
+}
+
+
+/**
+ * Checks if a custom post type supports date archives.
+ *
+ * @param string $post_type Custom post type name.
+ * @return bool True when the custom post type supports date archives.
+ */
+function cptda_is_date_post_type( $post_type = '' ) {
+	if ( in_array( (string) $post_type, cptda_get_post_types( 'names' ) ) ) {
+		return cptda_is_valid_post_type( $post_type );
+	}
+
+	return false;
+}
+
+/**
+ * Check if a custom post type can support date archives.
+ *
+ * Does not check if the post type has support for date archives.
+ * Use cptda_is_date_post_type() to check if a post type supports date archives.
+ *
+ * @since 2.3.0
+ * @param string $post_type Post type name.
+ * @return boolean True if it's a valid post type.
+ */
+function cptda_is_valid_post_type( $post_type ) {
+
+	$post_type = get_post_type_object( trim( (string) $post_type ) );
+
+	if ( ! $post_type ) {
+		return false;
+	}
+
+	$args = array(
+		'public'             => true,
+		'publicly_queryable' => true,
+		'has_archive'        => true,
+		'_builtin'           => false,
+	);
+
+	$valid = wp_list_filter( array( $post_type ), $args, 'AND' );
+	return ! empty( $valid );
+}
+
+/**
  * Is the query for a custom post type date archive?
  *
  * @see WP_Query::is_date()
  * @since 1.0
- * @return bool
+ * @return bool True on custom post type date archives.
  */
 function cptda_is_cpt_date() {
 
@@ -36,63 +98,13 @@ function cptda_is_cpt_date() {
 	return false;
 }
 
-
 /**
- * Checks if the post type supports date archives.
+ * Get the queried date archive custom post type name.
  *
- * @param string $post_type Post type name.
- * @return bool Returns true when the post type supports date archives.
+ * @since 2.5.0
+ * @return string Post type name if the current query is for a custom post type date archive. Else empty string.
  */
-function cptda_is_date_post_type( $post_type = '' ) {
-
-	$instance   = cptda_date_archives();
-	$post_types = $instance->post_type->get_date_archive_post_types( 'names' );
-
-	if ( in_array( (string) $post_type, $post_types ) ) {
-		return cptda_is_valid_post_type( $post_type );
-	}
-
-	return false;
-}
-
-/**
- * Check if a post type is valid to be used as date archive post type
- *
- * @since 2.3.0
- * @param string $post_type Post type name.
- * @return boolean True if it's a valid post type
- */
-function cptda_is_valid_post_type( $post_type ) {
-
-	$post_type = get_post_type_object( trim( (string) $post_type ) );
-
-	if ( ! ( isset( $post_type->public ) && $post_type->public ) ) {
-		return false;
-	}
-
-	if ( ! ( isset( $post_type->publicly_queryable ) && $post_type->publicly_queryable ) ) {
-		return false;
-	}
-
-	if ( ! ( isset( $post_type->has_archive ) && $post_type->has_archive ) ) {
-		return false;
-	}
-
-	if ( ! isset( $post_type->_builtin ) ) {
-		return false;
-	}
-
-	return $post_type->_builtin ? false : true;
-}
-
-
-/**
- * Get the current date archive custom post type.
- *
- * @since 1.0
- * @return string Post type.
- */
-function cptda_get_date_archive_cpt() {
+function cptda_get_queried_date_archive_post_type() {
 
 	if ( cptda_is_cpt_date() ) {
 		$post_type = get_query_var( 'post_type' );
@@ -105,13 +117,15 @@ function cptda_get_date_archive_cpt() {
 	return '';
 }
 
-
 /**
  * Get custom post type date archive post stati for a specific post type.
  *
+ * Used in the query (and widgets) for a custom post type date archive.
+ * The post stati can be filtered with the 'cptda_post_stati' filter.
+ *
  * @since 1.1
  * @param string $post_type Post type.
- * @return array Array with post stati for the post type.
+ * @return array Array with post stati for the post type. Default array( 'publish' ).
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 
@@ -131,40 +145,6 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	return $post_status;
 }
 
-
-/**
- * Returns public post types that have archives and are displayed in the admin menu.
- *
- * @since 2.1.0
- * @param string $type Return type 'names' or 'objects'.
- * @return array|object Post types.
- */
-function cptda_get_admin_post_types( $type = 'names' ) {
-
-	$args = array(
-		'public'             => true,
-		'publicly_queryable' => true,
-		'show_ui'            => true,
-		'show_in_menu'       => true,
-		'has_archive'        => true,
-		'_builtin'           => false,
-	);
-
-	$post_types = get_post_types( $args, 'objects', 'and' );
-
-	if ( 'objects' === $type ) {
-		return $post_types;
-	}
-
-	foreach ( $post_types as $key => $post_type ) {
-		$post_types[ $key ] = esc_attr( $post_type->labels->menu_name );
-	}
-
-	return $post_types;
-}
-
-
-
 /**
  * Gets the post type base slug.
  *
@@ -182,14 +162,16 @@ function cptda_get_post_type_base( $post_type = '' ) {
 	return $rewrite->get_base_permastruct();
 }
 
-
 /**
  * Display archive links based on post type, type and format.
- * Similar to wp_get_archives() but for custom post types.
+ *
+ * Copied from the WordPress function wp_get_archives().
+ *
+ * Use the extra `post_type` parameter in `$args` to display archive links for a custom post type.
  *
  * @since 1.0
  *
- * @see get_archives_link()
+ * @see wp_get_archives()
  *
  * @param string|array $args {
  *     Default archive links arguments. Optional.
@@ -228,7 +210,7 @@ function cptda_get_archives( $args = '' ) {
 
 	$post_type = sanitize_key( trim( (string) $r['post_type'] ) );
 
-	if ( !cptda_is_date_post_type( $post_type ) ) {
+	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		unset( $r['post_type'] );
 		if ( $r['echo'] ) {
 			wp_get_archives( $r );
@@ -272,7 +254,7 @@ function cptda_get_archives( $args = '' ) {
 	}
 
 	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	$post_status = ( is_array( $post_status ) && !empty( $post_status ) ) ? $post_status : array( 'publish' );
+	$post_status = ( is_array( $post_status ) && ! empty( $post_status ) ) ? $post_status : array( 'publish' );
 	$post_status = array_map( 'esc_sql', $post_status );
 	$post_status = "post_status IN ('" . implode( "', '", $post_status ) . "')";
 
@@ -426,14 +408,18 @@ function cptda_get_archives( $args = '' ) {
 	}
 }
 
-
 /**
- * Display calendar with days that have posts as links.
+ * Display a calendar with days that have posts as links.
+ *
+ * Copied from the WordPress function get_calendar().
+ *
+ * Use the extra `post_type` parameter to display a calendar for a custom post type.
  *
  * The calendar is cached, which will be retrieved, if it exists. If there are
  * no posts for the month, then it will not be displayed.
  *
  * @since 1.0.0
+ * @see get_calendar()
  *
  * @global wpdb      $wpdb
  * @global int       $m
@@ -450,12 +436,12 @@ function cptda_get_archives( $args = '' ) {
 function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 
-	if ( empty( $post_type ) || !cptda_is_date_post_type( $post_type ) ) {
+	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
 		return;
 	}
 
 	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	$post_status = ( is_array( $post_status ) && !empty( $post_status ) ) ? $post_status : array( 'publish' );
+	$post_status = ( is_array( $post_status ) && ! empty( $post_status ) ) ? $post_status : array( 'publish' );
 	$post_status = array_map( 'esc_sql', $post_status );
 	$post_status = "post_status IN ('" . implode( "', '", $post_status ) . "')";
 
@@ -567,21 +553,21 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tr>';
 
 	if ( $previous ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) .
 			'</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 	}
 
-	$calendar_output .= "\n\t\t".'<td class="pad">&nbsp;</td>';
+	$calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
 
 	if ( $next ) {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) .
 			' &raquo;</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
 	}
 
 	$calendar_output .= '
@@ -607,7 +593,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	// See how much we should pad in the beginning
 	$pad = calendar_week_mod( date( 'w', $unixmonth ) - $week_begins );
 	if ( 0 != $pad ) {
-		$calendar_output .= "\n\t\t".'<td colspan="'. esc_attr( $pad ) .'" class="pad">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
 	}
 
 	$newrow = false;
@@ -649,7 +635,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	$pad = 7 - calendar_week_mod( date( 'w', mktime( 0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins );
 	if ( $pad != 0 && $pad != 7 ) {
-		$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr( $pad ) .'">&nbsp;</td>';
+		$calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 	}
 	$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
 

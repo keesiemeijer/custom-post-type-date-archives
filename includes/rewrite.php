@@ -49,7 +49,7 @@ class CPTDA_Rewrite {
 
 		$plugin = cptda_date_archives();
 
-		$this->post_types = $plugin->post_type->get_date_archive_post_types( 'names' );
+		$this->post_types = $plugin->post_type->get_post_types( 'names' );
 
 		if ( empty( $this->post_types ) ) {
 			return;
