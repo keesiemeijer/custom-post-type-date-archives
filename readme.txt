@@ -61,7 +61,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 == Changelog ==
 = 2.5.0 =
 * Enhancement
-	* Add more control what posts are displayed in the Recent Posts widget
+	* Add more control over what posts are displayed in the Recent Posts widget
 	* New settings class to manage admin settings
 	* New functions for use in theme templates
 = 2.4.0 =
@@ -89,4 +89,4 @@ Initial Commit
 
 == Upgrade Notice ==
 = 2.4.0 =
-This update adds more control what posts are displayed in the Recent Posts widget.
+This update adds more control over what posts are displayed in the Recent Posts widget.
