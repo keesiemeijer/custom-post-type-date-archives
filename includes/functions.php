@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
  * Use context 'publish_future' to get custom post types that publish future posts.
  *
- * @since 2.4.1
+ * @since 2.5.0
  * @param string $format  Accepts 'names', 'labels' or 'objects' Default 'names'.
  * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'. Default 'date_archive'.
  *
@@ -101,7 +101,7 @@ function cptda_is_cpt_date() {
 /**
  * Get the queried date archive custom post type name.
  *
- * @since 2.4.1
+ * @since 2.5.0
  * @return string Post type name if the current query is for a custom post type date archive. Else empty string.
  */
 function cptda_get_queried_date_archive_post_type() {

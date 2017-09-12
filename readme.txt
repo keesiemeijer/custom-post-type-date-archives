@@ -3,7 +3,7 @@ Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag:  2.4.1-alpha
+Stable tag:  2.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Add Date archives to custom post types right in the dashboard itself. This plugi
 
 * Adds a date archives submenu for each custom post type
 * Adds the rewrite rules needed for viewing the date archives
-* Adds a calendar, archive and recent posts widget
+* Adds extra options to the calendar, archive and recent posts widget
 * Allows you to publish scheduled posts with future dates like normal posts
 * Allows you to use specific theme templates files for cpt date archives
 
@@ -28,7 +28,7 @@ Example permalink (url) for a custom post type `events` date archive.
 `
 https:&#47;&#47;example.com&#47;events&#47;2015&#47;06&#47;12
 `
-The calendar, archive and recent posts widget are similar to the existing WordPress widgets, but with extra options added.
+The calendar, archive and recent posts widget are similar to the existing WordPress widgets, but with extra (custom post type) options added.
 
 The cpt date archives use the same theme template files as the normal WordPress date archives. Extra [template files](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Theme-Template-Files) and [template functions](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki/Functions) are available for use in the custom post type date archives.
 
@@ -59,6 +59,11 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.5.0 =
+* Enhancement
+	* Add more control what posts are displayed in the Recent Posts widget
+	* New settings class to manage admin settings
+	* New functions for use in theme templates
 = 2.4.0 =
 * Enhancement
 	* Add recent posts widget
@@ -84,4 +89,4 @@ Initial Commit
 
 == Upgrade Notice ==
 = 2.4.0 =
-This update adds a recent posts widget.
+This update adds more control what posts are displayed in the Recent Posts widget.

@@ -50,7 +50,7 @@ class CPTDA_Post_Types {
 	/**
 	 * Setup post types.
 	 *
-	 * @since 2.4.1
+	 * @since 2.5.0
 	 */
 	private function get_public_post_types() {
 		$args = array(
@@ -187,7 +187,7 @@ class CPTDA_Post_Types {
 	 * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
 	 * Use context 'publish_future' to get custom post types that publish future posts.
 	 *
-	 * @since 2.4.1
+	 * @since 2.5.0
 	 * @param string $format  Accepts 'names', 'labels' or 'objects' Default 'names'.
 	 * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'.
 	 *                        Default 'date_archive'. If no context is provided the default is used.
@@ -222,7 +222,7 @@ class CPTDA_Post_Types {
 	 * Use context 'admin' to get custom post types that are registered to appear in the admin menu.
 	 * Use context 'publish_future' to get custom post types that publish future posts.
 	 *
-	 * @since 2.4.1
+	 * @since 2.5.0
 	 * @param string $context Accepts 'date_archive', 'admin' and 'publish_future'.
 	 *                        Default 'date_archive'. If no context is provided the default is used.
 	 * @return array Array with post type objects depending on context.
@@ -250,13 +250,13 @@ class CPTDA_Post_Types {
 	/**
 	 * Filters array of post types by support.
 	 *
-	 * @since 2.4.1
+	 * @since 2.5.0
 	 *
 	 * @param array  $post_types Array with post type objects.
 	 * @param string $support    Support to filter by.
 	 * @return array Array with post types filtered by support.
 	 */
-	public function filter_by_support( $post_types, $support ) {
+	private function filter_by_support( $post_types, $support ) {
 		if ( ! is_array( $post_types ) ) {
 			return array();
 		}
