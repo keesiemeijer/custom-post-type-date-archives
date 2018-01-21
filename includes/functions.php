@@ -441,11 +441,15 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	}
 
 	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	$post_status = ( is_array( $post_status ) && ! empty( $post_status ) ) ? $post_status : array( 'publish' );
-	$post_status = array_map( 'esc_sql', $post_status );
-	$post_status = "post_status IN ('" . implode( "', '", $post_status ) . "')";
+	if ( ! ( is_array( $post_status ) && $post_status ) ) {
+		$post_status = array( 'publish' );
+	}
+
+	$post_status_escaped = array_map( 'esc_sql', $post_status );
+	$post_status_sql     = "post_status IN ('" . implode( "', '", $post_status_escaped ) . "')";
 
 	$post_type_escaped = esc_sql( $post_type );
+	$post_type_sql     = "post_type = '{$post_type_escaped}' AND {$post_status_sql}";
 
 	$key = md5( $m . $monthnum . $year );
 	$cache = wp_cache_get( 'cptda_get_calendar', 'calendar' );
@@ -468,7 +472,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	// Quick check. If we have no posts at all, abort!
 	if ( ! $posts ) {
-		$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE post_type = '{$post_type_escaped}' AND {$post_status} LIMIT 1" );
+		$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE {$post_type_sql} LIMIT 1" );
 		if ( ! $gotsome ) {
 			$cache[ $key ] = '';
 			wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
@@ -508,19 +512,67 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$unixmonth = mktime( 0, 0 , 0, $thismonth, 1, $thisyear );
 	$last_day = date( 't', $unixmonth );
 
-	// Get the next and previous month and year with at least one post
-	$previous = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
+	$calendar_data = array(
+		'year'          => $thisyear,
+		'month'         => $thismonth,
+		'last_day'      => $last_day,
+		'post_type'     => $post_type,
+		'post_status'   => $post_status,
+		'post_type_sql' => $post_type_sql,
+	);
+
+	$navigation = array(
+		'previous' => array( 'year' => '', 'month' => '' ),
+		'next'     => array( 'year' => '', 'month' => '' ),
+	);
+
+	/**
+	 * Filter the calendar's next and previous archive links.
+	 *
+	 *
+	 * @param array $navigation    Array with year and month for previous and next archive link.
+	 *                             Set the 'previous' or 'next' key to false to disable the archive link
+	 * @param array $calendar_data Array with data for the current callendar.
+	 */
+	$calendar_nav = apply_filters( 'cptda_get_calendar_calendar_nav', $navigation, $calendar_data );
+	$calendar_nav = array_merge( $navigation, $calendar_nav );
+
+	$prev_year  = '';
+	$prev_month = '';
+	$prev       = $calendar_nav['previous'];
+	if ( is_array( $prev ) ) {
+		$prev_year  = isset( $prev['year'] ) ? absint( $prev['year'] ) : '';
+		$prev_month = isset( $prev['month'] ) ? absint( $prev['month'] ) : '';
+		if ( ! ( $prev_year && $prev_month ) ) {
+			// previous month and year with at least one post
+			$prev_obj = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date < '$thisyear-$thismonth-01'
-		AND post_type = '{$post_type_escaped}' AND {$post_status}
+		AND {$post_type_sql}
 			ORDER BY post_date DESC
 			LIMIT 1" );
-	$next = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
+			$prev_year  = isset( $prev_obj->year ) ? $prev_obj->year : '';
+			$prev_month = isset( $prev_obj->month ) ? $prev_obj->month : '';
+		}
+	}
+
+	$next_year  = '';
+	$next_month = '';
+	$next       = $calendar_nav['next'];
+	if ( is_array( $next ) ) {
+		$next_year  = isset( $next['year'] ) ? absint( $next['year'] ) : '';
+		$next_month = isset( $next['month'] ) ? absint( $next['month'] ) : '';
+		if ( ! ( $next_year && $next_month ) ) {
+			$next_obj = $wpdb->get_row( "SELECT MONTH(post_date) AS month, YEAR(post_date) AS year
 		FROM $wpdb->posts
 		WHERE post_date > '$thisyear-$thismonth-{$last_day} 23:59:59'
-		AND post_type = '{$post_type_escaped}' AND {$post_status}
+		AND {$post_type_sql}
 			ORDER BY post_date ASC
 			LIMIT 1" );
+			$next_year  = isset( $next_obj->year ) ? $next_obj->year : '';
+			$next_month = isset( $next_obj->month ) ? $next_obj->month : '';
+		}
+	}
 
 	/* translators: Calendar caption: 1: month name, 2: 4-digit year */
 	$calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
@@ -552,9 +604,9 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tfoot>
 	<tr>';
 
-	if ( $previous ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $previous->year, $previous->month, $post_type ) . '">&laquo; ' .
-			$wp_locale->get_month_abbrev( $wp_locale->get_month( $previous->month ) ) .
+	if ( $prev_year && $prev_month ) {
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
+			$wp_locale->get_month_abbrev( $wp_locale->get_month( $prev_month ) ) .
 			'</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
@@ -562,9 +614,9 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	$calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
 
-	if ( $next ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next->year, $next->month, $post_type ) . '">' .
-			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next->month ) ) .
+	if ( $next_year && $next_month ) {
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next_year, $next_month, $post_type ) . '">' .
+			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next_month ) ) .
 			' &raquo;</a></td>';
 	} else {
 		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
@@ -577,17 +629,28 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tbody>
 	<tr>';
 
-	$daywithpost = array();
+	/**
+	 * Set calendar days for the current calendar.
+	 *
+	 * @param null|array $daywithpost   Array with numerical calendar days or null.
+	 *                                  Default null (use days from current month and year).
+	 * @param array      $calendar_data Array with data for the current callendar.
+	 */
+	$daywithpost = apply_filters( 'cptda_get_calendar_calendar_days', null, $calendar_data );
 
-	// Get days with posts
-	$dayswithposts = $wpdb->get_results( "SELECT DISTINCT DAYOFMONTH(post_date)
-		FROM $wpdb->posts WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
-		AND post_type = '{$post_type_escaped}' AND {$post_status}
-		AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59'", ARRAY_N );
-	if ( $dayswithposts ) {
-		foreach ( (array) $dayswithposts as $daywith ) {
-			$daywithpost[] = $daywith[0];
+	if ( ! is_array( $daywithpost ) ) {
+		// Get days with posts
+		$dayswithposts = $wpdb->get_results( "SELECT DISTINCT DAYOFMONTH(post_date)
+			FROM $wpdb->posts WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
+			AND {$post_type_sql}
+			AND post_date <= '{$thisyear}-{$thismonth}-{$last_day} 23:59:59'", ARRAY_N );
+		if ( $dayswithposts ) {
+			foreach ( (array) $dayswithposts as $daywith ) {
+				$daywithpost[] = $daywith[0];
+			}
 		}
+
+		$daywithpost = is_array( $daywithpost ) ? $daywithpost : array();
 	}
 
 	// See how much we should pad in the beginning
