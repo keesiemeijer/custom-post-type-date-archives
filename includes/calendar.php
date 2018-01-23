@@ -246,6 +246,8 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$daywithpost = apply_filters( 'cptda_get_calendar_calendar_days', null, $calendar_data );
 
 	if ( ! is_array( $daywithpost ) ) {
+		$daywithpost = array();
+
 		// Get days with posts
 		$dayswithposts = $wpdb->get_results( "SELECT DISTINCT DAYOFMONTH(post_date)
 			FROM $wpdb->posts WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
@@ -256,8 +258,6 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 				$daywithpost[] = $daywith[0];
 			}
 		}
-
-		$daywithpost = is_array( $daywithpost ) ? $daywithpost : array();
 	}
 
 	// See how much we should pad in the beginning
