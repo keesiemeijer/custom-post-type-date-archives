@@ -2,6 +2,8 @@
 /**
  * Calendar
  *
+ * Customized core WordPress get_calendar() function.
+ *
  * @package     Custom Post Type Date Archives
  * @subpackage  Functions/Calendar
  * @copyright   Copyright (c) 2017, Kees Meijer
@@ -136,8 +138,10 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	/**
 	 * Filter the calendar's next and previous archive links.
 	 *
+	 * @since  2.5.1
 	 *
-	 * @param array $navigation    Array with year and month for previous and next archive link.
+	 *
+	 * @param array $navigation    Array with year and month data for previous and next archive link.
 	 *                             Set the 'previous' or 'next' key to false to disable the archive link
 	 * @param array $calendar_data Array with data for the current callendar.
 	 */
@@ -239,6 +243,8 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	/**
 	 * Set calendar days for the current calendar.
 	 *
+	 * @since  2.5.1
+	 *
 	 * @param null|array $daywithpost   Array with numerical calendar days or null.
 	 *                                  Default null (use days from current month and year).
 	 * @param array      $calendar_data Array with data for the current callendar.
@@ -259,6 +265,8 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 			}
 		}
 	}
+
+	$daywithpost = array_unique( array_map( 'intval', $daywithpost ) );
 
 	// See how much we should pad in the beginning
 	$pad = calendar_week_mod( date( 'w', $unixmonth ) - $week_begins );
@@ -323,6 +331,6 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		echo apply_filters( 'cptda_get_calendar', $calendar_output );
 		return;
 	}
-	/** This filter is documented in wp-includes/general-template.php */
+	/** This filter is documented in includes/calendar.php */
 	return apply_filters( 'cptda_get_calendar', $calendar_output );
 }
