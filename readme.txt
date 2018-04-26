@@ -2,8 +2,8 @@
 Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
 Requires at least: 4.0
-Tested up to: 4.8
-Stable tag:  2.5.0
+Tested up to: 4.9
+Stable tag:  2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,10 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.5.1 =
+* Enhancement
+	* Add ability to use custom archive days in the calendar by using filters.
+
 = 2.5.0 =
 * Enhancement
 	* Add more control over what posts are displayed in the Recent Posts widget
@@ -88,5 +92,5 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 Initial Commit
 
 == Upgrade Notice ==
-= 2.4.0 =
-This update adds more control over what posts are displayed in the Recent Posts widget.
+= 2.5.1 =
+This update adds filters to use custom dates in the calendar.

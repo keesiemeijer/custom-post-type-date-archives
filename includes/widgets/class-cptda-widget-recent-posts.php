@@ -106,6 +106,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			'posts_per_page'      => $number,
 			'no_found_rows'       => true,
 			'ignore_sticky_posts' => true,
+			'cptda_recent_posts'  => true, // To check if it's a query from this plugin
 		);
 
 		$today = getdate();

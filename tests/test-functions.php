@@ -156,47 +156,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test test calendar output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	 */
-	function test_cptda_get_calendar() {
-		global $wp_locale;
-		$this->init();
-		$year = (int) date( "Y" ) - 1;
-
-		$expected = '';
-		foreach ( array( '03', '01' ) as $month ) {
-			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
-			$post = $this->factory->post->create( $args );
-		}
-
-		$calendar = cptda_get_calendar( 'cpt', true, false );
-		$this->assertContains( '>&laquo; Mar<', $calendar );
-		$this->assertNotContains( '<td><a ', $calendar );
-
-		$this->go_to( '?post_type=cpt&year=' . $year . '&monthnum=3' );
-		$calendar = cptda_get_calendar( 'cpt', true, false );
-		$this->assertContains( "Posts published on March 20, $year", $calendar );
-		$this->assertContains( '<td><a ', $calendar );
-		$this->assertContains( cptda_get_day_link( $year, 3, 20, 'cpt' ) , $calendar );
-		$this->assertContains( '>&laquo; Jan<', $calendar );
-
-		$this->go_to( '?post_type=cpt&year=' . $year . '&monthnum=2' );
-		$calendar = cptda_get_calendar( 'cpt', true, false );
-		$this->assertContains( '>&laquo; Jan<', $calendar );
-		$this->assertContains( '>Mar &raquo;<', $calendar );
-		$this->assertNotContains( '<td><a ', $calendar );
-
-		$this->go_to( '?post_type=cpt&year=' . $year . '&monthnum=1' );
-		$calendar = cptda_get_calendar( 'cpt', true, false );
-		$this->assertContains( "Posts published on January 20, $year", $calendar );
-		$this->assertContains( '<td><a ', $calendar );
-		$this->assertContains( cptda_get_day_link( $year, 1, 20, 'cpt' ) , $calendar );
-		$this->assertContains( '>Mar &raquo;<', $calendar );
-	}
-
-	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_not_supported_custom_post_type_stati() {
