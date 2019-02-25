@@ -9,7 +9,11 @@ module.exports = function( grunt ) {
 
 		pkg: grunt.file.readJSON( 'package.json' ),
 
-		gitinfo: {},
+		githash: {
+			main: {
+				options: {},
+			}
+		},
 
 		addtextdomain: {
 			options: {
@@ -130,10 +134,10 @@ module.exports = function( grunt ) {
 				overwrite: true, // overwrite matched source files
 				replacements: [ {
 					from: /custom-post-type-date-archives.svg\?branch=(master|develop)/g,
-					to: "custom-post-type-date-archives.svg?branch=<%= gitinfo.local.branch.current.name %>"
+					to: "custom-post-type-date-archives.svg?branch=<%= githash.main.branch %>"
 				}, {
 					from: /custom-post-type-date-archives\/tree\/(master|develop)#/g,
-					to: "custom-post-type-date-archives/tree/<%= gitinfo.local.branch.current.name %>#"
+					to: "custom-post-type-date-archives/tree/<%= githash.main.branch %>#"
 				} ]
 			}
 		}
@@ -143,7 +147,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'i18n', [ 'addtextdomain', 'makepot' ] );
 
-	grunt.registerTask( 'travis', [ 'gitinfo', 'replace:replace_branch' ] );
+	grunt.registerTask( 'travis', [ 'githash', 'replace:replace_branch' ] );
 
 	// Creates build
 	grunt.registerTask( 'build', [ 'clean:main', 'version', 'makepot', 'travis', 'copy:main' ] );
