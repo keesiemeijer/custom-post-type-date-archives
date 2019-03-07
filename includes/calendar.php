@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array Array with date attributes.
  */
 function cptda_get_calendar_date() {
-	global $m, $monthnum, $year;
+	global $m, $monthnum, $year, $wpdb;
 
 	if ( isset( $_GET['w'] ) ) {
 		$w = (int) $_GET['w'];
