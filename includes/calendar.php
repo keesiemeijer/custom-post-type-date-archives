@@ -171,17 +171,6 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		return;
 	}
 
-	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	if ( ! ( is_array( $post_status ) && $post_status ) ) {
-		$post_status = array( 'publish' );
-	}
-
-	$post_status_escaped = array_map( 'esc_sql', $post_status );
-	$post_status_sql     = "post_status IN ('" . implode( "', '", $post_status_escaped ) . "')";
-
-	$post_type_escaped = esc_sql( $post_type );
-	$post_type_sql     = "post_type = '{$post_type_escaped}' AND {$post_status_sql}";
-
 	$key           = md5( $post_type . $m . $monthnum . $year );
 	$cache         = wp_cache_get( 'cptda_get_calendar', 'calendar' );
 	$is_cache      = $cache && is_array( $cache ) && isset( $cache[ $key ] );
@@ -254,7 +243,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		$prev_month = isset( $prev['month'] ) ? $prev['month'] : '';
 	} else {
 		$prev_year = absint( $calendar_data['prev_year'] );
-		$next_month = absint( $calendar_data['next_month'] );
+		$prev_month = absint( $calendar_data['prev_month'] );
 	}
 
 	if ( ( '' === $calendar_data['next_year'] ) && ( '' === $calendar_data['next_month'] ) ) {
