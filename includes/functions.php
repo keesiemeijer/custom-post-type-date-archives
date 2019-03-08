@@ -141,8 +141,9 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
 	 * @since 1.1
 	 * @param array $post_status Array with post stati for a custom post type with date archives
 	 */
-	$post_status = apply_filters( 'cptda_post_stati', $post_status, $post_type );
-	return $post_status;
+	$stati = apply_filters( 'cptda_post_stati', $post_status, $post_type );
+
+	return is_array( $stati ) && ! empty( $stati ) ? $stati : $post_status;
 }
 
 /**
