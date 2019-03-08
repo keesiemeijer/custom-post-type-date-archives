@@ -15,6 +15,7 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		parent::tearDown();
 		$this->unregister_post_type();
 
+		remove_filter( 'cptda_calendar_data', array($this, 'exclude_category_posts'), 10, 2 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_next_month_to_june' ), 10 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_next_month_navigation_to_false' ), 10 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_date_to_march_18' ), 10 );
@@ -23,8 +24,6 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test calendar output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_calendar() {
 		global $wp_locale;
@@ -88,7 +87,6 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test calendar output with date set to march 18 with filter.
-	 *
 	 */
 	function test_cptda_filter_days_of_calendar_no_dates() {
 		global $wp_locale;
@@ -113,8 +111,6 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test calendar cache.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_calendar_cache() {
 		global $wp_locale, $monthnum, $year;
@@ -141,6 +137,50 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		$no_queries     = get_num_queries();
 
 		$this->assertSame( $queries_after, $no_queries );
+	}
+
+	/**
+	 * Test example in documentation.
+	 */
+	function test_documentation_example() {
+		global $wp_locale, $monthnum, $year;
+		$this->init();
+
+		register_taxonomy_for_object_type( 'category', 'cpt' );
+		$post_year = (int) date( "Y" ) - 1;
+
+		// create posts for month
+		$args = array( 'post_date' => "$post_year-02-10 00:00:00", 'post_type' => 'cpt' );
+		$post = $this->factory->post->create( $args );
+		$args['post_date'] = "$post_year-03-10 00:00:00";
+		$post = $this->factory->post->create( $args );
+		$args['post_date'] = "$post_year-04-10 00:00:00";
+		$post = $this->factory->post->create( $args );
+		$args['post_date'] = "$post_year-04-20 00:00:00";
+		$post = $this->factory->post->create( $args );
+		$args['post_date'] = "$post_year-05-10 00:00:00";
+		$post = $this->factory->post->create( $args );
+		$args['post_date'] = "$post_year-06-10 00:00:00";
+		$post = $this->factory->post->create( $args );
+
+		$posts = get_posts( 'post_type=cpt&posts_per_page=-1&fields=ids' );
+
+		$term_id = wp_create_term( 'noarchive', 'category' );
+		wp_set_post_terms ( $posts[1], $term_id, 'category', true );
+		wp_set_post_terms ( $posts[2], $term_id, 'category', true );
+		wp_set_post_terms ( $posts[4], $term_id, 'category', true );
+
+		$monthnum = 4;
+		$year = $post_year;
+
+		// Exclude posts with 'noarchive' term.
+		add_filter( 'cptda_calendar_data', array($this, 'exclude_category_posts'), 10, 2 );
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+
+		$this->assertContains( '>Jun &raquo;<', $calendar );
+		$this->assertContains( '>&laquo; Feb<', $calendar );
+		$this->assertContains( "Posts published on April 10, $post_year", $calendar );
+		$this->assertNotContains( "Posts published on April 20, $post_year", $calendar );
 	}
 
 	/**
@@ -184,8 +224,6 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test calendar output with navigation to the month of June.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_filter_calendar_navigation() {
 		global $wp_locale;
@@ -258,5 +296,114 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 	function set_next_month_navigation_to_false( $data ) {
 		$data['next_month'] = false;
 		return $data;
+	}
+
+	/**
+	 * Test example in documentation
+	 */
+	function exclude_category_posts( $date, $post_type ) {
+
+	/*
+	 * The parameter $date is an array with $date attributes.
+	 *
+	 * By default the $date['calendar_days'] is an empty array.
+	 * If you provide an array with days it will be used by the calendar.
+	 */
+		$date['calendar_days'] = array();
+
+		$current_date = array(
+			'year'  => (int) $date['year'],
+			'month' => (int) $date['month'],
+		);
+
+		// Get the post stati for the current post type
+		$post_status = cptda_get_cpt_date_archive_stati( $post_type );
+
+		// Query arguments to get posts (dates) for the current month with
+		// posts with the 'noarchive' term excluded.
+		$args = array(
+			// Get all the posts for the current month
+			'posts_per_page' => -1,
+
+			// Get posts from post type and status.
+			'post_type'   => $post_type,
+			'post_status' => $post_status,
+
+			// Get posts from current calendar month.
+			'date_query' => array( $current_date ),
+
+			// Exclude posts with `noarchive` category term from results.
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'category',
+					'field'    => 'slug',
+					'terms'    => array( 'noarchive' ),
+					'operator' => 'NOT IN',
+				),
+			),
+		);
+
+
+		// Get the posts for the current calendar (with noarchive term excluded).
+		$calendar_posts = get_posts( $args );
+
+		if ( ! $calendar_posts ) {
+			// Return false for 'calendar_days' if no posts were found.
+			// This prevents the calendar querying for posts
+			$date['calendar_days'] = false;
+		} else {
+			// Get the dates from the posts.
+			$dates = wp_list_pluck( $calendar_posts, 'post_date' );
+
+			foreach ( $dates as $day ) {
+				// Get the day number from the post date.
+				$date['calendar_days'][] = (int) date( 'j', strtotime( $day ) );
+			}
+		}
+
+		/*
+	 * The 'prev_year', 'prev_month', 'next_year' and 'next_month' values are
+	 * by default an empty string.
+	 *
+	 * If you provide your own values it will be used by the calendar.
+	 */
+
+		// Query for the next archive month.
+		$args['posts_per_page']       = 1;
+		$args['date_query']           = array();
+		$args['date_query']['before'] = $current_date;
+
+		// Get post before the current calendar date (with 'noarchive term excluded').
+		$post_before = get_posts( $args );
+
+		if ( isset( $post_before[0]->post_date ) ) {
+			// Get the date values from the post.
+			$date['prev_year']  = (int) date( 'Y', strtotime( $post_before[0]->post_date ) );
+			$date['prev_month'] = (int) date( 'n', strtotime( $post_before[0]->post_date ) );
+		} else {
+			// Return false for 'prev_year' or 'prev_month' if no posts are found.
+			// This prevents the calendar querying for next and previous archive dates.
+			$date['prev_year'] = false;
+		}
+
+		// Query for previous archive month.
+		$args['date_query']          = array();
+		$args['date_query']['after'] = $current_date;
+		$args['order']               = 'ASC';
+
+		// Get a post after the current calendar date (with 'noarchive term excluded').
+		$post_after = get_posts( $args );
+
+		if ( isset( $post_after[0]->post_date ) ) {
+			// Get the date values from the post.
+			$date['next_year']  = (int) date( 'Y', strtotime( $post_after[0]->post_date ) );
+			$date['next_month'] = (int) date( 'n', strtotime( $post_after[0]->post_date ) );
+		} else {
+			// Return false for 'next_year' or 'next_month' if no posts are found.
+			// This prevents the calendar querying for next and previous archive dates.
+			$date['next_year'] = false;
+		}
+
+		return $date;
 	}
 }
