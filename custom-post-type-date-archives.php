@@ -93,6 +93,11 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->load_textdomain();
 			self::$instance->post_type = new CPTDA_Post_Types();
 
+			if( class_exists('CPTDA_Rest_API_Calendar') ) {
+				$cptda_rest_api_calendar = new CPTDA_Rest_API_Calendar();
+				$cptda_rest_api_calendar->init();
+			}
+
 			if ( is_admin() ) {
 				new CPTDA_Admin();
 			}
@@ -177,6 +182,9 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/settings.php';
 
+		if ( class_exists( 'WP_REST_Controller' ) ) {
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-calendar.php';
+		}
 
 		if ( ! is_admin() ) {
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rewrite.php';
