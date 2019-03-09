@@ -34,28 +34,28 @@ function cptda_get_calendar_date() {
 
 	// Let's figure out when we are
 	if ( ! empty( $monthnum ) && ! empty( $year ) ) {
-		$thismonth = zeroise( intval( $monthnum ), 2 );
+		$thismonth = (int) $monthnum;
 		$thisyear = (int) $year;
 	} elseif ( ! empty( $w ) ) {
 		// We need to get the month from MySQL
 		$thisyear = (int) substr( $m, 0, 4 );
 		//it seems MySQL's weeks disagree with PHP's
 		$d = ( ( $w - 1 ) * 7 ) + 6;
-		$thismonth = $wpdb->get_var( "SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')" );
+		$thismonth = (int) $wpdb->get_var( "SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')" );
 	} elseif ( ! empty( $m ) ) {
 		$thisyear = (int) substr( $m, 0, 4 );
 		if ( strlen( $m ) < 6 ) {
-			$thismonth = '01';
+			$thismonth = 1;
 		} else {
-			$thismonth = zeroise( (int) substr( $m, 4, 2 ), 2 );
+			$thismonth = (int) substr( $m, 4, 2 );
 		}
 	} else {
-		$thisyear = gmdate( 'Y', $ts );
-		$thismonth = gmdate( 'm', $ts );
+		$thisyear = (int) gmdate( 'Y', $ts );
+		$thismonth = (int) gmdate( 'm', $ts );
 	}
 
-	$unixmonth = mktime( 0, 0 , 0, $thismonth, 1, $thisyear );
-	$last_day = date( 't', $unixmonth );
+	$unixmonth = (int) mktime( 0, 0 , 0, $thismonth, 1, $thisyear );
+	$last_day = (int) date( 't', $unixmonth );
 
 	return array(
 		'year'          => $thisyear,
@@ -103,8 +103,8 @@ function cptda_get_adjacent_archive_date( $post_type, $calendar_date, $type = 'p
 	global $wpdb;
 
 	$post_type_sql = cptda_get_calendar_post_type_sql( $post_type );
-	$year          = absint( $calendar_date['year'] );
-	$month         = absint( $calendar_date['month'] );
+	$year          = isset( $calendar_date['year'] ) ? absint( $calendar_date['year'] ) : 0;
+	$month         = isset( $calendar_date['month'] ) ? absint( $calendar_date['month'] ) : 0;
 
 	$date  = array(
 		'year'  => '',
@@ -115,13 +115,19 @@ function cptda_get_adjacent_archive_date( $post_type, $calendar_date, $type = 'p
 		return $date;
 	}
 
+	$month     = zeroise( $month, 2 );
 	$order     = 'DESC';
 	$date_sql  = "post_date < '$year-$month-01'";
 
-	if ( 'next' === $type ) {
+	if ( isset( $calendar_date['last_day'] ) && ( 'next' === $type ) ) {
 		$order    = 'ASC';
-		$last_day = $calendar_date['last_day'];
-		$date_sql = "post_date > '$year-$month-{$last_day} 23:59:59'";
+		$last_day = absint( $calendar_date['last_day'] );
+		$last_day = $last_day ? zeroise( $last_day, 2 ) : '';
+		$date_sql = $last_day ? "post_date > '$year-$month-{$last_day} 23:59:59'" : '';
+	}
+
+	if ( ! $date_sql ) {
+		return $date;
 	}
 
 	// previous month and year with at least one post
@@ -131,8 +137,8 @@ function cptda_get_adjacent_archive_date( $post_type, $calendar_date, $type = 'p
 		AND {$post_type_sql}
 		ORDER BY post_date {$order}
 		LIMIT 1" );
-	$date['year']  = isset( $date_obj->year ) ? $date_obj->year : '';
-	$date['month'] = isset( $date_obj->month ) ? $date_obj->month : '';
+	$date['year']  = isset( $date_obj->year ) ? (int) $date_obj->year : '';
+	$date['month'] = isset( $date_obj->month ) ? (int) $date_obj->month : '';
 
 	return $date;
 }
@@ -168,7 +174,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$post_type_sql = cptda_get_calendar_post_type_sql( $post_type );
 
 	if ( empty( $post_type ) || empty( $post_type_sql ) ) {
-		return;
+		return '';
 	}
 
 	$key           = md5( $post_type . $m . $monthnum . $year );
@@ -233,9 +239,6 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$calendar_data = apply_filters( 'cptda_calendar_data', $calendar_date, $post_type );
 	$calendar_data = array_merge( $calendar_date, $calendar_data );
 
-	$thisyear = $calendar_data['year'];
-	$thismonth = $calendar_data['month'];
-	$last_day = $calendar_data['last_day'];
 
 	if ( ( '' === $calendar_data['prev_year'] ) && ( '' === $calendar_data['prev_month'] ) ) {
 		$prev       = cptda_get_adjacent_archive_date( $post_type, $calendar_data );
@@ -259,6 +262,10 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$calendar_data['next_month'] = $next_month;
 	$calendar_data['prev_year'] = $prev_year;
 	$calendar_data['prev_month'] = $prev_month;
+
+	$thisyear = $calendar_data['year'];
+	$thismonth = zeroise( absint( $calendar_data['month'] ), 2 );
+	$last_day = $calendar_data['last_day'];
 
 	/* translators: Calendar caption: 1: month name, 2: 4-digit year */
 	$calendar_caption = _x( '%1$s %2$s', 'calendar caption' );

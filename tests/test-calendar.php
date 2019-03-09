@@ -15,7 +15,7 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		parent::tearDown();
 		$this->unregister_post_type();
 
-		remove_filter( 'cptda_calendar_data', array($this, 'exclude_category_posts'), 10, 2 );
+		remove_filter( 'cptda_calendar_data', array( $this, 'exclude_category_posts' ), 10, 2 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_next_month_to_june' ), 10 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_next_month_navigation_to_false' ), 10 );
 		remove_filter( 'cptda_calendar_data', array( $this, 'set_date_to_march_18' ), 10 );
@@ -174,7 +174,7 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		$year = $post_year;
 
 		// Exclude posts with 'noarchive' term.
-		add_filter( 'cptda_calendar_data', array($this, 'exclude_category_posts'), 10, 2 );
+		add_filter( 'cptda_calendar_data', array( $this, 'exclude_category_posts' ), 10, 2 );
 		$calendar = cptda_get_calendar( 'cpt', true, false );
 
 		$this->assertContains( '>Jun &raquo;<', $calendar );
@@ -208,12 +208,12 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 
 		$expected = array (
 			'year'          => 2018,
-			'month'         => '03',
-			'last_day'      => '31',
-			'next_year'     => '2018',
-			'prev_year'     => '2018',
-			'next_month'    => '5',
-			'prev_month'    => '1',
+			'month'         => 3,
+			'last_day'      => 31,
+			'next_year'     => 2018,
+			'prev_year'     => 2018,
+			'next_month'    => 5,
+			'prev_month'    => 1,
 			'calendar_days' => array( 20 ),
 		);
 
@@ -303,7 +303,7 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 	 */
 	function exclude_category_posts( $date, $post_type ) {
 
-	/*
+		/*
 	 * The parameter $date is an array with $date attributes.
 	 *
 	 * By default the $date['calendar_days'] is an empty array.
