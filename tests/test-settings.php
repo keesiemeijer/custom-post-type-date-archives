@@ -22,8 +22,6 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test if settings always returns default settings
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_delete_settings
 	 */
 	function test_get_settings_defaults() {
 		$settings_obj = new CPTDA_Settings();
@@ -40,8 +38,6 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_get_settings_in_database() {
 		$this->init();
@@ -66,8 +62,6 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_add_value() {
 		$this->init();
@@ -92,8 +86,6 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings. Remove a value
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_remove_value() {
 		$this->init();

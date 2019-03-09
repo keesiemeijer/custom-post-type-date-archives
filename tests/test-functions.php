@@ -18,9 +18,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_cpt_date() on a custom post type date archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
-	 * test_createpublished_posts_init
 	 */
 	function test_cptda_is_cpt_date() {
 		$this->init();
@@ -46,8 +43,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_date_post_type().
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_is_date_post_type() {
 		$this->init();
@@ -63,8 +58,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_date_post_type() for post type post without archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_date_post_type_no_archive() {
 		$args = array( 'public' => true, 'has_archive' => false );
@@ -77,7 +70,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 * Test deprecated function cptda_get_date_archive_cpt
 	 *
 	 * @expectedDeprecated cptda_get_date_archive_cpt
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_cptda_get_date_archive_cpt() {
 		$this->init();
@@ -99,8 +91,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_queried_date_archive_post_type() current post type archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_cptda_get_queried_date_archive_post_type() {
 		$this->init();
@@ -118,8 +108,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_queried_date_archive_post_type() on normal date archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts
 	 */
 	function test_cptda_get_queried_date_archive_post_type_post() {
 		$posts = $this->create_posts( 'post' );
@@ -136,8 +124,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test archives output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_archives() {
 		global $wp_locale;
@@ -160,8 +146,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test archives output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_archives_objects_with_filter() {
 		global $wp_locale;
@@ -218,8 +202,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_post_status_publish() {
 		$this->init();
@@ -228,8 +210,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_post_status_future() {
 		$this->future_init();
@@ -239,8 +219,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_post_types() {
 		$this->init();
@@ -249,8 +227,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_cptda_get_post_types_future() {
 		$this->future_init();
@@ -259,8 +235,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types for post type not publicly queryable.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_get_post_types_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
@@ -274,7 +248,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 * This is a deprecated function
 	 *
 	 * @expectedDeprecated cptda_get_admin_post_types
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_admin_post_types_deprecated() {
 		$this->init();
@@ -285,8 +258,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types for admin post types.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_admin_post_types() {
 		$this->init();
@@ -304,8 +275,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_valid_post_type.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_valid_post_type() {
 		$args = array( 'public' => true, 'has_archive' => true, );
@@ -316,9 +285,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_valid_post_type for post type not publicly queryable.
-	 *
-	 * @depends test_cptda_is_valid_post_type
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_valid_post_type_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
@@ -332,7 +298,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 *
 	 * @expectedDeprecated cptda_get_admin_post_types
 	 * @expectedDeprecated cptda_get_date_archive_cpt
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_empty_output() {
 

@@ -26,8 +26,6 @@ class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test output from widget.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_archives_widget_output() {
 
@@ -70,8 +68,6 @@ EOF;
 
 	/**
 	 * Test calendar widget output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_calendar_widget_output() {
 
@@ -113,8 +109,6 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_widget_output() {
 
@@ -158,8 +152,6 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_future_posts_only() {
 
@@ -207,8 +199,6 @@ EOF;
 
 	/**
 	 * Test output from recent posts widget.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_recent_posts_no_posts_found() {
 
@@ -248,7 +238,6 @@ EOF;
 	/**
 	 * Test **not** replacing WordPress core default widgets.
 	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_not_replacing_core_widgets() {
 

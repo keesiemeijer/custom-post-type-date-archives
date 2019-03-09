@@ -20,8 +20,6 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test testcase function init()
-	 *
-	 * @depends test_cpt_setup
 	 */
 	function test_init() {
 		$this->init();
@@ -30,8 +28,6 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test testcase function future_init()
-	 *
-	 * @depends test_cpt_setup
 	 */
 	function test_future_init() {
 		$this->future_init();
@@ -48,8 +44,6 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test if posts are created with post status publish.
-	 *
-	 * @depends test_init
 	 */
 	function test_create_posts_init() {
 		$this->init();
@@ -59,8 +53,6 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test if posts with future dates are created with post status publish.
-	 *
-	 * @depends test_future_init
 	 */
 	function test_create_posts_future_init() {
 		$this->future_init();
@@ -71,7 +63,7 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 	/**
 	 * Test deleting admin page settings
 	 */
-	function test_delete_settings(){
+	function test_delete_settings() {
 		$this->delete_settings();
 		$this->assertFalse( get_option( 'custom_post_type_date_archives' ) );
 	}
