@@ -93,9 +93,13 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			self::$instance->load_textdomain();
 			self::$instance->post_type = new CPTDA_Post_Types();
 
-			if( class_exists('CPTDA_Rest_API_Calendar') ) {
+			if (  class_exists( 'WP_REST_Controller' ) ) {
 				$cptda_rest_api_calendar = new CPTDA_Rest_API_Calendar();
 				$cptda_rest_api_calendar->init();
+				$cptda_rest_api_latest_post = new CPTDA_Rest_API_Recent_Posts();
+				$cptda_rest_api_latest_post->init();
+				$cptda_rest_api_latest_post = new CPTDA_Rest_API_Archives();
+				$cptda_rest_api_latest_post->init();
 			}
 
 			if ( is_admin() ) {
@@ -181,9 +185,12 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/settings.php';
-
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/recent-posts.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/archive-utils.php';
 		if ( class_exists( 'WP_REST_Controller' ) ) {
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-calendar.php';
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-recent-posts.php';
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-archives.php';
 		}
 
 		if ( ! is_admin() ) {
