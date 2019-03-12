@@ -77,7 +77,10 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		$data  = array();
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
-		if ( ! $post_type || ! post_type_exists( $post_type ) ) {
+		$types     = cptda_get_post_types();
+		$types[]   = 'post';
+
+		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 			return $error;
 		}
 
@@ -193,7 +196,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		return $this->add_additional_fields_schema( $schema );
 	}
 
-	public function filter_callback( $output, $results, $r ) {
+	public function archive_filter_callback( $output, $results, $r ) {
 		$this->dates = $results;
 		return $output;
 	}
@@ -201,9 +204,11 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	public function get_archives( $args ) {
 		$this->dates = array();
 
-		add_filter( 'cptda_get_archives', array( $this, 'filter_callback' ), 10, 3 );
+		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
+
+		add_filter( 'cptda_get_archives', array( $this, 'archive_filter_callback' ), 10, 3 );
 		$archives = cptda_get_archives_html( $args );
-		remove_filter( 'cptda_get_archives', array( $this, 'filter_callback' ), 10, 3 );
+		remove_filter( 'cptda_get_archives', array( $this, 'archive_filter_callback' ), 10, 3 );
 
 		return $archives;
 	}

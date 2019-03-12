@@ -55,35 +55,37 @@ function cptda_get_archives( $args = '' ) {
 	global $wpdb, $wp_locale;
 
 	$defaults = array(
-		'type' => 'monthly', 'limit' => '',
+		'type' => 'monthly', 'limit' => '', 'offset' => '',
 		'format' => 'html', 'before' => '',
 		'after' => '', 'show_post_count' => false,
 		'echo' => 1, 'order' => 'DESC', 'post_type' => ''
 	);
 
 	$r = wp_parse_args( $args, $defaults );
+	$r = cptda_sanitize_archive_settings( $r );
+
 
 	// Reset format for 'objects'
 	$object_format = ( 'object' === $r['format'] );
 	$r['format']   = $object_format ? 'html' : $r['format'];
 
-	$post_type = sanitize_key( trim( (string) $r['post_type'] ) );
-	if ( ! cptda_is_date_post_type( $post_type ) ) {
-		if ( $r['echo'] ) {
-			wp_get_archives( $r );
-			return;
-		} else {
-			return wp_get_archives( $r );
-		}
+	$post_type = $r['post_type'];
+	$types     = cptda_get_post_types();
+	$types[]   = 'post';
+
+	if ( ! $post_type || ! in_array( $post_type, $types ) ) {
+		return '';
+	}
+
+	$limit = '';
+
+	if ( $r['limit'] ) {
+		$offset = $r['offset'] ? $r['offset'] . ', ' : '';
+		$limit = ' LIMIT ' . $offset . $r['limit'];
 	}
 
 	if ( '' == $r['type'] ) {
 		$r['type'] = 'monthly';
-	}
-
-	if ( ! empty( $r['limit'] ) ) {
-		$r['limit'] = absint( $r['limit'] );
-		$r['limit'] = ' LIMIT ' . $r['limit'];
 	}
 
 	$order = strtoupper( $r['order'] );
@@ -143,8 +145,6 @@ function cptda_get_archives( $args = '' ) {
 		wp_cache_set( 'last_changed', $last_changed, 'posts' );
 	}
 
-	$limit = $r['limit'];
-
 	if ( 'monthly' == $r['type'] ) {
 		$query = "SELECT YEAR(post_date) AS `year`, MONTH(post_date) AS `month`, count(ID) as posts FROM $wpdb->posts $join $where GROUP BY YEAR(post_date), MONTH(post_date) ORDER BY post_date $order $limit";
 		$key = md5( $query );
@@ -156,7 +156,7 @@ function cptda_get_archives( $args = '' ) {
 		if ( ! $object_format && $results ) {
 			$after = $r['after'];
 			foreach ( (array) $results as $result ) {
-				$url = cptda_get_month_link( $result->year, $result->month, $r['post_type'] );
+				$url = cptda_get_month_archive_link( $result->year, $result->month, $r['post_type'] );
 				/* translators: 1: month name, 2: 4-digit year */
 				$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $result->month ), $result->year );
 				if ( $r['show_post_count'] ) {
@@ -176,7 +176,7 @@ function cptda_get_archives( $args = '' ) {
 		if ( ! $object_format && $results ) {
 			$after = $r['after'];
 			foreach ( (array) $results as $result ) {
-				$url = cptda_get_year_link( $result->year, $r['post_type'] );
+				$url = cptda_get_year_archive_link( $result->year, $r['post_type'] );
 				$text = sprintf( '%d', $result->year );
 				if ( $r['show_post_count'] ) {
 					$r['after'] = '&nbsp;(' . $result->posts . ')' . $after;
@@ -196,7 +196,7 @@ function cptda_get_archives( $args = '' ) {
 		if ( ! $object_format && $results ) {
 			$after = $r['after'];
 			foreach ( (array) $results as $result ) {
-				$url  = cptda_get_day_link( $result->year, $result->month, $result->dayofmonth, $r['post_type'] );
+				$url  = cptda_get_day_archive_link( $result->year, $result->month, $result->dayofmonth, $r['post_type'] );
 				$date = sprintf( '%1$d-%2$02d-%3$02d 00:00:00', $result->year, $result->month, $result->dayofmonth );
 				$text = mysql2date( $archive_day_date_format, $date );
 				if ( $r['show_post_count'] ) {

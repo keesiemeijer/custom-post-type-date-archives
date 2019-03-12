@@ -162,3 +162,54 @@ function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 	 */
 	return apply_filters( 'cptda_get_day_link', $daylink, $year, $month, $day );
 }
+
+/**
+ * Retrieve the permalink for date archives.
+ *
+ * @since 2.5.2
+ *
+ * @param bool|int $year      False for current year. Integer of year.
+ * @param string   $post_type Post type.
+ * @return string Archive permalink.
+ */
+function cptda_get_year_archive_link( $year, $post_type ) {
+	if ( 'post' === $post_type ) {
+		return get_year_link( $year );
+	}
+	return cptda_get_year_link( $year, $post_type );
+}
+
+/**
+ * Retrieve the permalink for date archives.
+ *
+ * @since 2.5.2
+ *
+ * @param bool|int $year      False for current year. Integer of year.
+ * @param bool|int $month     False for current month. Integer of month.
+ * @param string   $post_type Post type.
+ * @return string Archive permalink.
+ */
+function cptda_get_month_archive_link( $year, $month, $post_type ) {
+	if ( 'post' === $post_type ) {
+		return get_month_link( $year, $month );
+	}
+	return cptda_get_month_link( $year, $month, $post_type );
+}
+
+/**
+ * Retrieve the permalink for date archives.
+ *
+ * @since 2.5.2
+ *
+ * @param bool|int $year      False for current year. Integer of year.
+ * @param bool|int $month     False for current month. Integer of month.
+ * @param bool|int $day       False for current day. Integer of day.
+ * @param string   $post_type Post type.
+ * @return string Archive permalink.
+ */
+function cptda_get_day_archive_link( $year, $month, $day, $post_type ) {
+	if ( 'post' === $post_type ) {
+		return get_day_link( $year, $month, $day );
+	}
+	return cptda_get_day_link( $year, $month, $day, $post_type );
+}

@@ -361,7 +361,7 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 			}
 		}
 
-		/*
+	/*
 	 * The 'prev_year', 'prev_month', 'next_year' and 'next_month' values are
 	 * by default an empty string.
 	 *

@@ -50,7 +50,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 		global $wp_rest_server;
 		$wp_rest_server = new Spy_REST_Server;
 		do_action( 'rest_api_init' );
-		$this->assertTrue( in_array( '/custom_post_type_date_archives/v1/(?P<type>[\w-]+)/recent-posts', array_keys( $wp_rest_server->get_routes() ) ) );
+		$this->assertTrue( in_array( '/custom_post_type_date_archives/v1/(?P<cptda_type>[\w-]+)/recent-posts', array_keys( $wp_rest_server->get_routes() ) ) );
 		$wp_rest_server = null;
 	}
 

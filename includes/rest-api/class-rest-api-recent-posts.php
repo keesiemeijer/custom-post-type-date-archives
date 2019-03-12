@@ -42,9 +42,9 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		$namespace = 'custom_post_type_date_archives/v' . $version;
 		$base = 'recent-posts';
 
-		register_rest_route( $namespace, '/(?P<type>[\w-]+)/' . $base, array(
+		register_rest_route( $namespace, '/(?P<cptda_type>[\w-]+)/' . $base, array(
 				'args' => array(
-					'type' => array(
+					'cptda_type' => array(
 						'description' => __( 'An alphanumeric identifier for the post type.' ),
 						'type'        => 'string',
 					),
@@ -76,18 +76,21 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 		$data  = array();
 
-		$post_type = $args['type'];
-		if ( ! ( isset( $post_type ) && post_type_exists( $post_type ) ) ) {
+		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
+		$types     = cptda_get_post_types();
+		$types[]   = 'post';
+
+		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 			return $error;
 		}
-
 
 		$defaults = cptda_get_recent_posts_settings();
 		$args     = wp_parse_args( $args, $defaults );
 
 		$args['post_type'] = $post_type;
-		$args = cptda_sanitize_recent_posts_settings( $args );
+		unset( $args['cptda_type'] );
 
+		$args = cptda_sanitize_recent_posts_settings( $args );
 		$args = $this->prepare_item_for_response( $args, $request );
 
 		return rest_ensure_response( $args );
@@ -137,6 +140,12 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
+
+		// Default recent posts is 5
+		$number = $args['number'] ? $args['number'] : 5;
+
+		// Don't allow queries over 100 posts
+		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
 		$recent_posts = cptda_get_recent_posts( $args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );

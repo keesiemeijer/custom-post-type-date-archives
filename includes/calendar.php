@@ -75,7 +75,10 @@ function cptda_get_calendar_date() {
  * @return string SQL for the post type
  */
 function cptda_get_calendar_post_type_sql( $post_type ) {
-	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
+	$types     = cptda_get_post_types();
+	$types[]   = 'post';
+
+	if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 		return '';
 	}
 
@@ -298,7 +301,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tr>';
 
 	if ( $prev_year && $prev_month ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_archive_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $prev_month ) ) .
 			'</a></td>';
 	} else {
@@ -308,7 +311,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
 
 	if ( $next_year && $next_month ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_link( $next_year, $next_month, $post_type ) . '">' .
+		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_archive_link( $next_year, $next_month, $post_type ) . '">' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next_month ) ) .
 			' &raquo;</a></td>';
 	} else {
@@ -370,7 +373,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 			$label = sprintf( __( 'Posts published on %s' ), $date_format );
 			$calendar_output .= sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
-				cptda_get_day_link( $thisyear, $thismonth, $day, $post_type ),
+				cptda_get_day_archive_link( $thisyear, $thismonth, $day, $post_type ),
 				esc_attr( $label ),
 				$day
 			);

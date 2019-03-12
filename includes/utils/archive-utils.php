@@ -6,35 +6,40 @@ function cptda_get_archive_settings() {
 		'title'           => '',
 		'before_title'    => '',
 		'after_title'     => '',
-		'limit'           => 10,
+		'limit'           => '',
+		'offset'          => '',
 		'type'            => 'monthly',
 		'order'           => 'DESC',
 		'format'          => 'html',
 		'show_post_count' => false,
+		'before'          => '',
+		'after'           => '',
 	);
 }
 
 function cptda_sanitize_archive_settings( $args ) {
-	$defaults = cptda_get_recent_posts_settings();
+	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
 
-	$args['post_type']       = sanitize_key( (string) $args['post_type'] );
+	$args['post_type']       = sanitize_key( trim( (string) $args['post_type'] ) );
 	$args['title']           = strip_tags( trim( (string) $args['title'] ) );
 	$args['before_title']    = trim( (string) $args['before_title'] ) ;
 	$args['after_title']     = trim( (string) $args['after_title'] );
 	$args['limit']           = absint( $args['limit'] );
+	$args['offset']          = absint( $args['offset'] );
 	$args['type']            = strip_tags( trim( (string) $args['type'] ) );
 	$args['order']           = strip_tags( trim( (string) $args['order'] ) );
 	$args['format']          = strip_tags( trim( (string) $args['format'] ) );
 	$args['show_post_count'] = wp_validate_boolean( $args['show_post_count'] );
+	$args['before']          = trim( (string) $args['before'] ) ;
+	$args['after']           = trim( (string) $args['after'] );
 
 	return $args;
 }
 
 function cptda_validate_archive_settings( $args ) {
 	$plugin       = cptda_date_archives();
-	$defaults     = cptda_get_archive_settings();
-	$args         = array_merge( $defaults, $args );
+	$args         = cptda_sanitize_archive_settings( $args );
 	$type         = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
 	$order        = array( 'ASC', 'DESC' );
 	$format       = array( 'custom', 'html', 'option' );
@@ -46,14 +51,10 @@ function cptda_validate_archive_settings( $args ) {
 	}
 
 	/* strings */
-	$args['type']   = in_array( $args['type'], $type )     ? $args['type']   : 'monthly';
 	$args['order']  = strtoupper( $args['order'] );
+	$args['type']   = in_array( $args['type'], $type )     ? $args['type']   : 'monthly';
 	$args['order']  = in_array( $args['order'], $order )   ? $args['order']  : 'DESC';
 	$args['format'] = in_array( $args['format'], $format ) ? $args['format'] : 'html';
-
-	/* Integers. */
-	$args['limit'] = absint( $args['limit'] );
-	$args['limit'] = $args['limit'] ? $args['limit'] : 10;
 
 	return $args;
 }
@@ -61,21 +62,28 @@ function cptda_validate_archive_settings( $args ) {
 function cptda_get_archives_html( $args ) {
 	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
+	$html     = '';
 
-	/* Overwrite the $echo argument and set it to false. */
-	$args['echo'] = false;
-	$html = '';
+	/* Override archive $args if needed. */
+	$args['echo']  = false;
+	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
 
 	/* If a title was input by the user, display it. */
 	if ( ! empty( $args['title'] ) ) {
 		$html .= $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
+	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : 0;
+	$paged = ( 1 < $paged ) ? $paged : 0;
+	if ( $paged ) {
+		$args['offset'] = $args['limit'] ? ( ( $paged - 1 ) * $args['limit'] ) : '';
+	}
+
 	/* Get the archives list. */
-	if ( cptda_is_date_post_type( $args['post_type'] ) ) {
-		$archives = str_replace( array( "\r", "\n", "\t" ), '', cptda_get_archives( $args ) );
-	} else {
-		$archives = str_replace( array( "\r", "\n", "\t" ), '', wp_get_archives( $args ) );
+	$archives = str_replace( array( "\r", "\n", "\t" ), '', cptda_get_archives( $args ) );
+
+	if ( ! $archives ) {
+		return '';
 	}
 
 	/* If the archives should be shown in a <select> drop-down. */

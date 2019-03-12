@@ -74,12 +74,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 			echo '<div class="calendar_wrap">';
 		}
 
-		/* Get the archives list. */
-		if ( cptda_is_date_post_type( $args['post_type'] ) ) {
-			cptda_get_calendar( $args['post_type'] );
-		} else {
-			get_calendar();
-		}
+		cptda_get_calendar( $args['post_type'] );
 
 		echo '</div>';
 		echo $widget_args['after_widget'];

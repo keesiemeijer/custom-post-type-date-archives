@@ -59,9 +59,9 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$namespace = 'custom_post_type_date_archives/v' . $version;
 		$base = 'calendar';
 
-		register_rest_route( $namespace, '/(?P<type>[\w-]+)/' . $base, array(
+		register_rest_route( $namespace, '/(?P<cptda_type>[\w-]+)/' . $base, array(
 				'args' => array(
-					'type' => array(
+					'cptda_type' => array(
 						'description' => __( 'An alphanumeric identifier for the post type.' ),
 						'type'        => 'string',
 					),
@@ -93,27 +93,34 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid calendar request.', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 		$data  = array();
 
-		if ( ! ( isset( $args['type'] ) && cptda_is_date_post_type( $args['type'] ) ) ) {
+		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
+		$types     = cptda_get_post_types();
+		$types[]   = 'post';
+
+		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 			return $error;
 		}
-
 
 		$year  = isset( $args['year'] ) ? absint( $args['year'] ) : '';
 		$month = isset( $args['month'] ) ? absint( $args['month'] ) : '';
 
 		if ( $year && $month ) {
-			$data['year'] = $year;
-			$data['month'] = $month;
+			$args['year']  = $year;
+			$args['month'] = $month;
 		} else {
-			$data = cptda_get_calendar_date();
+			$date = cptda_get_calendar_date();
+			$args['year']  = $date['year'];
+			$args['month'] = $date['month'];
 		}
 
-		if ( ! ( $data['year'] && $data['month'] ) ) {
+		if ( ! ( $args['year'] && $args['month'] ) ) {
 			return $error;
 		}
 
-		$data['post_type'] = $args['type'];
-		$data = $this->prepare_item_for_response( $data, $request );
+		$args['post_type'] = $post_type;
+		unset( $args['cptda_type'] );
+
+		$data = $this->prepare_item_for_response( $args, $request );
 
 		return rest_ensure_response( $data );
 	}
@@ -245,7 +252,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	 * @param array  $date     Calendar date.
 	 * @return string Calendar HTML.
 	 */
-	public function get_filter_attributes( $calendar, $date ) {
+	public function calendar_filter_callback( $calendar, $date ) {
 		$this->calendar      = $calendar;
 		$this->calendar_data = $date;
 		return $calendar;
@@ -273,9 +280,9 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 			$year     = $args['year'];
 		}
 
-		add_filter( 'cptda_get_calendar', array( $this, 'get_filter_attributes' ), 10, 2 );
+		add_filter( 'cptda_get_calendar', array( $this, 'calendar_filter_callback' ), 10, 2 );
 		$calendar = cptda_get_calendar( $args['post_type'], true, false );
-		remove_filter( 'cptda_get_calendar', array( $this, 'get_filter_attributes' ), 10, 2 );
+		remove_filter( 'cptda_get_calendar', array( $this, 'calendar_filter_callback' ), 10, 2 );
 
 		$monthnum = $previous_monthnum;
 		$year     = $previous_year;

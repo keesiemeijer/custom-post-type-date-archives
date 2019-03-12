@@ -60,18 +60,16 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
  * @since 2.5.2
  * @access public
  *
- * @param array $args Arguments used to get the calendar.
+ * @param array  $args    Arguments used to get the calendar.
+ * @param string $feature The feature that called this function.
  * @return string Recent Posts HTML.
  */
-function cptda_get_recent_posts( $args ) {
+function cptda_get_recent_posts( $args, $feature = '' ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args = array_merge( $defaults, $args );
 
 	// Default recent posts is 5
 	$number = $args['number'] ? $args['number'] : 5;
-
-	// Don't allow queries over 100 posts
-	$number = ( 100 >= $number ) ? $number : 100;
 
 	$query_args = array(
 		'post_type'           => $args['post_type'],
@@ -118,6 +116,10 @@ function cptda_get_recent_posts( $args ) {
 
 	if ( ( 'all' !== $include ) && $date_query ) {
 		$query_args['date_query']  = array( $date_query );
+	}
+
+	if ( 'widget' === $feature ) {
+		$args = apply_filters( 'widget_posts_args', $query_args, $args );
 	}
 
 	$posts = get_posts( $query_args );
