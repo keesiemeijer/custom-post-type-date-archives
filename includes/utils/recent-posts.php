@@ -101,7 +101,7 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
  * @param array $args Arguments used for the recent posts feature.
  * @return array Recent posts query.
  */
-function cptda_get_recent_posts( $args, $feature = '' ) {
+function cptda_get_recent_posts_query( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args = array_merge( $defaults, $args );
 
@@ -155,11 +155,5 @@ function cptda_get_recent_posts( $args, $feature = '' ) {
 		$query_args['date_query']  = array( $date_query );
 	}
 
-	if ( 'widget' === $feature ) {
-		$args = apply_filters( 'widget_posts_args', $query_args, $args );
-	}
-
-	$posts = get_posts( $query_args );
-
-	return $posts;
+	return $query_args;
 }

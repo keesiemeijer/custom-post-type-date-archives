@@ -146,7 +146,6 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		// Don't allow queries over 100 posts
 		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
-		$recent_posts = cptda_get_recent_posts( $args );
 		// Don't allow title and message arguments.
 		$blacklisted = array(
 			'title',
@@ -158,11 +157,14 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		foreach ( $blacklisted as $value ) {
 			$args[ $value ] = '';
 		}
+
+		$query_args   = cptda_get_recent_posts_query( $args );
+		$recent_posts = get_posts( $query_args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		$data = array(
-			'posts'     => $recent_posts,
-			'rendered'  => $rendered,
+			'posts'    => $recent_posts,
+			'rendered' => $rendered,
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

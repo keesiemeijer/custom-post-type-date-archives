@@ -77,7 +77,12 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 		$args['title'] = apply_filters( 'widget_title', $title, $args, $this->id_base );
 
-		$recent_posts = cptda_get_recent_posts( $args );
+		$query_args = cptda_get_recent_posts_query( $args );
+
+		/** This filter is documented in wp-includes/widgets/class-wp-widget-recent-posts.php */
+		$query_args = apply_filters( 'widget_posts_args', $query_args, $args );
+
+		$recent_posts = get_posts( $query_args );
 		$widget       = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		if ( $widget ) {
