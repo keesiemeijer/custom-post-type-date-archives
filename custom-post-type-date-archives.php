@@ -184,9 +184,10 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/link-template.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/post_type.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/widgets.php';
-		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/settings.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/admin-settings.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/recent-posts.php';
-		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/archive-utils.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/archives.php';
+		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/calendar.php';
 		if ( class_exists( 'WP_REST_Controller' ) ) {
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-calendar.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-recent-posts.php';
