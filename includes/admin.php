@@ -116,7 +116,7 @@ class CPTDA_Admin {
 	 */
 	public function get_settings( $post_type = '' ) {
 
-		$settings_obj = new CPTDA_Settings();
+		$settings_obj = new CPTDA_Admin_Settings();
 		$old_settings = $settings_obj->get_settings();
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && ( 'POST' === $_SERVER['REQUEST_METHOD'] ) ) {

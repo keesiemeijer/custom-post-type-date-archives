@@ -71,7 +71,7 @@ class CPTDA_Post_Types {
 	 */
 	private function setup_admin_post_types() {
 
-		$settings = new CPTDA_Settings();
+		$settings = new CPTDA_Admin_Settings();
 		$admin_settings = $settings->get_settings();
 
 		if ( empty( $admin_settings ) ) {
