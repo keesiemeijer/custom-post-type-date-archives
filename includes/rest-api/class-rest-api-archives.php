@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Adds a WordPress REST API endpoint to get a custom post type calendar.
+ * Adds a WordPress REST API endpoint to get custom post type archives.
  *
- * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/calendar
+ * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/archives
  *
  * @since 2.5.2
  */
@@ -109,7 +109,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		/**
-		 * Whether users are allowed to view recent posts Rest API items.
+		 * Whether users are allowed to view archive Rest API items.
 		 *
 		 * @since 2.5.2
 		 *
@@ -164,7 +164,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves the calendar schema, conforming to JSON Schema.
+	 * Retrieves the archives schema, conforming to JSON Schema.
 	 *
 	 * @since 2.5.2
 	 * @access public
@@ -174,7 +174,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/schema#',
-			'title'      => 'custom_post_type_date_archives_calendar',
+			'title'      => 'custom_post_type_date_archives',
 			'type'       => 'object',
 			'properties' => array(
 				'dates' => array(

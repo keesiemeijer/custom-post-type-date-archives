@@ -1,4 +1,26 @@
 <?php
+/**
+ * Recent Posts Utils
+ *
+ * @package     Custom_Post_Type_Date_Archives
+ * @subpackage  Utils/Recent_Posts
+ * @copyright   Copyright (c) 2017, Kees Meijer
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.5.2
+ */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Get the default settings for the recent posts feature.
+ *
+ * @since 2.5.2
+ *
+ * @return array Default recent posts settings.
+ */
 function cptda_get_recent_posts_settings() {
 	return array(
 		'title'         => '',
@@ -12,6 +34,14 @@ function cptda_get_recent_posts_settings() {
 	);
 }
 
+/**
+ * Sanitize recent posts feature settings.
+ *
+ * @since 2.5.2
+ *
+ * @param array $args Array with recent posts settings.
+ * @return array Array with sanitized recent post settings.
+ */
 function cptda_sanitize_recent_posts_settings( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
@@ -28,6 +58,15 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 	return $args;
 }
 
+/**
+ * Get te recent posts feature HTML.
+ *
+ * @since 2.5.2
+ *
+ * @param array $recent_posts Array with post IDs.
+ * @param array $args         Recent posts arguments
+ * @return string Recent posts HTML.
+ */
 function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
@@ -55,14 +94,12 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 }
 
 /**
- * Returns calendar HTML.
+ * Create the recent posts query used by the widget and rest API.
  *
  * @since 2.5.2
- * @access public
  *
- * @param array  $args    Arguments used to get the calendar.
- * @param string $feature The feature that called this function.
- * @return string Recent Posts HTML.
+ * @param array $args Arguments used for the recent posts feature.
+ * @return array Recent posts query.
  */
 function cptda_get_recent_posts( $args, $feature = '' ) {
 	$defaults = cptda_get_recent_posts_settings();

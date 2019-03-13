@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Adds a WordPress REST API endpoint to get a custom post type calendar.
+ * Adds a WordPress REST API endpoint to get recent posts.
  *
- * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/calendar
+ * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/recent-posts
  *
  * @since 2.5.2
  */
@@ -166,7 +166,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves the calendar schema, conforming to JSON Schema.
+	 * Retrieves the recent posts schema, conforming to JSON Schema.
 	 *
 	 * @since 2.5.2
 	 * @access public
@@ -176,7 +176,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/schema#',
-			'title'      => 'custom_post_type_date_archives_calendar',
+			'title'      => 'custom_post_type_date_archives_recent_posts',
 			'type'       => 'object',
 			'properties' => array(
 				'posts' => array(
@@ -188,7 +188,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 					'context'     => array( 'view' ),
 				),
 				'rendered' => array(
-					'description' => __( 'Rendered calendar HTML', 'custom-post-type-date-archives' ),
+					'description' => __( 'Rendered recent posts HTML', 'custom-post-type-date-archives' ),
 					'type'        => 'string',
 					'context'     => array( 'view' ),
 				),

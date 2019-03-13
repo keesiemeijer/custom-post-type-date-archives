@@ -53,8 +53,10 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		$args['cpda_widget_archives'] =  true;
 
 		if ( 'option' === $args['format'] ) {
+			/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
 			$args = apply_filters( 'widget_archives_dropdown_args', $args, $instance );
 		} else {
+			/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
 			$args = apply_filters( 'widget_archives_args', $args, $instance );
 		}
 
@@ -71,7 +73,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance   = cptda_validate_archive_settings( $new_instance );
+		$instance  = cptda_validate_archive_settings( $new_instance );
 		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 5;
 
 		return $instance;
