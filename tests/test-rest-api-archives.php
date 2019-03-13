@@ -91,8 +91,6 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test rendered output.
-	 *
-	 * @group gg
 	 */
 	function test_rendered_archives() {
 		global $wp_locale;
@@ -117,7 +115,8 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		);
 
 		$data = $this->rest_cptda_get_archives( 'cpt', $args );
-		$expected = "<h2>Archives</h2><ul>{$expected}</ul>";
+		// Title is not allowed for the rest api.
+		$expected = "<ul>{$expected}</ul>";
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 }

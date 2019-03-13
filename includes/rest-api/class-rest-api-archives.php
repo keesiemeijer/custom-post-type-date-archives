@@ -204,7 +204,21 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	public function get_archives( $args ) {
 		$this->dates = array();
 
+		// Don't allow large queries.
 		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
+
+		// Don't allow these archive arguments.
+		$blacklisted = array(
+			'title',
+			'before_title',
+			'after_title',
+			'before',
+			'after',
+		);
+
+		foreach ( $blacklisted as $value ) {
+			$args[ $value ] = '';
+		}
 
 		add_filter( 'cptda_get_archives', array( $this, 'archive_filter_callback' ), 10, 3 );
 		$archives = cptda_get_archives_html( $args );

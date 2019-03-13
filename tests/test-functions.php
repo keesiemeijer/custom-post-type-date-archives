@@ -12,6 +12,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 		$this->unregister_post_type();
+		$this->unregister_post_type('cpt_2');
 		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
 		remove_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
 	}

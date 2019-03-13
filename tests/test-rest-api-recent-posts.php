@@ -106,14 +106,17 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 		}
 
 		$args = array(
+			'post_type'    => 'cpt',
 			'title'        => 'Recent Posts',
 			'before_title' =>  '<h2>',
 			'after_title'  =>  '</h2>',
-			'post_type'    => 'cpt',
+			'message'      => 'No posts found',
 		);
 
 		$data = $this->rest_cptda_get_recent_posts( 'cpt', $args );
-		$expected = "<h2>Recent Posts</h2><ul>{$expected}</ul>";
+
+		// Title and message are not allowed for the rest api.
+		$expected = "<ul>{$expected}</ul>";
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 

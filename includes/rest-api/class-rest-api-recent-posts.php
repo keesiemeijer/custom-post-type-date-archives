@@ -140,14 +140,24 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
-
-		// Default recent posts is 5
+		// Default recent posts number is 5
 		$number = $args['number'] ? $args['number'] : 5;
 
 		// Don't allow queries over 100 posts
 		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
 		$recent_posts = cptda_get_recent_posts( $args );
+		// Don't allow title and message arguments.
+		$blacklisted = array(
+			'title',
+			'before_title',
+			'after_title',
+			'message',
+		);
+
+		foreach ( $blacklisted as $value ) {
+			$args[ $value ] = '';
+		}
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		$data = array(
