@@ -4,7 +4,7 @@
  *
  * Customized core WordPress wp_get_archives() function.
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Functions/Archives
  * @copyright   Copyright (c) 2017, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -64,7 +64,6 @@ function cptda_get_archives( $args = '' ) {
 	$r = wp_parse_args( $args, $defaults );
 	$r = cptda_sanitize_archive_settings( $r );
 
-
 	// Reset format for 'objects'
 	$object_format = ( 'object' === $r['format'] );
 	$r['format']   = $object_format ? 'html' : $r['format'];
@@ -78,10 +77,9 @@ function cptda_get_archives( $args = '' ) {
 	}
 
 	$limit = '';
-
 	if ( $r['limit'] ) {
 		$offset = $r['offset'] ? $r['offset'] . ', ' : '';
-		$limit = ' LIMIT ' . $offset . $r['limit'];
+		$limit  = ' LIMIT ' . $offset . $r['limit'];
 	}
 
 	if ( '' == $r['type'] ) {

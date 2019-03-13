@@ -2,7 +2,7 @@
 /**
  * Admin Pages.
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Classes/Admin
  * @copyright   Copyright (c) 2016, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
