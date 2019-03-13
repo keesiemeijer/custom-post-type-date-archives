@@ -2,7 +2,7 @@
 /**
  * Class for managing admin settings.
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Classes/Settings
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  * @author keesiemeijer
  */
-class CPTDA_Settings {
+class CPTDA_Admin_Settings {
 
 	private function get_default_settings() {
 		return array(

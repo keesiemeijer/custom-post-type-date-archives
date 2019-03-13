@@ -1,5 +1,26 @@
 <?php
+/**
+ * Archive Utils
+ *
+ * @package     Custom_Post_Type_Date_Archives
+ * @subpackage  Utils/Archives
+ * @copyright   Copyright (c) 2017, Kees Meijer
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.5.2
+ */
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Get the default settings for the archives feature.
+ *
+ * @since 2.5.2
+ *
+ * @return array Default archives settings.
+ */
 function cptda_get_archive_settings() {
 	return array(
 		'post_type'       => 'post',
@@ -17,6 +38,14 @@ function cptda_get_archive_settings() {
 	);
 }
 
+/**
+ * Sanitize recent archive settings.
+ *
+ * @since 2.5.2
+ *
+ * @param array $args Array with archives settings.
+ * @return array Array with sanitized archives settings.
+ */
 function cptda_sanitize_archive_settings( $args ) {
 	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
@@ -28,7 +57,7 @@ function cptda_sanitize_archive_settings( $args ) {
 	$args['limit']           = absint( $args['limit'] );
 	$args['offset']          = absint( $args['offset'] );
 	$args['type']            = strip_tags( trim( (string) $args['type'] ) );
-	$args['order']           = strip_tags( trim( (string) $args['order'] ) );
+	$args['order']           = strtoupper( strip_tags( trim( (string) $args['order'] ) ) );
 	$args['format']          = strip_tags( trim( (string) $args['format'] ) );
 	$args['show_post_count'] = wp_validate_boolean( $args['show_post_count'] );
 	$args['before']          = trim( (string) $args['before'] ) ;
@@ -37,21 +66,27 @@ function cptda_sanitize_archive_settings( $args ) {
 	return $args;
 }
 
+/**
+ * Validate recent archive settings.
+ *
+ * @since 2.5.2
+ *
+ * @param array $args Array with archives settings.
+ * @return array Array with validated archives settings.
+ */
 function cptda_validate_archive_settings( $args ) {
-	$plugin       = cptda_date_archives();
-	$args         = cptda_sanitize_archive_settings( $args );
-	$type         = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
-	$order        = array( 'ASC', 'DESC' );
-	$format       = array( 'custom', 'html', 'option' );
+	$plugin = cptda_date_archives();
+	$args   = cptda_sanitize_archive_settings( $args );
+
 	$post_types   = $plugin->post_type->get_post_types( 'names' );
 	$post_types[] = 'post';
-
 	if ( ! in_array( $args['post_type'], $post_types ) ) {
 		$args['post_type'] = 'post';
 	}
 
-	/* strings */
-	$args['order']  = strtoupper( $args['order'] );
+	$type           = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
+	$order          = array( 'ASC', 'DESC' );
+	$format         = array( 'custom', 'html', 'option' );
 	$args['type']   = in_array( $args['type'], $type )     ? $args['type']   : 'monthly';
 	$args['order']  = in_array( $args['order'], $order )   ? $args['order']  : 'DESC';
 	$args['format'] = in_array( $args['format'], $format ) ? $args['format'] : 'html';
@@ -59,6 +94,14 @@ function cptda_validate_archive_settings( $args ) {
 	return $args;
 }
 
+/**
+ * Get te archives feature HTML.
+ *
+ * @since 2.5.2
+ *
+ * @param array $args Archive arguments.
+ * @return string Archives HTML.
+ */
 function cptda_get_archives_html( $args ) {
 	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
@@ -68,7 +111,6 @@ function cptda_get_archives_html( $args ) {
 	$args['echo']  = false;
 	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
 
-	/* If a title was input by the user, display it. */
 	if ( ! empty( $args['title'] ) ) {
 		$html .= $args['before_title'] . $args['title'] . $args['after_title'];
 	}
