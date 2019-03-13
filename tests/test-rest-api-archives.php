@@ -119,4 +119,37 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$expected = "<ul>{$expected}</ul>";
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
+
+	/**
+	 * Test pagination.
+	 */
+	function test_recent_posts_pagination() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$url  = cptda_get_month_link( $year, $month, 'cpt' );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			if ( '02' === $month ) {
+				$expected .=  trim( get_archives_link( $url, $text ) );
+			}
+		}
+
+		$posts = get_posts( 'post_type=cpt&fields=ids' );
+
+		$args = array(
+			'limit' => 1,
+			'page'  => 2,
+		);
+
+		$data     = $this->rest_cptda_get_archives( 'cpt', $args );
+		$expected = "<ul>{$expected}</ul>";
+
+		$this->assertEquals( 1 , count( $data['dates'] ) );
+		$this->assertEquals( $expected , $data['rendered'] );
+	}
 }
