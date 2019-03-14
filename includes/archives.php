@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *                                       will order by post title and 'postbypost' will order by post date.
  *                                       Default 'monthly'.
  *     @type string|int $limit           Number of links to limit the query to. Default empty (no limit).
- *     @type string|int $offset          Ofsset the query. Limit must be set for the offset to be used.
+ *     @type string|int $offset          Offset the query. Limit must be set for the offset to be used.
  *                                       Default empty (no offset).
  *     @type string     $format          Format each link should take using the $before and $after args.
  *                                       Accepts 'link' (`<link>` tag), 'option' (`<option>` tag), 'html'
