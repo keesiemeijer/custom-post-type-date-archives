@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Date Archives 2.6.1-alpha\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2019-03-14 14:26:44+00:00\n"
+"POT-Creation-Date: 2019-03-14 15:23:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Could not find the post type for the current screen."
 msgstr ""
 
-#: includes/archives.php:159 tests/test-archives.php:25
+#: includes/archives.php:161 tests/test-archives.php:25
 #: tests/test-rest-api-archives.php:106 tests/test-rest-api-archives.php:137
 #: tests/test-widgets.php:41
 #. translators: 1: month name, 2: 4-digit year
