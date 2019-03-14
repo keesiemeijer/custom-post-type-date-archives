@@ -6,7 +6,7 @@
  * @subpackage  Utils/Calendar
  * @copyright   Copyright (c) 2017, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the current calendar date.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @return array Array with date attributes.
  */
@@ -67,7 +67,7 @@ function cptda_get_calendar_date() {
 /**
  * Get the SQL for a post type.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param string $post_type Post type.
  * @return string SQL for the post type
@@ -80,12 +80,8 @@ function cptda_get_calendar_post_type_sql( $post_type ) {
 		return '';
 	}
 
-	$post_status = cptda_get_cpt_date_archive_stati( $post_type );
-	if ( ! ( is_array( $post_status ) && $post_status ) ) {
-		$post_status = array( 'publish' );
-	}
-
-	$post_status_escaped = array_map( 'esc_sql', $post_status );
+	$post_status         = cptda_get_cpt_date_archive_stati( $post_type );
+	$post_status_escaped = array_map( 'esc_sql', (array) $post_status );
 	$post_status_sql     = "post_status IN ('" . implode( "', '", $post_status_escaped ) . "')";
 
 	$post_type_escaped = esc_sql( $post_type );
@@ -94,6 +90,8 @@ function cptda_get_calendar_post_type_sql( $post_type ) {
 
 /**
  * Gets the date for an adjacent archive date
+ *
+ * @since  2.6.0
  *
  * @param string $post_type     Post type.
  * @param array  $calendar_date Array with date attributes. See cptda_get_calendar_date();

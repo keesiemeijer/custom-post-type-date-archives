@@ -6,7 +6,7 @@
  * @subpackage  Utils/Archives
  * @copyright   Copyright (c) 2017, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the default settings for the archives feature.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @return array Default archives settings.
  */
@@ -41,7 +41,7 @@ function cptda_get_archive_settings() {
 /**
  * Sanitize recent archive settings.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $args Array with archives settings.
  * @return array Array with sanitized archives settings.
@@ -69,7 +69,7 @@ function cptda_sanitize_archive_settings( $args ) {
 /**
  * Validate recent archive settings.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $args Array with archives settings.
  * @return array Array with validated archives settings.
@@ -95,9 +95,9 @@ function cptda_validate_archive_settings( $args ) {
 }
 
 /**
- * Get te archives feature HTML.
+ * Get the archives feature HTML.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $args Archive arguments.
  * @return string Archives HTML.
@@ -108,7 +108,7 @@ function cptda_get_archives_html( $args ) {
 	$html     = '';
 
 	/* Override archive $args if needed. */
-	$args['echo']  = false;
+	$args['echo']   = false;
 	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
 
 	if ( ! empty( $args['title'] ) ) {

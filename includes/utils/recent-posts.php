@@ -6,7 +6,7 @@
  * @subpackage  Utils/Recent_Posts
  * @copyright   Copyright (c) 2017, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the default settings for the recent posts feature.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @return array Default recent posts settings.
  */
@@ -37,7 +37,7 @@ function cptda_get_recent_posts_settings() {
 /**
  * Sanitize recent posts feature settings.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $args Array with recent posts settings.
  * @return array Array with sanitized recent post settings.
@@ -61,7 +61,7 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 /**
  * Get te recent posts feature HTML.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $recent_posts Array with post IDs.
  * @param array $args         Recent posts arguments
@@ -96,14 +96,14 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 /**
  * Create the recent posts query used by the widget and rest API.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param array $args Arguments used for the recent posts feature.
  * @return array Recent posts query.
  */
 function cptda_get_recent_posts_query( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
-	$args = array_merge( $defaults, $args );
+	$args     = array_merge( $defaults, $args );
 
 	// Default recent posts is 5
 	$number = $args['number'] ? $args['number'] : 5;

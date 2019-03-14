@@ -6,7 +6,7 @@
  * @subpackage  Rest_API/Calendar
  * @copyright   Copyright (c) 2019, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -19,14 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/calendar
  *
- * @since 2.5.2
+ * @since 2.6.0
  */
 class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 
 	/**
 	 * Register routes on rest_api_init.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 */
 	public function init() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
@@ -35,7 +35,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Calendar HTML.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @var string
 	 */
 	public $calendar;
@@ -43,7 +43,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Calendar data
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 *
 	 * @var array
 	 */
@@ -52,7 +52,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Register the routes for the objects of the controller.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 */
 	public function register_routes() {
 		$version = '1';
@@ -82,7 +82,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Get one item from the collection.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -128,7 +128,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get items
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -138,7 +138,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		/**
 		 * Whether users are allowed to view calendar Rest API items.
 		 *
-		 * @since 2.5.2
+		 * @since 2.6.0
 		 *
 		 * @param bool $allowed Default true.
 		 */
@@ -148,7 +148,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get a specific item
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -161,7 +161,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Prepare the item for the REST response
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param array           $args    WP Rest API arguments of the item.
@@ -197,7 +197,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Retrieves the calendar schema, conforming to JSON Schema.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @return array Item schema data.
@@ -245,7 +245,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Returns arguments used by the calendar.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param string $calendar Calendar HTML.
@@ -261,7 +261,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	/**
 	 * Returns calendar HTML.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param array $args Arguments used to get the calendar.

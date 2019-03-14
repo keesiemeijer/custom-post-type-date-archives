@@ -8,7 +8,7 @@
  * @subpackage  Functions/Archives
  * @copyright   Copyright (c) 2017, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -262,7 +262,7 @@ function cptda_get_archives( $args = '' ) {
 	/**
 	 * Filter the archive HTML.
 	 *
-	 * @since  2.5.2
+	 * @since  2.6.0
 	 *
 	 * @param string $output  Archive HTML.
 	 * @param array  $results Array with date objects.

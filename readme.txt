@@ -19,6 +19,7 @@ Add Date archives to custom post types right in the dashboard itself. This plugi
 * Adds extra options to the calendar, archive and recent posts widget
 * Allows you to publish scheduled posts with future dates like normal posts
 * Allows you to use specific theme templates files for cpt date archives
+* Adds WP Rest API endpoints for the calendar, archives and recent posts
 
 [Plugin Documentation](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki)
 
@@ -59,6 +60,13 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.6.0 =
+* Enhancement
+	* Add Rest API endpoints for the archives, calendar and recent posts.
+	* Allow post type post in archives and calendar plugin functions.
+	* Add pagination (offset) for archives and recent posts.
+	* Restructure calendar filters (deprecating the old calendar filters).
+
 = 2.5.1 =
 * Enhancement
 	* Add ability to use custom archive days in the calendar by using filters.
@@ -68,6 +76,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 	* Add more control over what posts are displayed in the Recent Posts widget
 	* New settings class to manage admin settings
 	* New functions for use in theme templates
+
 = 2.4.0 =
 * Enhancement
 	* Add recent posts widget
@@ -92,5 +101,5 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 Initial Commit
 
 == Upgrade Notice ==
-= 2.5.1 =
-This update adds filters to use custom dates in the calendar.
+= 2.6.0 =
+This update adds rest API endpoints for the archives, calendar and recent posts.

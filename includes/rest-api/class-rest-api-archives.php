@@ -6,7 +6,7 @@
  * @subpackage  Rest_API/Archives
  * @copyright   Copyright (c) 2019, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5.2
+ * @since       2.6.0
  */
 
 // Exit if accessed directly.
@@ -19,14 +19,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Registered endpoint: /wp-json/custom-post-type-date-archives/v1/{post_type}/archives
  *
- * @since 2.5.2
+ * @since 2.6.0
  */
 class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 
 	/**
+	 * Archive objects.
+	 *
+	 * @since 2.6.0
+	 * @var array
+	 */
+	public $archives;
+
+	/**
 	 * Register routes on rest_api_init.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 */
 	public function init() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
@@ -35,12 +43,12 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Register the routes for the objects of the controller.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 */
 	public function register_routes() {
-		$version = '1';
+		$version   = '1';
 		$namespace = 'custom_post_type_date_archives/v' . $version;
-		$base = 'archives';
+		$base      = 'archives';
 
 		register_rest_route( $namespace, '/(?P<cptda_type>[\w-]+)/' . $base, array(
 				'args' => array(
@@ -65,7 +73,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Get one item from the collection.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -101,7 +109,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get items
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -111,7 +119,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		/**
 		 * Whether users are allowed to view archive Rest API items.
 		 *
-		 * @since 2.5.2
+		 * @since 2.6.0
 		 *
 		 * @param bool $allowed Default true.
 		 */
@@ -121,7 +129,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to get a specific item
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -134,7 +142,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Prepare the item for the REST response
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @param array           $args    WP Rest API arguments of the item.
@@ -142,16 +150,14 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
-
-
 		$rendered = $this->get_archives( $args );
 
 		$data = array(
-			'dates'     => $this->dates,
-			'rendered'  => $rendered,
+			'archives' => $this->archives,
+			'rendered' => $rendered,
 		);
 
-		$this->dates = array();
+		$this->archives = array();
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -166,7 +172,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	/**
 	 * Retrieves the archives schema, conforming to JSON Schema.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 * @access public
 	 *
 	 * @return array Item schema data.
@@ -177,7 +183,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 			'title'      => 'custom_post_type_date_archives',
 			'type'       => 'object',
 			'properties' => array(
-				'dates' => array(
+				'archives' => array(
 					'description' => __( 'Archive date objects.', 'custom-post-type-date-archives' ),
 					'type'        => 'array',
 					'items'       => array(
@@ -197,12 +203,12 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	}
 
 	public function archive_filter_callback( $output, $results, $r ) {
-		$this->dates = $results;
+		$this->archives = $results;
 		return $output;
 	}
 
 	public function get_archives( $args ) {
-		$this->dates = array();
+		$this->archives = array();
 
 		// Don't allow large queries.
 		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;

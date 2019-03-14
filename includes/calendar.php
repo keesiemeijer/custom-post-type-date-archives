@@ -104,7 +104,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	 *
 	 * This filter is called before the database query.
 	 *
-	 * @since 2.5.2
+	 * @since 2.6.0
 	 *
 	 * @param array  $calendar_data Array with calendar data.
 	 * @param string $post_type     Post type
@@ -117,7 +117,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		$prev_year  = isset( $prev['year'] ) ? $prev['year'] : '';
 		$prev_month = isset( $prev['month'] ) ? $prev['month'] : '';
 	} else {
-		$prev_year = absint( $calendar_data['prev_year'] );
+		$prev_year  = absint( $calendar_data['prev_year'] );
 		$prev_month = absint( $calendar_data['prev_month'] );
 	}
 
@@ -126,7 +126,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		$next_year  = isset( $next['year'] ) ? $next['year'] : '';
 		$next_month = isset( $next['month'] ) ? $next['month'] : '';
 	} else {
-		$next_year = absint( $calendar_data['next_year'] );
+		$next_year  = absint( $calendar_data['next_year'] );
 		$next_month = absint( $calendar_data['next_month'] );
 	}
 
@@ -272,7 +272,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		/**
 		 * Filter the HTML calendar output.
 		 *
-		 * @since 2.5.2
+		 * @since 2.6.0
 		 *
 		 * @param string $calendar_output HTML output of the calendar.
 		 * @param array  $calendar_data   Array with arguments for the current calendar.

@@ -166,7 +166,7 @@ function cptda_get_day_link( $year, $month, $day, $post_type = '' ) {
 /**
  * Retrieve the permalink for date archives.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param bool|int $year      False for current year. Integer of year.
  * @param string   $post_type Post type.
@@ -182,7 +182,7 @@ function cptda_get_year_archive_link( $year, $post_type ) {
 /**
  * Retrieve the permalink for date archives.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param bool|int $year      False for current year. Integer of year.
  * @param bool|int $month     False for current month. Integer of month.
@@ -199,7 +199,7 @@ function cptda_get_month_archive_link( $year, $month, $post_type ) {
 /**
  * Retrieve the permalink for date archives.
  *
- * @since 2.5.2
+ * @since 2.6.0
  *
  * @param bool|int $year      False for current year. Integer of year.
  * @param bool|int $month     False for current month. Integer of month.
