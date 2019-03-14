@@ -57,8 +57,6 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 
 	/**
 	 *
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_date_archives() {
 		$this->go_to_date_archive( 'cpt' );

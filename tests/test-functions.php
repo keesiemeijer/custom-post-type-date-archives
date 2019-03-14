@@ -10,14 +10,13 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 		$this->unregister_post_type();
+		$this->unregister_post_type( 'cpt_2' );
 		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
+		remove_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
 	}
 
 	/**
 	 * Test cptda_is_cpt_date() on a custom post type date archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
-	 * test_createpublished_posts_init
 	 */
 	function test_cptda_is_cpt_date() {
 		$this->init();
@@ -43,8 +42,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_date_post_type().
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_is_date_post_type() {
 		$this->init();
@@ -60,8 +57,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_date_post_type() for post type post without archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_date_post_type_no_archive() {
 		$args = array( 'public' => true, 'has_archive' => false );
@@ -74,7 +69,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 * Test deprecated function cptda_get_date_archive_cpt
 	 *
 	 * @expectedDeprecated cptda_get_date_archive_cpt
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_cptda_get_date_archive_cpt() {
 		$this->init();
@@ -96,8 +90,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_queried_date_archive_post_type() current post type archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_cptda_get_queried_date_archive_post_type() {
 		$this->init();
@@ -115,8 +107,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_queried_date_archive_post_type() on normal date archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts
 	 */
 	function test_cptda_get_queried_date_archive_post_type_post() {
 		$posts = $this->create_posts( 'post' );
@@ -132,30 +122,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test test archives output.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
-	 */
-	function test_cptda_get_archives() {
-		global $wp_locale;
-		$this->init();
-		$year = (int) date( "Y" ) - 1;
-
-		$expected = '';
-		foreach ( array( '03', '02' ) as $month ) {
-			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
-			$post = $this->factory->post->create( $args );
-			$url = cptda_get_month_link( $year, $month, 'cpt' );
-			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
-			$expected .= trim( get_archives_link( $url, $text ) ) . "\n";
-		}
-
-		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
-
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
-	}
-
-	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_not_supported_custom_post_type_stati() {
@@ -166,18 +132,21 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_post_status_publish() {
 		$this->init();
-		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
+		$this->assertSame( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
 
 	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
+	 */
+	function test_post_status_publish_post_type_post() {
+		$this->assertSame( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'post' ) );
+	}
+
+	/**
+	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_post_status_future() {
 		$this->future_init();
@@ -187,8 +156,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_post_types() {
 		$this->init();
@@ -197,8 +164,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_cptda_get_post_types_future() {
 		$this->future_init();
@@ -207,8 +172,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types for post type not publicly queryable.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_get_post_types_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
@@ -222,7 +185,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 * This is a deprecated function
 	 *
 	 * @expectedDeprecated cptda_get_admin_post_types
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_admin_post_types_deprecated() {
 		$this->init();
@@ -233,8 +195,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_get_post_types for admin post types.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cptda_get_admin_post_types() {
 		$this->init();
@@ -252,8 +212,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_valid_post_type.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_valid_post_type() {
 		$args = array( 'public' => true, 'has_archive' => true, );
@@ -264,9 +222,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test cptda_is_valid_post_type for post type not publicly queryable.
-	 *
-	 * @depends test_cptda_is_valid_post_type
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cptda_is_valid_post_type_not_publicly_queryable() {
 		$args = array( 'public' => true, 'has_archive' => true, 'publicly_queryable' => false );
@@ -280,7 +235,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 *
 	 * @expectedDeprecated cptda_get_admin_post_types
 	 * @expectedDeprecated cptda_get_date_archive_cpt
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_empty_output() {
 
@@ -293,7 +247,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$day   = get_the_date( 'j', $_posts[0] );
 
 		$this->go_to( '?post_type=cpt&year=' . $year  );
-		
+
 		if ( ! defined( 'WP_DEBUG' ) ) {
 			define( 'WP_DEBUG', true );
 		}
@@ -307,14 +261,28 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$is_valid   = cptda_is_valid_post_type( 'cpt' );
 		$is_date    = cptda_is_cpt_date();
 		$post_type  = cptda_get_queried_date_archive_post_type();
-		$stati      = cptda_get_cpt_date_archive_stati( 'cpt');
+		$stati      = cptda_get_cpt_date_archive_stati( 'cpt' );
 		$deprecated = cptda_get_date_archive_cpt();
 		$deprecated = cptda_get_admin_post_types();
 		$archives   = cptda_get_archives( 'post_type=cpt&echo=0' );
+		$date       = cptda_get_calendar_date();
+		$adjacent   = cptda_get_adjacent_archive_date( 'cpt', $date );
+		$sql        = cptda_get_calendar_post_type_sql( 'cpt' );
 		$calendar   = cptda_get_calendar( 'cpt', true, false );
-		$year       = cptda_get_year_link( $year, 'cpt' );
-		$month      = cptda_get_month_link( $year, $month, 'cpt' );
-		$day        = cptda_get_month_link( $year, $month, $day, 'cpt' );
+		$_year      = cptda_get_year_link( $year, 'cpt' );
+		$_month     = cptda_get_month_link( $year, $month, 'cpt' );
+		$_day       = cptda_get_month_link( $year, $month, $day, 'cpt' );
+		$_year      = cptda_get_year_archive_link( $year, 'cpt' );
+		$_month     = cptda_get_month_archive_link( $year, $month, 'cpt' );
+		$_day       = cptda_get_day_archive_link( $year, $month, $day, 'cpt' );
+		$arch_args  = cptda_get_archive_settings();
+		$sanitize   = cptda_sanitize_archive_settings( $arch_args );
+		$validate   = cptda_validate_archive_settings( $arch_args );
+		$arch_html  = cptda_get_archives_html( $arch_args );
+		$rp_args    = cptda_get_recent_posts_settings();
+		$sanitize   = cptda_sanitize_recent_posts_settings( $rp_args );
+		$html       = cptda_get_recent_posts_html( $posts, $rp_args );
+		$query      = cptda_get_recent_posts_query( $rp_args );
 
 		$out = ob_get_clean();
 

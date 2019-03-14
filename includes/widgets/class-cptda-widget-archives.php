@@ -2,7 +2,7 @@
 /**
  * Archive Widget
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Widget
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -22,22 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CPTDA_Widget_Archives extends WP_Widget {
 
 	public $plugin;
-	public $defaults;
-
 
 	public function __construct() {
 		$this->plugin = cptda_date_archives();
-
-		/* Set up defaults. */
-		$this->defaults = array(
-			'title'           => esc_attr__( 'Archives', 'custom-post-type-archives' ),
-			'limit'           => 10,
-			'post_type'       => 'post',
-			'type'            => 'monthly',
-			'order'           => 'DESC',
-			'format'          => 'html',
-			'show_post_count' => false,
-		);
 
 		$widget_ops = array(
 			'classname' => 'widget_archive',
@@ -54,94 +41,48 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		}
 	}
 
-	public function widget( $sidebar, $instance ) {
+	public function widget( $widget_args, $instance ) {
 
-		/* Set the $args for wp_get_archives() to the $instance array. */
-		$args = wp_parse_args( $instance, $this->defaults );
+		/* Set the $widget_args for wp_get_archives() to the $instance array. */
+		$args = wp_parse_args( $instance, $this->get_defaults() );
+
+		$args['title'] = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
+
+		$args['before_title'] = $widget_args['before_title'];
+		$args['after_title']  = $widget_args['after_title'];
+		$args['cpda_widget_archives'] =  true;
+
+		if ( 'option' === $args['format'] ) {
+			/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
+			$args = apply_filters( 'widget_archives_dropdown_args', $args, $instance );
+		} else {
+			/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
+			$args = apply_filters( 'widget_archives_args', $args, $instance );
+		}
+
+		$args = cptda_validate_archive_settings( $args );
 
 		/* Overwrite the $echo argument and set it to false. */
 		$args['echo'] = false;
 
-		/* Output the sidebar's $before_widget wrapper. */
-		echo $sidebar['before_widget'];
+		$archives = cptda_get_archives_html( $args );
 
-		/* If a title was input by the user, display it. */
-		if ( ! empty( $args['title'] ) ) {
-			echo $sidebar['before_title'] . apply_filters( 'widget_title',  $args['title'], $instance, $this->id_base ) . $sidebar['after_title'];
+		if ( $archives ) {
+			echo $widget_args['before_widget'] . $archives . $widget_args['after_widget'];
 		}
-
-		/* Get the archives list. */
-		if ( cptda_is_date_post_type( $args['post_type'] ) ) {
-			$archives = str_replace( array( "\r", "\n", "\t" ), '', cptda_get_archives( $args ) );
-		} else {
-			$archives = str_replace( array( "\r", "\n", "\t" ), '', wp_get_archives( $args ) );
-		}
-
-		/* If the archives should be shown in a <select> drop-down. */
-		if ( 'option' === $args['format'] ) {
-
-			/* Create a title for the drop-down based on the archive type. */
-			if ( 'yearly' === $args['type'] ) {
-				$option_title = esc_html__( 'Select Year', 'custom-post-type-date-archives' );
-			} elseif ( 'monthly' === $args['type'] ) {
-				$option_title = esc_html__( 'Select Month', 'custom-post-type-date-archives' );
-			} elseif ( 'weekly' === $args['type'] ) {
-				$option_title = esc_html__( 'Select Week', 'custom-post-type-date-archives' );
-			} elseif ( 'daily' === $args['type'] ) {
-				$option_title = esc_html__( 'Select Day', 'custom-post-type-date-archives' );
-			} elseif ( 'postbypost' === $args['type'] || 'alpha' === $args['type'] ) {
-				$option_title = esc_html__( 'Select Post', 'custom-post-type-date-archives' );
-			}
-
-			/* Output the <select> element and each <option>. */
-			echo '<p><select name="archive-dropdown" onchange=\'document.location.href=this.options[this.selectedIndex].value;\'>';
-			echo '<option value="">' . $option_title . '</option>';
-			echo $archives;
-			echo '</select></p>';
-		} elseif ( 'html' === $args['format'] ) {
-			echo '<ul>' . $archives . '</ul>';
-		} else {
-			echo $archives;
-		}
-
-		/* Close the sidebar's widget wrapper. */
-		echo $sidebar['after_widget'];
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		/* Strip tags. */
-		$instance['title']  = strip_tags( $new_instance['title'] );
+		$instance  = cptda_validate_archive_settings( $new_instance );
+		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 5;
 
-		/* Whitelist options. */
-		$type       = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
-		$order      = array( 'ASC', 'DESC' );
-		$format     = array( 'custom', 'html', 'option' );
-		$post_types = $this->plugin->post_type->get_post_types( 'names' );
-		$post_types[] = 'post';
-
-		$instance['post_type'] = $new_instance['post_type'];
-		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
-			$instance['post_type'] = 'post';
-		}
-
-		$instance['type']   = in_array( $new_instance['type'], $type )     ? $new_instance['type']   : 'monthly';
-		$instance['order']  = in_array( $new_instance['order'], $order )   ? $new_instance['order']  : 'DESC';
-		$instance['format'] = in_array( $new_instance['format'], $format ) ? $new_instance['format'] : 'html';
-
-		/* Integers. */
-		$instance['limit'] = absint( $new_instance['limit'] );
-		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 10;
-
-		/* Checkboxes. */
-		$instance['show_post_count'] = isset( $new_instance['show_post_count'] ) ? 1 : 0;
-
-		/* Return sanitized options. */
 		return $instance;
 	}
 
 	public function form( $instance ) {
+		$defaults = $this->get_defaults();
 		/* Merge the user-selected arguments with the defaults. */
-		$instance = wp_parse_args( (array) $instance, $this->defaults );
+		$instance = wp_parse_args( (array) $instance, $defaults );
 
 		/* Create an array of archive types. */
 		$type = array(
@@ -177,5 +118,11 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/archive-widget.php';
+	}
+
+	function get_defaults() {
+		$defaults = cptda_get_archive_settings();
+		$defaults['title'] = esc_attr__( 'Archives', 'custom-post-type-archives' );
+		return $defaults;
 	}
 }

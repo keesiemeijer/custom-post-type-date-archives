@@ -17,7 +17,6 @@
 class CPTDA_Widget_Recent_Posts extends WP_Widget {
 
 	protected $plugin;
-	protected $defaults;
 	protected $include;
 
 	/**
@@ -28,16 +27,6 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 */
 	public function __construct() {
 		$this->plugin = cptda_date_archives();
-
-		/* Set up defaults. */
-		$this->defaults = array(
-			'title'         => '',
-			'message'       => '',
-			'number'        => 5,
-			'show_date'     => false,
-			'include'       => 'all',
-			'post_type'     => 'post',
-		);
 
 		$this->include = array(
 			'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
@@ -74,96 +63,31 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 *                        'before_widget', and 'after_widget'.
 	 * @param array $instance Settings for the current Recent Posts widget instance.
 	 */
-	public function widget( $args, $instance ) {
-		if ( ! isset( $args['widget_id'] ) ) {
-			$args['widget_id'] = $this->id;
+	public function widget( $widget_args, $instance ) {
+		if ( ! isset( $widget_args['widget_id'] ) ) {
+			$widget_args['widget_id'] = $this->id;
 		}
 
-		$instance = $this->get_instance_settings( $instance );
-		$title    = ( ! empty( $instance['title'] ) ) ? $instance['title'] : __( 'Recent Posts' );
+		$args  = $this->get_instance_settings( $instance );
+		$title = ( ! empty( $args['title'] ) ) ? $args['title'] : __( 'Recent Posts' );
+
+		$args['before_title'] = $widget_args['before_title'];
+		$args['after_title'] = $widget_args['after_title'];
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
-		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
+		$args['title'] = apply_filters( 'widget_title', $title, $args, $this->id_base );
 
-		if ( $title ) {
-			$title = $args['before_title'] . $title . $args['after_title'];
+		$query_args = cptda_get_recent_posts_query( $args );
+
+		/** This filter is documented in wp-includes/widgets/class-wp-widget-recent-posts.php */
+		$query_args = apply_filters( 'widget_posts_args', $query_args, $args );
+
+		$recent_posts = get_posts( $query_args );
+		$widget       = cptda_get_recent_posts_html( $recent_posts, $args );
+
+		if ( $widget ) {
+			echo $widget_args['before_widget'] . $widget . $widget_args['after_widget'];
 		}
-
-		$number = ( ! empty( $instance['number'] ) ) ? absint( $instance['number'] ) : 5;
-		if ( ! $number ) {
-			$number = 5;
-		}
-
-		$post_type     = trim( (string) $instance['post_type'] );
-		$include       = trim( (string) $instance['include'] );
-		$message       = trim( (string) $instance['message'] );
-		$show_date     = (bool) $instance['show_date'];
-		$widget_start  = $args['before_widget'] . $title;
-
-		$query_args = array(
-			'post_type'           => $post_type,
-			'post_status'         => cptda_get_cpt_date_archive_stati( $post_type ),
-			'posts_per_page'      => $number,
-			'no_found_rows'       => true,
-			'ignore_sticky_posts' => true,
-			'cptda_recent_posts'  => true, // To check if it's a query from this plugin
-		);
-
-		$today = getdate();
-		$date  = array(
-			'year'  => $today['year'],
-			'month' => $today['mon'],
-			'day'   => $today['mday'],
-		);
-
-		$date_query = array();
-
-		switch ( $include ) {
-			case 'future':
-			$date_query = array( 'after' => $date );
-			break;
-			case 'year':
-			unset( $date['month'], $date['day'] );
-			$date_query = array( $date );
-			break;
-			case 'month':
-			unset( $date['day'] );
-			$date_query = array( $date );
-			break;
-			case 'day':
-			$date_query = array( $date );
-			break;
-		}
-
-		if ( ( 'all' !== $include ) && $date_query ) {
-			$query_args['date_query']  = array( $date_query );
-		}
-
-		/**
-		 * Filters the arguments for the Recent Posts widget.
-		 *
-		 * @since 3.4.0
-		 *
-		 * @see WP_Query::get_posts()
-		 *
-		 * @param array $query_args An array of arguments used to retrieve the recent posts.
-		 */
-		$r = new WP_Query( apply_filters( 'widget_posts_args', $query_args ) );
-
-		if ( $r->have_posts() ) {
-			echo $widget_start;
-			include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
-			echo $args['after_widget'];
-		} else {
-			if ( $message ) {
-				echo $widget_start;
-				echo apply_filters( 'the_content', $message );
-				echo $args['after_widget'];
-			}
-		}
-
-		// Reset the global $the_post as the query might have stomped on it.
-		wp_reset_postdata();
 	}
 
 	/**
@@ -178,16 +102,12 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @return array Updated settings to save.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$instance['title']         = sanitize_text_field( (string) $new_instance['title'] );
-		$instance['number']        = (int) $new_instance['number'];
-		$instance['show_date']     = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
-
-		if ( current_user_can( 'unfiltered_html' ) ) {
-			$instance['message'] = (string) $new_instance['message'];
-		} else {
-			$instance['message'] = wp_kses_post( (string) $new_instance['message'] );
-		}
+		$instance              = $old_instance;
+		$new_instance          = cptda_sanitize_recent_posts_settings( $new_instance );
+		$instance['title']     = sanitize_text_field( (string) $new_instance['title'] );
+		$instance['number']    = $new_instance['number'] ? $new_instance['number'] : 5;
+		$instance['show_date'] = (bool) $new_instance['show_date'];
+		$instance['message']   = (string) $new_instance['message'];
 
 		$post_types = $this->plugin->post_type->get_post_types( 'names' );
 		$post_types[] = 'post';
@@ -252,6 +172,8 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			$instance['include'] = $instance['status_future'] ? 'future' : 'all';
 		}
 
-		return wp_parse_args( (array) $instance, $this->defaults );
+		$default = cptda_get_recent_posts_settings();
+
+		return wp_parse_args( (array) $instance, $default );
 	}
 }

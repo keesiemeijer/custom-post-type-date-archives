@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Date Archives 2.5.1\n"
+"Project-Id-Version: Custom Post Type Date Archives 2.6.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2019-02-25 14:50:06+00:00\n"
+"POT-Creation-Date: 2019-03-14 14:06:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,8 +25,8 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: custom-post-type-date-archives.php:117
-#: custom-post-type-date-archives.php:129
+#: custom-post-type-date-archives.php:126
+#: custom-post-type-date-archives.php:138
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -48,14 +48,15 @@ msgstr ""
 msgid "Could not find the post type for the current screen."
 msgstr ""
 
-#: includes/calendar.php:297
-msgid "Posts published on %s"
-msgstr ""
-
-#: includes/functions.php:304 tests/test-functions.php:149
-#: tests/test-widgets.php:43
+#: includes/archives.php:159 tests/test-archives.php:25
+#: tests/test-rest-api-archives.php:106 tests/test-rest-api-archives.php:137
+#: tests/test-widgets.php:41
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
+msgstr ""
+
+#: includes/calendar.php:242
+msgid "Posts published on %s"
 msgstr ""
 
 #: includes/partials/admin-form.php:14
@@ -189,98 +190,149 @@ msgstr ""
 msgid "Leave blank to not display the widget when no posts are found"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:33
-#: includes/widgets/class-cptda-widget-archives.php:49
-#: includes/widgets/class-cptda-widget-calendar.php:38
-#: tests/test-widgets.php:47
-msgid "Archives"
+#: includes/rest-api/class-rest-api-archives.php:56
+#: includes/rest-api/class-rest-api-calendar.php:65
+#: includes/rest-api/class-rest-api-recent-posts.php:48
+msgid "An alphanumeric identifier for the post type."
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:44
-msgid "A monthly archive of your site&#8217;s Posts."
+#: includes/rest-api/class-rest-api-archives.php:84
+#: includes/rest-api/class-rest-api-recent-posts.php:76
+msgid "Invalid post type"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:51
-msgid "Custom Post Type Archives"
+#: includes/rest-api/class-rest-api-archives.php:187
+msgid "Archive date objects."
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:52
-msgid "A monthly archive of your site&#8217;s custom post type Posts."
+#: includes/rest-api/class-rest-api-archives.php:195
+msgid "Rendered archive HTML"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:85
+#: includes/rest-api/class-rest-api-calendar.php:93
+msgid "Invalid calendar request."
+msgstr ""
+
+#: includes/rest-api/class-rest-api-calendar.php:212
+msgid "Calendar post type."
+msgstr ""
+
+#: includes/rest-api/class-rest-api-calendar.php:217
+msgid "Calendar year."
+msgstr ""
+
+#: includes/rest-api/class-rest-api-calendar.php:222
+msgid "Calendar month."
+msgstr ""
+
+#: includes/rest-api/class-rest-api-calendar.php:227
+msgid "Calendar Date"
+msgstr ""
+
+#: includes/rest-api/class-rest-api-calendar.php:235
+msgid "Rendered calendar HTML"
+msgstr ""
+
+#: includes/rest-api/class-rest-api-recent-posts.php:195
+msgid "Recent Posts post type."
+msgstr ""
+
+#: includes/rest-api/class-rest-api-recent-posts.php:203
+msgid "Rendered recent posts HTML"
+msgstr ""
+
+#: includes/utils/archives.php:136
 msgid "Select Year"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:87
+#: includes/utils/archives.php:138
 msgid "Select Month"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:89
+#: includes/utils/archives.php:140
 msgid "Select Week"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:91
+#: includes/utils/archives.php:142
 msgid "Select Day"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:93
+#: includes/utils/archives.php:144
 msgid "Select Post"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:148
+#: includes/widgets/class-cptda-widget-archives.php:31
+msgid "A monthly archive of your site&#8217;s Posts."
+msgstr ""
+
+#: includes/widgets/class-cptda-widget-archives.php:36
+#: includes/widgets/class-cptda-widget-archives.php:125
+#: includes/widgets/class-cptda-widget-calendar.php:38
+#: tests/test-widgets.php:45
+msgid "Archives"
+msgstr ""
+
+#: includes/widgets/class-cptda-widget-archives.php:38
+msgid "Custom Post Type Archives"
+msgstr ""
+
+#: includes/widgets/class-cptda-widget-archives.php:39
+msgid "A monthly archive of your site&#8217;s custom post type Posts."
+msgstr ""
+
+#: includes/widgets/class-cptda-widget-archives.php:89
 msgid "Alphabetical"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:149
+#: includes/widgets/class-cptda-widget-archives.php:90
 msgid "Daily"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:150
+#: includes/widgets/class-cptda-widget-archives.php:91
 msgid "Monthly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:151
+#: includes/widgets/class-cptda-widget-archives.php:92
 msgid "Post By Post"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:152
+#: includes/widgets/class-cptda-widget-archives.php:93
 msgid "Weekly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:153
+#: includes/widgets/class-cptda-widget-archives.php:94
 msgid "Yearly"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:158
+#: includes/widgets/class-cptda-widget-archives.php:99
 msgid "Ascending"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:159
+#: includes/widgets/class-cptda-widget-archives.php:100
 msgid "Descending"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:164
+#: includes/widgets/class-cptda-widget-archives.php:105
 msgid "Custom"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:165
+#: includes/widgets/class-cptda-widget-archives.php:106
 msgid "HTML"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:166
+#: includes/widgets/class-cptda-widget-archives.php:107
 msgid "Option"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-archives.php:176
-#: includes/widgets/class-cptda-widget-calendar.php:115
-#: includes/widgets/class-cptda-widget-recent-posts.php:234
+#: includes/widgets/class-cptda-widget-archives.php:117
+#: includes/widgets/class-cptda-widget-calendar.php:110
+#: includes/widgets/class-cptda-widget-recent-posts.php:154
 msgid "Post"
 msgstr ""
 
 #: includes/widgets/class-cptda-widget-calendar.php:39
 #: includes/widgets/class-cptda-widget-calendar.php:50
-#: tests/test-widgets.php:90
+#: tests/test-widgets.php:86
 msgid "Calendar"
 msgstr ""
 
@@ -296,40 +348,40 @@ msgstr ""
 msgid "A calendar of your site&#8217;s custom post type Posts."
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:43
+#: includes/widgets/class-cptda-widget-recent-posts.php:32
 msgid "all posts"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:44
+#: includes/widgets/class-cptda-widget-recent-posts.php:33
 msgid "posts with future dates only"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:45
+#: includes/widgets/class-cptda-widget-recent-posts.php:34
 msgid "posts from the current year"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:46
+#: includes/widgets/class-cptda-widget-recent-posts.php:35
 msgid "posts from the current month"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:47
+#: includes/widgets/class-cptda-widget-recent-posts.php:36
 msgid "posts from today"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:52
+#: includes/widgets/class-cptda-widget-recent-posts.php:41
 msgid "Your site&#8217;s most recent Posts."
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:57
-#: includes/widgets/class-cptda-widget-recent-posts.php:83
+#: includes/widgets/class-cptda-widget-recent-posts.php:46
+#: includes/widgets/class-cptda-widget-recent-posts.php:72
 msgid "Recent Posts"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:60
+#: includes/widgets/class-cptda-widget-recent-posts.php:49
 msgid "Custom Post Type Recent Posts"
 msgstr ""
 
-#: includes/widgets/class-cptda-widget-recent-posts.php:61
+#: includes/widgets/class-cptda-widget-recent-posts.php:50
 msgid "Your site&#8217;s most recent custom post type Posts."
 msgstr ""
 
@@ -351,13 +403,13 @@ msgstr ""
 msgid "https://keesiemeijer.wordpress.com"
 msgstr ""
 
-#: includes/calendar.php:189
+#: includes/calendar.php:143
 #. translators: Calendar caption: 1: month name, 2: 4-digit year
 msgctxt "calendar caption"
 msgid "%1$s %2$s"
 msgstr ""
 
-#: includes/calendar.php:296
+#: includes/calendar.php:241
 msgctxt "daily archives date format"
 msgid "F j, Y"
 msgstr ""

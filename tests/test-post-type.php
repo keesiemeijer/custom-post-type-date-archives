@@ -22,8 +22,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test slug with front (blog)
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpt_slug_with_front() {
 		$this->init();
@@ -33,8 +31,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test slug
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpt_slug() {
 		$this->set_permalink_structure( '/%postname%/' );
@@ -45,8 +41,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test rewrite slug
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpt_rewrite_slug() {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
@@ -56,8 +50,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test rewrite slug without front
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_cpt_rewrite_slug_without_front() {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
@@ -68,8 +60,6 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test rewrite set to false
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_cpt_setup
 	 */
 	function test_cpt_rewrite_slug_rewrite_false() {
 		global $wp_rewrite;

@@ -8,18 +8,7 @@
 	>
 	<testsuites>
 		<testsuite>
-			<file>tests/test-testcase.php</file>
-			<file>tests/test-post-type.php</file>
-			<file>tests/test-functions.php</file>
-			<file>tests/test-calendar.php</file>
-			<file>tests/test-query.php</file>
-			<file>tests/test-rewrite.php</file>
-			<file>tests/test-settings.php</file>
-			<file>tests/test-admin.php</file>
-			<file>tests/test-template.php</file>
-			<file>tests/test-filters.php</file>
-			<file>tests/test-widgets.php</file>
-			<file>tests/test-uninstall.php</file>
+			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

@@ -2,7 +2,7 @@
 /**
  * Calendar Widget.
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Widget
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -55,17 +55,17 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		}
 	}
 
-	public function widget( $args, $instance ) {
+	public function widget( $widget_args, $instance ) {
 
-		/* Set the $args for wp_get_archives() to the $instance array. */
-		$instance = wp_parse_args( $instance, $this->defaults );
+		/* Set the $widget_args for wp_get_archives() to the $instance array. */
+		$args = wp_parse_args( $instance, $this->defaults );
 
 		/** This filter is documented in wp-includes/default-widgets.php */
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+		$title = apply_filters( 'widget_title', empty( $args['title'] ) ? '' : $args['title'], $args, $this->id_base );
 
-		echo $args['before_widget'];
+		echo $widget_args['before_widget'];
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo $widget_args['before_title'] . $title . $widget_args['after_title'];
 		}
 
 		if ( 0 === self::$instance ) {
@@ -74,15 +74,10 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 			echo '<div class="calendar_wrap">';
 		}
 
-		/* Get the archives list. */
-		if ( cptda_is_date_post_type( $instance['post_type'] ) ) {
-			cptda_get_calendar( $instance['post_type'] );
-		} else {
-			get_calendar();
-		}
+		cptda_get_calendar( $args['post_type'] );
 
 		echo '</div>';
-		echo $args['after_widget'];
+		echo $widget_args['after_widget'];
 
 		self::$instance++;
 	}

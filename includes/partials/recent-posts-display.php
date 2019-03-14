@@ -1,10 +1,17 @@
-<ul>
-<?php while ( $r->have_posts() ) : $r->the_post(); ?>
+<?php
+foreach ( $recent_posts as $recent_post ) : 
+	$permalink  = get_permalink( $recent_post );
+	$post_title = get_the_title( $recent_post );
+	$post_title = $post_title ? $post_title : $recent_post;
+
+	if ( ! ( $permalink && $post_title ) ) {
+		continue;
+	}
+?>
 	<li>
-		<a href="<?php the_permalink(); ?>"><?php get_the_title() ? the_title() : the_ID(); ?></a>
-	<?php if ( $show_date ) : ?>
-		<span class="post-date"><?php echo get_the_date(); ?></span>
+		<a href="<?php echo $permalink; ?>"><?php echo $post_title; ?></a>
+	<?php if ( $args['show_date'] ) : ?>
+		<span class="post-date"><?php echo get_the_date( '', $recent_post ); ?></span>
 	<?php endif; ?>
 	</li>
-<?php endwhile; ?>
-</ul>
+<?php endforeach; ?>

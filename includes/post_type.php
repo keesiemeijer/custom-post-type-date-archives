@@ -2,7 +2,7 @@
 /**
  * Post Types.
  *
- * @package     Custom Post Type Date Archives
+ * @package     Custom_Post_Type_Date_Archives
  * @subpackage  Classes/Post_Types
  * @copyright   Copyright (c) 2014, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -71,7 +71,7 @@ class CPTDA_Post_Types {
 	 */
 	private function setup_admin_post_types() {
 
-		$settings = new CPTDA_Settings();
+		$settings = new CPTDA_Admin_Settings();
 		$admin_settings = $settings->get_settings();
 
 		if ( empty( $admin_settings ) ) {

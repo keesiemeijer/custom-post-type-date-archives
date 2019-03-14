@@ -15,8 +15,6 @@ class KM_CPTDA_Tests_Query extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test non existant date archive.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_404() {
 		$this->init();
@@ -34,8 +32,6 @@ class KM_CPTDA_Tests_Query extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test date archives for published custom post type posts.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_init
 	 */
 	function test_date_archive() {
 		$this->init();
@@ -54,8 +50,6 @@ class KM_CPTDA_Tests_Query extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test future date archives for future custom post type posts.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_create_posts_future_init
 	 */
 	function test_future_date_archive() {
 		$this->future_init();

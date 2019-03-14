@@ -1,6 +1,8 @@
 <?php
 /**
  * Tests CPT admin page
+ *
+ * @group Settings
  */
 class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
@@ -18,15 +20,14 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 		$this->unregister_post_type();
+		$this->unregister_post_type('cpt_2');
 	}
 
 	/**
 	 * Test if settings always returns default settings
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_delete_settings
 	 */
 	function test_get_settings_defaults() {
-		$settings_obj = new CPTDA_Settings();
+		$settings_obj = new CPTDA_Admin_Settings();
 
 		$expected = array(
 			'date_archives'        => array(),
@@ -40,14 +41,12 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_future_init
 	 */
 	function test_get_settings_in_database() {
 		$this->init();
 		$this->future_init();
 
-		$settings_obj = new CPTDA_Settings();
+		$settings_obj = new CPTDA_Admin_Settings();
 
 		$expected =  array(
 			'date_archives'        => array( 'cpt' => 1 ),
@@ -66,13 +65,11 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings.
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_add_value() {
 		$this->init();
 		$this->init( 'cpt_2' );
-		$settings_obj = new CPTDA_Settings();
+		$settings_obj = new CPTDA_Admin_Settings();
 
 		$expected =  array(
 			'date_archives'        => array( 'cpt' => 1, 'cpt_2' => 1 ),
@@ -92,12 +89,10 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test merging admin page settings. Remove a value
-	 *
-	 * @depends KM_CPTDA_Tests_Testcase::test_init
 	 */
 	function test_admin_merge_page_settings_remove_value() {
 		$this->init();
-		$settings_obj = new CPTDA_Settings();
+		$settings_obj = new CPTDA_Admin_Settings();
 
 		$expected = array(
 			'date_archives'        => array(),
