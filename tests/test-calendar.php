@@ -318,11 +318,11 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 	function exclude_category_posts( $date, $post_type ) {
 
 		/*
-	 * The parameter $date is an array with $date attributes.
-	 *
-	 * By default the $date['calendar_days'] is an empty array.
-	 * If you provide an array with days it will be used by the calendar.
-	 */
+		 * The parameter $date is an array with $date attributes.
+		 *
+		 * By default the $date['calendar_days'] is an empty array.
+		 * If you provide an array with days it will be used by the calendar.
+		 */
 		$date['calendar_days'] = array();
 
 		$current_date = array(
@@ -375,12 +375,12 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 			}
 		}
 
-	/*
-	 * The 'prev_year', 'prev_month', 'next_year' and 'next_month' values are
-	 * by default an empty string.
-	 *
-	 * If you provide your own values it will be used by the calendar.
-	 */
+		/*
+		 * The 'prev_year', 'prev_month', 'next_year' and 'next_month' values are
+		 * by default an empty string.
+		 *
+		 * If you provide your own values it will be used by the calendar.
+		 */
 
 		// Query for the next archive month.
 		$args['posts_per_page']       = 1;
