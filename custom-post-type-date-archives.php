@@ -96,10 +96,10 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 			if (  class_exists( 'WP_REST_Controller' ) ) {
 				$cptda_rest_api_calendar = new CPTDA_Rest_API_Calendar();
 				$cptda_rest_api_calendar->init();
-				$cptda_rest_api_latest_post = new CPTDA_Rest_API_Recent_Posts();
-				$cptda_rest_api_latest_post->init();
-				$cptda_rest_api_latest_post = new CPTDA_Rest_API_Archives();
-				$cptda_rest_api_latest_post->init();
+				$cptda_rest_api_recent_post = new CPTDA_Rest_API_Recent_Posts();
+				$cptda_rest_api_recent_post->init();
+				$cptda_rest_api_archives = new CPTDA_Rest_API_Archives();
+				$cptda_rest_api_archives->init();
 			}
 
 			if ( is_admin() ) {
