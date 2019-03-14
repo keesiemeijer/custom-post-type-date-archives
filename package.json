@@ -1,6 +1,6 @@
 {
   "name": "custom-post-type-date-archives",
-  "version": "2.6.0",
+  "version": "2.6.1-alpha",
   "tested_up_to": "5.1",
   "requires_at_least": "4.1",
   "main": "Gruntfile.js",
