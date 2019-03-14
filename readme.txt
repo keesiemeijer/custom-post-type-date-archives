@@ -1,9 +1,9 @@
 === Custom Post Type Date Archives ===
 Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
-Requires at least: 4.0
-Tested up to: 4.9
-Stable tag:  2.5.2-alpha
+Requires at least: 4.1
+Tested up to: 5.1
+Stable tag:  2.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
