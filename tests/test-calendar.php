@@ -62,6 +62,20 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 	}
 
 	/**
+	 * Test post type post
+	 */
+	function test_cptda_get_calendar_post_type_post() {
+		global $wp_locale, $monthnum, $year;
+
+		$monthnum = 3;
+		$year = (int) date( "Y" ) - 1;
+
+
+		$calendar = cptda_get_calendar( 'post', true, false );
+		$this->assertContains( "<caption>March {$year}</caption>", $calendar );
+	}
+
+	/**
 	 * Test calendar output with date set to march 18 with filter.
 	 */
 	function test_cptda_filter_days_of_calendar() {

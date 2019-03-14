@@ -67,7 +67,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$response = rest_do_request( $request );
 		$data     = $response->get_data();
 		$expected = array(
-			'dates',
+			'archives',
 			'rendered',
 		);
 
@@ -86,6 +86,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 	 */
 	function test_invalid_post_type() {
 		$data = $this->rest_cptda_get_archives( 'invalid' );
+		// WP Error
 		$this->assertTrue( isset( $data['code'] ) );
 	}
 
@@ -149,7 +150,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data     = $this->rest_cptda_get_archives( 'cpt', $args );
 		$expected = "<ul>{$expected}</ul>";
 
-		$this->assertEquals( 1 , count( $data['dates'] ) );
+		$this->assertEquals( 1 , count( $data['archives'] ) );
 		$this->assertEquals( $expected , $data['rendered'] );
 	}
 }

@@ -4,15 +4,13 @@
  */
 class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
-	protected $archive_objects = null;
-
 	/**
 	 * Reset post type on teardown.
 	 */
 	function tearDown() {
 		parent::tearDown();
 		$this->unregister_post_type();
-		$this->unregister_post_type('cpt_2');
+		$this->unregister_post_type( 'cpt_2' );
 		remove_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10, 2 );
 		remove_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
 	}
@@ -124,75 +122,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test test archives output.
-	 */
-	function test_cptda_get_archives() {
-		global $wp_locale;
-		$this->init();
-		$year = (int) date( "Y" ) - 1;
-
-		$expected = '';
-		foreach ( array( '03', '02' ) as $month ) {
-			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
-			$post = $this->factory->post->create( $args );
-			$url = cptda_get_month_link( $year, $month, 'cpt' );
-			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
-			$expected .= trim( get_archives_link( $url, $text ) ) . "\n";
-		}
-
-		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
-
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
-	}
-
-	/**
-	 * Test test archives output.
-	 */
-	function test_cptda_get_archives_objects_with_filter() {
-		global $wp_locale;
-		$this->init();
-		$year = (int) date( "Y" ) - 1;
-
-		$args = array( 'post_date' => "$year-03-20 00:00:00", 'post_type' => 'cpt' );
-		$post = $this->factory->post->create( $args );
-
-		add_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
-
-		$expected  = array(
-			'year' => '2018',
-			'month' => '3',
-			'posts' => '1',
-		);
-
-		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
-
-		$this->assertEquals( $expected, get_object_vars( $this->archive_objects[0] ) );
-		$this->archive_objects = null;
-	}
-
-	/**
-	 * Test test archives output.
-	 */
-	function test_cptda_get_archives_objects() {
-		global $wp_locale;
-		$this->init();
-		$year = (int) date( "Y" ) - 1;
-
-		$args = array( 'post_date' => "$year-03-20 00:00:00", 'post_type' => 'cpt' );
-		$post = $this->factory->post->create( $args );
-
-		$expected  = array(
-			'year' => '2018',
-			'month' => '3',
-			'posts' => '1',
-		);
-
-		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false, 'format' => 'object' ) );
-
-		$this->assertEquals( $expected, get_object_vars( $archive[0] ) );
-	}
-
-	/**
 	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
 	 */
 	function test_not_supported_custom_post_type_stati() {
@@ -206,7 +135,14 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 */
 	function test_post_status_publish() {
 		$this->init();
-		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
+		$this->assertSame( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
+	}
+
+	/**
+	 * Test cptda_get_cpt_date_archive_stati returns correct stati.
+	 */
+	function test_post_status_publish_post_type_post() {
+		$this->assertSame( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'post' ) );
 	}
 
 	/**
@@ -333,18 +269,24 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$adjacent   = cptda_get_adjacent_archive_date( 'cpt', $date );
 		$sql        = cptda_get_calendar_post_type_sql( 'cpt' );
 		$calendar   = cptda_get_calendar( 'cpt', true, false );
-		$year       = cptda_get_year_link( $year, 'cpt' );
-		$month      = cptda_get_month_link( $year, $month, 'cpt' );
-		$day        = cptda_get_month_link( $year, $month, $day, 'cpt' );
+		$_year      = cptda_get_year_link( $year, 'cpt' );
+		$_month     = cptda_get_month_link( $year, $month, 'cpt' );
+		$_day       = cptda_get_month_link( $year, $month, $day, 'cpt' );
+		$_year      = cptda_get_year_archive_link( $year, 'cpt' );
+		$_month     = cptda_get_month_archive_link( $year, $month, 'cpt' );
+		$_day       = cptda_get_day_archive_link( $year, $month, $day, 'cpt' );
+		$arch_args  = cptda_get_archive_settings();
+		$sanitize   = cptda_sanitize_archive_settings( $arch_args );
+		$validate   = cptda_validate_archive_settings( $arch_args );
+		$arch_html  = cptda_get_archives_html( $arch_args );
+		$rp_args    = cptda_get_recent_posts_settings();
+		$sanitize   = cptda_sanitize_recent_posts_settings( $rp_args );
+		$html       = cptda_get_recent_posts_html( $posts, $rp_args );
+		$query      = cptda_get_recent_posts_query( $rp_args );
 
 		$out = ob_get_clean();
 
 		$this->assertEmpty( $out );
-	}
-
-	function get_objects( $html, $objects ) {
-		$this->archive_objects = $objects;
-		return $html;
 	}
 
 	function add_future_status( $status, $post_type ) {

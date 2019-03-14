@@ -98,6 +98,7 @@ class CPTDA_WP_Rest_API_Calendar extends CPTDA_UnitTestCase {
 	 */
 	function test_invalid_post_type() {
 		$data = $this->rest_cptda_get_calendar( 'invalid' );
+		// WP Error
 		$this->assertTrue( isset( $data['code'] ) );
 	}
 

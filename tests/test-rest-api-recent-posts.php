@@ -79,12 +79,13 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test success response for rest request.
+	 * Test error response for rest request.
 	 *
 	 * @requires function WP_REST_Controller::register_routes
 	 */
 	function test_invalid_post_type() {
 		$data = $this->rest_cptda_get_recent_posts( 'invalid' );
+		// WP Error
 		$this->assertTrue( isset( $data['code'] ) );
 	}
 
@@ -108,8 +109,8 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 		$args = array(
 			'post_type'    => 'cpt',
 			'title'        => 'Recent Posts',
-			'before_title' =>  '<h2>',
-			'after_title'  =>  '</h2>',
+			'before_title' => '<h2>',
+			'after_title'  => '</h2>',
 			'message'      => 'No posts found',
 		);
 
