@@ -1,6 +1,8 @@
 <?php
 /**
  * Tests CPT date archive template used
+ *
+ * @group Template
  */
 class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 
@@ -115,6 +117,24 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$template = $this->get_template();
 
 		$this->assertEquals( 'date-cpt.php', basename( $template ) );
+	}
+
+	/**
+	 * Test theme without archive template
+	 */
+	function test_theme_without_archive_template() {
+		if ( file_exists( $this->theme . "archive.php" ) ) {
+			rename( $this->theme . "archive.php", $this->theme . "temp.php" );
+		}
+		$this->go_to_date_archive();
+		$template = $this->get_template();
+		// Add it back
+		if ( file_exists( $this->theme . "temp.php" ) ) {
+			rename( $this->theme . "temp.php", $this->theme . "archive.php" );
+		}
+
+		$this->assertEquals( 'index.php', basename( $template ) );
+
 	}
 
 	/**

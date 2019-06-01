@@ -56,14 +56,11 @@ function cptda_date_template_include( $template ) {
 	$templates[] = get_date_template();
 	$templates[] = get_post_type_archive_template();
 	$templates[] = get_archive_template();
+	$templates[] = get_index_template();
 	$templates   = array_unique( array_filter( array_map( 'basename', $templates ) ) );
 	$template    = locate_template( $templates );
 
-	if ( ! empty( $template ) ) {
-		return apply_filters( 'cptda_date_template_include', $template   );
-	}
-
-	return $template;
+	return apply_filters( 'cptda_date_template_include', $template   );
 }
 
 add_filter( 'template_include', 'cptda_date_template_include' );

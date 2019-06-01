@@ -1,9 +1,9 @@
 === Custom Post Type Date Archives ===
 Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
-Requires at least: 4.1
-Tested up to: 5.1
-Stable tag:  2.6.0
+Requires at least: 4.2
+Tested up to: 5.2
+Stable tag:  2.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,9 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.6.1 =
+* Fix white screen bug for themes without archive templates. props @wpexplorer
+
 = 2.6.0 =
 * Enhancement
 	* Add Rest API endpoints for the archives, calendar and recent posts.
@@ -101,5 +104,5 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 Initial Commit
 
 == Upgrade Notice ==
-= 2.6.0 =
-This update adds rest API endpoints for the archives, calendar and recent posts.
+= 2.6.1 =
+Fix white screen bug for themes without archive templates. props @wpexplorer
