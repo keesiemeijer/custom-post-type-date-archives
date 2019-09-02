@@ -189,6 +189,7 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/archives.php';
 		require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/utils/calendar.php';
 		if ( class_exists( 'WP_REST_Controller' ) ) {
+			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'blocks/calendar/index.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-calendar.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-recent-posts.php';
 			require_once CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/rest-api/class-rest-api-archives.php';
