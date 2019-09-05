@@ -96,10 +96,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! moment */ "moment");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! memize */ "./node_modules/memize/index.js");
-/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(memize__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! memize */ "./node_modules/memize/index.js");
+/* harmony import */ var memize__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(memize__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _components_server_side_render__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/server-side-render */ "./components/server-side-render.js");
+/* harmony import */ var _components_post_types_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/post-types.js */ "./components/post-types.js");
 
 
 
@@ -118,15 +122,20 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  */
 
 
+
 /**
  * WordPress dependencies
  */
 
+var __ = wp.i18n.__;
 var _wp$components = wp.components,
     Disabled = _wp$components.Disabled,
-    ServerSideRender = _wp$components.ServerSideRender;
+    PanelBody = _wp$components.PanelBody;
 var Component = wp.element.Component;
-var withSelect = wp.data.withSelect; // import { ServerSideRender } from '@wordpress/editor';
+var withSelect = wp.data.withSelect;
+var InspectorControls = wp.editor.InspectorControls;
+
+
 
 var CalendarEdit =
 /*#__PURE__*/
@@ -139,10 +148,10 @@ function (_Component) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, CalendarEdit);
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(CalendarEdit).apply(this, arguments));
-    _this.getYearMonth = memize__WEBPACK_IMPORTED_MODULE_9___default()(_this.getYearMonth.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), {
+    _this.getYearMonth = memize__WEBPACK_IMPORTED_MODULE_10___default()(_this.getYearMonth.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), {
       maxSize: 1
     });
-    _this.getServerSideAttributes = memize__WEBPACK_IMPORTED_MODULE_9___default()(_this.getServerSideAttributes.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), {
+    _this.getServerSideAttributes = memize__WEBPACK_IMPORTED_MODULE_10___default()(_this.getServerSideAttributes.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_5___default()(_this)), {
       maxSize: 1
     });
     return _this;
@@ -155,7 +164,7 @@ function (_Component) {
         return {};
       }
 
-      var momentDate = moment__WEBPACK_IMPORTED_MODULE_8___default()(date);
+      var momentDate = moment__WEBPACK_IMPORTED_MODULE_9___default()(date);
       return {
         year: momentDate.year(),
         month: momentDate.month() + 1
@@ -169,10 +178,33 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ServerSideRender, {
-        block: "cptda/calendar",
+      var _this$props = this.props,
+          postType = _this$props.postType,
+          setAttributes = _this$props.setAttributes,
+          attributes = _this$props.attributes;
+      var post_type = attributes.post_type;
+
+      if (!post_type) {
+        // Default to current post type
+        setAttributes({
+          post_type: postType
+        });
+      }
+
+      var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(PanelBody, {
+        title: __('Calendar Settings')
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        postType: attributes.post_type,
+        onPostTypeChange: function onPostTypeChange(value) {
+          return setAttributes({
+            post_type: value
+          });
+        }
+      })));
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(react__WEBPACK_IMPORTED_MODULE_8__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        block: "calendar",
         attributes: this.getServerSideAttributes(this.props.attributes, this.props.date)
-      }));
+      })));
     }
   }]);
 
@@ -192,7 +224,8 @@ function (_Component) {
   // For other post types the calendar always displays the current month.
 
   return {
-    date: postType === 'post' ? getEditedPostAttribute('date') : undefined
+    date: getEditedPostAttribute('date'),
+    postType: postType
   };
 })(CalendarEdit));
 
@@ -266,6 +299,268 @@ registerBlockType('cptda/calendar', {
     return null;
   }
 });
+
+/***/ }),
+
+/***/ "./components/post-types.js":
+/*!**********************************!*\
+  !*** ./components/post-types.js ***!
+  \**********************************/
+/*! exports provided: getPostTypes, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostTypes", function() { return getPostTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PostTypePanel; });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+
+
+var __ = wp.i18n.__;
+var SelectControl = wp.components.SelectControl;
+function getPostTypes() {
+  var postTypes = [{
+    label: __('Post'),
+    value: 'post'
+  }];
+  var cptdaPostType = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["get"])(window.cptda_data, 'post_type', {});
+
+  for (var key in cptdaPostType) {
+    if (cptdaPostType.hasOwnProperty(key)) {
+      postTypes.push({
+        label: cptdaPostType[key],
+        value: key
+      });
+    }
+  }
+
+  return postTypes;
+}
+function PostTypePanel(_ref) {
+  var postType = _ref.postType,
+      onPostTypeChange = _ref.onPostTypeChange;
+  return [onPostTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
+    key: "cptda-select-post-type",
+    label: __('Post Type'),
+    value: "".concat(postType),
+    options: getPostTypes(),
+    onChange: function onChange(value) {
+      onPostTypeChange(value);
+    }
+  })];
+}
+
+/***/ }),
+
+/***/ "./components/server-side-render.js":
+/*!******************************************!*\
+  !*** ./components/server-side-render.js ***!
+  \******************************************/
+/*! exports provided: rendererPath, CPTDA_ServerSideRender, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rendererPath", function() { return rendererPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CPTDA_ServerSideRender", function() { return CPTDA_ServerSideRender; });
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/extends.js");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
+
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * WordPress dependencies
+ */
+
+var _wp$element = wp.element,
+    Component = _wp$element.Component,
+    RawHTML = _wp$element.RawHTML;
+var _wp$i18n = wp.i18n,
+    __ = _wp$i18n.__,
+    sprintf = _wp$i18n.sprintf;
+var apiFetch = wp.apiFetch;
+var addQueryArgs = wp.url.addQueryArgs;
+var _wp$components = wp.components,
+    Placeholder = _wp$components.Placeholder,
+    Spinner = _wp$components.Spinner;
+function rendererPath(block) {
+  var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var urlQueryArgs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var post_type = attributes.post_type;
+  delete attributes.post_type;
+  return addQueryArgs("/custom_post_type_date_archives/v1/".concat(post_type, "/").concat(block), _objectSpread({}, urlQueryArgs, {}, attributes));
+}
+var CPTDA_ServerSideRender =
+/*#__PURE__*/
+function (_Component) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(CPTDA_ServerSideRender, _Component);
+
+  function CPTDA_ServerSideRender(props) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, CPTDA_ServerSideRender);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(CPTDA_ServerSideRender).call(this, props));
+    _this.state = {
+      response: null
+    };
+    return _this;
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(CPTDA_ServerSideRender, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.isStillMounted = true;
+      this.fetch(this.props); // Only debounce once the initial fetch occurs to ensure that the first
+      // renders show data as soon as possible.
+
+      this.fetch = Object(lodash__WEBPACK_IMPORTED_MODULE_8__["debounce"])(this.fetch, 500);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.isStillMounted = false;
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (!Object(lodash__WEBPACK_IMPORTED_MODULE_8__["isEqual"])(prevProps, this.props)) {
+        this.fetch(this.props);
+      }
+    }
+  }, {
+    key: "fetch",
+    value: function fetch(props) {
+      var _this2 = this;
+
+      if (!this.isStillMounted) {
+        return;
+      }
+
+      if (null !== this.state.response) {
+        this.setState({
+          response: null
+        });
+      }
+
+      var block = props.block,
+          _props$attributes = props.attributes,
+          attributes = _props$attributes === void 0 ? null : _props$attributes,
+          _props$urlQueryArgs = props.urlQueryArgs,
+          urlQueryArgs = _props$urlQueryArgs === void 0 ? {} : _props$urlQueryArgs;
+      var path = rendererPath(block, attributes, urlQueryArgs); // Store the latest fetch request so that when we process it, we can
+      // check if it is the current request, to avoid race conditions on slow networks.
+
+      var fetchRequest = this.currentFetchRequest = apiFetch({
+        path: path
+      }).then(function (response) {
+        if (_this2.isStillMounted && fetchRequest === _this2.currentFetchRequest && response) {
+          _this2.setState({
+            response: response.rendered
+          });
+        }
+      }).catch(function (error) {
+        if (_this2.isStillMounted && fetchRequest === _this2.currentFetchRequest) {
+          _this2.setState({
+            response: {
+              error: true,
+              errorMsg: error.message
+            }
+          });
+        }
+      });
+      return fetchRequest;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var response = this.state.response;
+      var _this$props = this.props,
+          className = _this$props.className,
+          EmptyResponsePlaceholder = _this$props.EmptyResponsePlaceholder,
+          ErrorResponsePlaceholder = _this$props.ErrorResponsePlaceholder,
+          LoadingResponsePlaceholder = _this$props.LoadingResponsePlaceholder;
+
+      if (response === '') {
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(EmptyResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
+          response: response
+        }, this.props));
+      } else if (!response) {
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(LoadingResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
+          response: response
+        }, this.props));
+      } else if (response.error) {
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ErrorResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
+          response: response
+        }, this.props));
+      }
+
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(RawHTML, {
+        key: "html",
+        className: className
+      }, response);
+    }
+  }]);
+
+  return CPTDA_ServerSideRender;
+}(Component);
+CPTDA_ServerSideRender.defaultProps = {
+  EmptyResponsePlaceholder: function EmptyResponsePlaceholder(_ref) {
+    var className = _ref.className;
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
+      className: className
+    }, __('Block rendered as empty.') + className);
+  },
+  ErrorResponsePlaceholder: function ErrorResponsePlaceholder(_ref2) {
+    var response = _ref2.response,
+        className = _ref2.className;
+    // translators: %s: error message describing the problem
+    var errorMessage = sprintf(__('Error loading block: %s'), response.errorMsg);
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
+      className: className
+    }, errorMessage);
+  },
+  LoadingResponsePlaceholder: function LoadingResponsePlaceholder(_ref3) {
+    var className = _ref3.className;
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
+      className: className
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Spinner, null));
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (CPTDA_ServerSideRender);
 
 /***/ }),
 
@@ -355,6 +650,35 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/extends.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/extends.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _extends() {
+  module.exports = _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+module.exports = _extends;
 
 /***/ }),
 
@@ -618,6 +942,17 @@ module.exports = function memize( fn, options ) {
 
 /***/ }),
 
+/***/ "lodash":
+/*!**********************************!*\
+  !*** external {"this":"lodash"} ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["lodash"]; }());
+
+/***/ }),
+
 /***/ "moment":
 /*!**********************************!*\
   !*** external {"this":"moment"} ***!
@@ -626,6 +961,17 @@ module.exports = function memize( fn, options ) {
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["moment"]; }());
+
+/***/ }),
+
+/***/ "react":
+/*!*********************************!*\
+  !*** external {"this":"React"} ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["React"]; }());
 
 /***/ })
 

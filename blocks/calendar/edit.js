@@ -1,78 +1,104 @@
 /**
  * External dependencies
  */
+import { Fragment } from 'react';
 import moment from 'moment';
 import memoize from 'memize';
 
 /**
  * WordPress dependencies
  */
-const { Disabled, ServerSideRender } = wp.components;
+const { __ } = wp.i18n;
+const { Disabled, PanelBody } = wp.components;
 const { Component } = wp.element;
 const { withSelect } = wp.data;
-// import { ServerSideRender } from '@wordpress/editor';
+const { InspectorControls } = wp.editor;
+
+import CPTDA_ServerSideRender from '../components/server-side-render';
+import PostTypePanel from '../components/post-types.js';
 
 class CalendarEdit extends Component {
 	constructor() {
-		super( ...arguments );
+		super(...arguments);
+
 		this.getYearMonth = memoize(
-			this.getYearMonth.bind( this ),
-			{ maxSize: 1 }
+			this.getYearMonth.bind(this), { maxSize: 1 }
 		);
 		this.getServerSideAttributes = memoize(
-			this.getServerSideAttributes.bind( this ),
-			{ maxSize: 1 }
+			this.getServerSideAttributes.bind(this), { maxSize: 1 }
 		);
 	}
 
-	getYearMonth( date ) {
-		if ( ! date ) {
+	getYearMonth(date) {
+		if (!date) {
 			return {};
 		}
-		const momentDate = moment( date );
+		const momentDate = moment(date);
 		return {
 			year: momentDate.year(),
 			month: momentDate.month() + 1,
 		};
 	}
 
-	getServerSideAttributes( attributes, date ) {
+	getServerSideAttributes(attributes, date) {
 		return {
 			...attributes,
-			...this.getYearMonth( date ),
+			...this.getYearMonth(date),
 		};
 	}
 
 	render() {
+		const { postType, setAttributes, attributes } = this.props;
+		let { post_type } = attributes;
+
+		if (!post_type) {
+			// Default to current post type
+			setAttributes({ post_type: postType })
+		}
+
+		const inspectorControls = (
+			<InspectorControls>
+				<PanelBody title={ __( 'Calendar Settings' ) }>
+					<PostTypePanel
+						postType={attributes.post_type}
+						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
+					/>
+				</PanelBody>
+			</InspectorControls>
+		);
+
 		return (
-			<Disabled>
-				<ServerSideRender
-					block="cptda/calendar"
-					attributes={ this.getServerSideAttributes(
-						this.props.attributes,
-						this.props.date
-					) }
-				/>
-			</Disabled>
+			<Fragment>
+				{inspectorControls}
+				<Disabled>
+					<CPTDA_ServerSideRender
+						block='calendar'
+						attributes={
+							this.getServerSideAttributes(
+							this.props.attributes,
+							this.props.date
+						) }
+					/>
+				</Disabled>
+			</Fragment>
 		);
 	}
 }
 
-export default withSelect( ( select ) => {
-	const coreEditorSelect = select( 'core/editor' );
-	if ( ! coreEditorSelect ) {
+export default withSelect((select) => {
+	const coreEditorSelect = select('core/editor');
+	if (!coreEditorSelect) {
 		return;
 	}
 	const {
 		getEditedPostAttribute,
 	} = coreEditorSelect;
-	const postType = getEditedPostAttribute( 'type' );
+	const postType = getEditedPostAttribute('type');
 	// Dates are used to overwrite year and month used on the calendar.
 	// This overwrite should only happen for 'post' post types.
 	// For other post types the calendar always displays the current month.
 	return {
-		date: postType === 'post' ?
-			getEditedPostAttribute( 'date' ) :
-			undefined,
+		date: getEditedPostAttribute('date'),
+		postType: postType
 	};
-} )( CalendarEdit );
+})(CalendarEdit);

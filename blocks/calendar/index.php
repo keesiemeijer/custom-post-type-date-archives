@@ -2,7 +2,7 @@
 /**
  * Server-side rendering of the `cptda/calendar` block.
  *
- * @package WordPress
+ * @package Custom_Post_Type_Date_Archives
  */
 
 add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
@@ -14,62 +14,30 @@ add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
  * `wp-element`: includes the WordPress Element abstraction for describing the structure of your blocks.
  * `wp-i18n`: To internationalize the block's text.
  *
- * @since 2.4.2
+ * @since 2.6.2
  */
 function cptda_block_editor_assets() {
-
-	// // if ( ! cptda_has_editor_block_support() ) {
-	// // 	return;
-	// // }
-
-	// // $plugin = cptda_plugin();
-
-	// // Use un-minified Javascript when in debug mode.
-	// $debug = $plugin && $plugin->plugin_supports( 'debug' ) ? '' : '.min';
-
-	// Scripts.
-	// 
 	wp_enqueue_script(
-		'cptda-related-posts-block', // Handle.
+		'cptda-editor-block', // Handle.
 		CPT_DATE_ARCHIVES_PLUGIN_URL . "includes/assets/js/calendar/index.js",
-		array( 'wp-blocks', 'wp-i18n', 'wp-url', 'wp-element', 'wp-data', 'wp-api-fetch', 'wp-editor', 'wp-components' )
+		array( 'wp-i18n', 'wp-url', 'wp-element', 'wp-data', 'wp-api-fetch', 'wp-editor', 'wp-components' )
 	);
 
-	// // Styles.
-	// wp_enqueue_style(
-	// 	'rpbt-related-posts-block-css', // Handle.
-	// 	CPT_DATE_ARCHIVES_PLUGIN_URL . 'includes/assets/css/editor.css',
-	// 	array( 'wp-edit-blocks' )
-	// );
-
-	// $order = array(
-	// 	'DESC' => __( 'Most terms in common', 'related-posts-by-taxonomy' ),
-	// 	'ASC'  => __( 'Least terms in common', 'related-posts-by-taxonomy' ),
-	// 	'RAND' => __( 'Randomly', 'related-posts-by-taxonomy' ),
-	// );
-
-	// wp_localize_script( 'rpbt-related-posts-block', 'cptda_plugin_data',
-	// 	array(
-	// 		'post_types'       => $plugin->post_types,
-	// 		'taxonomies'       => $plugin->taxonomies,
-	// 		'default_tax'      => $plugin->default_tax,
-	// 		'all_tax'          => 'cptda_all_tax',
-	// 		'formats'          => $plugin->formats,
-	// 		'image_sizes'      => $plugin->image_sizes,
-	// 		'order'            => $order,
-	// 		'preview'          => (bool) $plugin->plugin_supports( 'editor_block_preview' ),
-	// 		'html5_gallery'    => (bool) current_theme_supports( 'html5', 'gallery' ),
-	// 		'default_category' => absint( get_option( 'default_category' ) ),
-	// 	)
-	// );
+	wp_localize_script( 'cptda-editor-block', 'cptda_data',
+		array(
+			'post_type' => cptda_get_post_types( 'labels' ),
+			'post'      => __( 'Post', '' ),
+		)
+	);
 }
 
 
 /**
  * Renders the `cptda/calendar` block on server.
  *
- * @param array $attributes The block attributes.
+ * @since 2.6.2
  *
+ * @param array $attributes The block attributes.
  * @return string Returns the block content.
  */
 function cptda_render_block_calendar( $attributes ) {
@@ -110,6 +78,8 @@ function cptda_render_block_calendar( $attributes ) {
 
 /**
  * Registers the `cptda/calendar` block on server.
+ *
+ * @since 2.6.2
  */
 function cptda_register_block_calendar() {
 	register_block_type(
@@ -128,6 +98,9 @@ function cptda_register_block_calendar() {
 				),
 				'year'      => array(
 					'type' => 'integer',
+				),
+				'post_type' => array(
+					'type' => 'string',
 				),
 			),
 			'render_callback' => 'cptda_render_block_calendar',
