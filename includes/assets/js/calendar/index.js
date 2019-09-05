@@ -158,6 +158,22 @@ function (_Component) {
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(CalendarEdit, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this$props = this.props,
+          postType = _this$props.postType,
+          setAttributes = _this$props.setAttributes,
+          attributes = _this$props.attributes;
+      var post_type = attributes.post_type;
+
+      if (!post_type) {
+        // Default to current post type
+        setAttributes({
+          post_type: postType
+        });
+      }
+    }
+  }, {
     key: "getYearMonth",
     value: function getYearMonth(date) {
       if (!date) {
@@ -178,23 +194,19 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          postType = _this$props.postType,
-          setAttributes = _this$props.setAttributes,
-          attributes = _this$props.attributes;
-      var post_type = attributes.post_type;
+      var _this$props2 = this.props,
+          setAttributes = _this$props2.setAttributes,
+          attributes = _this$props2.attributes;
+      var post_type = attributes.post_type; // Return if post type has not been set yet
 
       if (!post_type) {
-        // Default to current post type
-        setAttributes({
-          post_type: postType
-        });
+        return null;
       }
 
       var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(PanelBody, {
         title: __('Calendar Settings')
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_12__["default"], {
-        postType: attributes.post_type,
+        postType: post_type,
         onPostTypeChange: function onPostTypeChange(value) {
           return setAttributes({
             post_type: value

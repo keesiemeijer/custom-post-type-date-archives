@@ -29,6 +29,16 @@ class CalendarEdit extends Component {
 		);
 	}
 
+	componentDidMount() {
+		const { postType, setAttributes, attributes } = this.props;
+		let { post_type } = attributes;
+
+		if (!post_type) {
+			// Default to current post type
+			setAttributes({ post_type: postType })
+		}
+	}
+
 	getYearMonth(date) {
 		if (!date) {
 			return {};
@@ -48,19 +58,19 @@ class CalendarEdit extends Component {
 	}
 
 	render() {
-		const { postType, setAttributes, attributes } = this.props;
+		const { setAttributes, attributes } = this.props;
 		let { post_type } = attributes;
 
+		// Return if post type has not been set yet
 		if (!post_type) {
-			// Default to current post type
-			setAttributes({ post_type: postType })
+			return null;
 		}
 
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Calendar Settings' ) }>
 					<PostTypePanel
-						postType={attributes.post_type}
+						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
 					/>
 				</PanelBody>
