@@ -1,7 +1,9 @@
 /**
  * External dependencies
  */
-import { isEqual, debounce } from 'lodash';
+import { isEqual, debounce, find } from 'lodash';
+
+import { getPostTypes } from './post-types.js';
 
 /**
  * WordPress dependencies
@@ -14,17 +16,20 @@ const { Placeholder, Spinner } = wp.components;
 
 export function rendererPath(block, attributes = null, urlQueryArgs = {} ) {
 	const {post_type} = attributes;
-	delete attributes.post_type;
+
+	let attributesClone = Object.assign({}, attributes);
+	delete attributesClone.post_type;
 
 	return addQueryArgs( `/custom_post_type_date_archives/v1/${ post_type }/${ block }`, {
 		...urlQueryArgs,
-		...attributes
+		...attributesClone
 	} );
 }
 
 export class CPTDA_ServerSideRender extends Component {
 	constructor( props ) {
 		super( props );
+		this.postTypes = getPostTypes();
 		this.state = {
 			response: null,
 		};
@@ -83,7 +88,7 @@ export class CPTDA_ServerSideRender extends Component {
 
 		if ( response === '' ) {
 			return (
-				<EmptyResponsePlaceholder response={ response } { ...this.props } />
+				<EmptyResponsePlaceholder response={ response } { ...this.props } postTypes={this.postTypes} />
 			);
 		} else if ( ! response ) {
 			return (
@@ -107,13 +112,25 @@ export class CPTDA_ServerSideRender extends Component {
 }
 
 CPTDA_ServerSideRender.defaultProps = {
-	EmptyResponsePlaceholder: ( { className } ) => (
+	EmptyResponsePlaceholder: ( { className, attributes, postTypes } ) => {
+
+	let emptyResponseMessage = __( 'No posts found' );
+	const {post_type} = attributes;
+	if(post_type) {
+		const postTypeObj = find( postTypes, {'value': post_type});
+		if(postTypeObj) {
+			emptyResponseMessage = __( 'No posts found for post type ' ) + postTypeObj.label;
+		}
+	}
+
+	return (
 		<Placeholder
 			className={ className }
 		>
-			{ __( 'Block rendered as empty.' ) + className }
+			{ emptyResponseMessage }
 		</Placeholder>
-	),
+	)
+},
 	ErrorResponsePlaceholder: ( { response, className } ) => {
 		// translators: %s: error message describing the problem
 		const errorMessage = sprintf( __( 'Error loading block: %s' ), response.errorMsg );
