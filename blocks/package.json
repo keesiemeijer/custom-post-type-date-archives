@@ -2,7 +2,7 @@
   "name": "custom-post-type-date-archives-calendar-block",
   "version": "1.0.0",
   "license": "GPL-2.0-or-later",
-  "main": "calendar/index.js",
+  "main": "recent-posts/index.js",
   "devDependencies": {
     "@wordpress/components": "^8.1.0",
     "@wordpress/scripts": "^3.4.0",
@@ -10,10 +10,11 @@
   },
   "scripts": {
     "test": "wp-scripts test-unit-js",
-    "start": "wp-scripts start",
+    "start": "wp-scripts start calendar/index.js recent-posts/index.js --output-path=../includes/assets/js/blocks",
     "build": "wp-scripts build",
     "build:calendar": "wp-scripts build calendar/index.js --output-path=../includes/assets/js/calendar",
-    "start:calendar": "wp-scripts start calendar/index.js --output-path=../includes/assets/js/calendar"
+    "start:calendar": "wp-scripts start calendar/index.js --output-path=../includes/assets/js/calendar",
+    "start:recent": "wp-scripts start recent-posts/index.js --output-path=../includes/assets/js/blocks"
   },
   "dependencies": {
     "memize": "^1.0.5",
