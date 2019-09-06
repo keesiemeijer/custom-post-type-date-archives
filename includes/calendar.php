@@ -81,7 +81,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 			wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
 			$cache_data[ $key ] = '';
 			wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
-			return;
+			return '';
 		}
 	}
 
