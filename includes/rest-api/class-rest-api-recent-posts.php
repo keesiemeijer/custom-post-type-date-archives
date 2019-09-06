@@ -151,12 +151,13 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 			'title',
 			'before_title',
 			'after_title',
-			'message',
 		);
 
 		foreach ( $blacklisted as $value ) {
 			$args[ $value ] = '';
 		}
+
+		$args['message'] = wp_kses_post($args['message']);
 
 		$query_args   = cptda_get_recent_posts_query( $args );
 		$recent_posts = get_posts( $query_args );
