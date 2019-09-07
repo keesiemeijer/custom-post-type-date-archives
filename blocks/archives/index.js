@@ -4,27 +4,24 @@
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
-
 /**
  * Internal dependencies
  */
 import edit from './edit';
 import icon from './icon';
 
-registerBlockType('cptda/recent-posts', {
-	title: __( 'Custom Post Type latest Posts' ),
-	description: __( 'Display a list of your most recent posts.' ),
+registerBlockType('cptda/archives', {
+	title: __( 'Custom Post Type Archives' ),
+	description: __( 'Display a monthly archive of your posts.' ),
 	icon,
 	category: 'widgets',
-	keywords: [ __( 'recent posts' ) ],
 	supports: {
 		align: true,
 		html: false,
 	},
 	edit,
 	save() {
-			// Rendering in PHP
-			return null;
-		}
+		// Rendering in PHP
+		return null;
+	}
 } );
-

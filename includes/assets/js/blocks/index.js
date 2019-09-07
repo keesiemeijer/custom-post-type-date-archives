@@ -71,6 +71,244 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./archives/edit.js":
+/*!**************************!*\
+  !*** ./archives/edit.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_server_side_render__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/server-side-render */ "./components/server-side-render.js");
+/* harmony import */ var _components_post_types_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/post-types.js */ "./components/post-types.js");
+/* harmony import */ var _components_query_panel_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/query-panel.js */ "./components/query-panel.js");
+
+
+
+
+
+
+
+/**
+ * External dependencies
+ */
+
+/**
+ * WordPress dependencies
+ */
+
+var __ = wp.i18n.__;
+var _wp$components = wp.components,
+    Disabled = _wp$components.Disabled,
+    PanelBody = _wp$components.PanelBody,
+    ToggleControl = _wp$components.ToggleControl;
+var Component = wp.element.Component;
+var withSelect = wp.data.withSelect;
+var InspectorControls = wp.editor.InspectorControls;
+
+
+
+
+var CalendarEdit =
+/*#__PURE__*/
+function (_Component) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4___default()(CalendarEdit, _Component);
+
+  function CalendarEdit() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, CalendarEdit);
+
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(CalendarEdit).apply(this, arguments));
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(CalendarEdit, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this$props = this.props,
+          postType = _this$props.postType,
+          setAttributes = _this$props.setAttributes,
+          attributes = _this$props.attributes;
+      var post_type = attributes.post_type;
+
+      if (!post_type) {
+        // Default to current post type
+        setAttributes({
+          post_type: postType
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          setAttributes = _this$props2.setAttributes,
+          attributes = _this$props2.attributes;
+      var post_type = attributes.post_type,
+          type = attributes.type,
+          format = attributes.format,
+          order = attributes.order,
+          limit = attributes.limit,
+          show_post_count = attributes.show_post_count; // Return if post type has not been set yet
+
+      if (!post_type) {
+        return null;
+      }
+
+      var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(PanelBody, {
+        title: __('Calendar Settings')
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        postType: post_type,
+        onPostTypeChange: function onPostTypeChange(value) {
+          return setAttributes({
+            post_type: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(ToggleControl, {
+        label: __('Show post count'),
+        checked: show_post_count,
+        onChange: function onChange(value) {
+          return setAttributes({
+            show_post_count: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_components_query_panel_js__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        limit: limit,
+        onLimitChange: function onLimitChange(value) {
+          return setAttributes({
+            limit: value
+          });
+        },
+        type: type,
+        onTypeChange: function onTypeChange(value) {
+          return setAttributes({
+            type: value
+          });
+        },
+        format: format,
+        onFormatChange: function onFormatChange(value) {
+          return setAttributes({
+            format: value
+          });
+        },
+        order: order,
+        onOrderChange: function onOrderChange(value) {
+          return setAttributes({
+            order: value
+          });
+        }
+      })));
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(react__WEBPACK_IMPORTED_MODULE_6__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        block: "archives",
+        title: "Custom Post Type Archives",
+        attributes: this.props.attributes
+      })));
+    }
+  }]);
+
+  return CalendarEdit;
+}(Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (withSelect(function (select) {
+  var coreEditorSelect = select('core/editor');
+
+  if (!coreEditorSelect) {
+    return;
+  }
+
+  var getEditedPostAttribute = coreEditorSelect.getEditedPostAttribute;
+  var postType = getEditedPostAttribute('type'); // Dates are used to overwrite year and month used on the calendar.
+  // This overwrite should only happen for 'post' post types.
+  // For other post types the calendar always displays the current month.
+
+  return {
+    postType: postType
+  };
+})(CalendarEdit));
+
+/***/ }),
+
+/***/ "./archives/icon.js":
+/*!**************************!*\
+  !*** ./archives/icon.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * WordPress dependencies
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg"
+}, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Path"], {
+  d: "M21 6V20C21 21.1 20.1 22 19 22H5C3.89 22 3 21.1 3 20L3.01 6C3.01 4.9 3.89 4 5 4H6V2H8V4H16V2H18V4H19C20.1 4 21 4.9 21 6ZM5 8H19V6H5V8ZM19 20V10H5V20H19ZM11 12H17V14H11V12ZM17 16H11V18H17V16ZM7 12H9V14H7V12ZM9 18V16H7V18H9Z"
+})));
+
+/***/ }),
+
+/***/ "./archives/index.js":
+/*!***************************!*\
+  !*** ./archives/index.js ***!
+  \***************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./edit */ "./archives/edit.js");
+/* harmony import */ var _icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./icon */ "./archives/icon.js");
+/**
+ * WordPress dependencies
+ */
+var __ = wp.i18n.__;
+var registerBlockType = wp.blocks.registerBlockType;
+/**
+ * Internal dependencies
+ */
+
+
+
+registerBlockType('cptda/archives', {
+  title: __('Custom Post Type Archives'),
+  description: __('Display a monthly archive of your posts.'),
+  icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
+  category: 'widgets',
+  supports: {
+    align: true,
+    html: false
+  },
+  edit: _edit__WEBPACK_IMPORTED_MODULE_0__["default"],
+  save: function save() {
+    // Rendering in PHP
+    return null;
+  }
+});
+
+/***/ }),
+
 /***/ "./calendar/edit.js":
 /*!**************************!*\
   !*** ./calendar/edit.js ***!
@@ -215,6 +453,7 @@ function (_Component) {
       })));
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(react__WEBPACK_IMPORTED_MODULE_8__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_11__["default"], {
         block: "calendar",
+        title: "Custom Post Type Calendar",
         attributes: this.getServerSideAttributes(this.props.attributes, this.props.date)
       })));
     }
@@ -299,7 +538,7 @@ var registerBlockType = wp.blocks.registerBlockType;
 registerBlockType('cptda/calendar', {
   title: __('Custom Post Type Calendar'),
   description: __('A calendar of your site’s custom post type posts.'),
-  //icon,
+  icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
   category: 'widgets',
   keywords: [__('posts'), __('archive')],
   supports: {
@@ -417,6 +656,106 @@ function PostTypePanel(_ref) {
 
 /***/ }),
 
+/***/ "./components/query-panel.js":
+/*!***********************************!*\
+  !*** ./components/query-panel.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return QueryPanel; });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+
+var __ = wp.i18n.__;
+var _wp$components = wp.components,
+    SelectControl = _wp$components.SelectControl,
+    RangeControl = _wp$components.RangeControl;
+function QueryPanel(_ref) {
+  var limit = _ref.limit,
+      onLimitChange = _ref.onLimitChange,
+      format = _ref.format,
+      onFormatChange = _ref.onFormatChange,
+      type = _ref.type,
+      onTypeChange = _ref.onTypeChange,
+      order = _ref.order,
+      onOrderChange = _ref.onOrderChange;
+  return [onLimitChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
+    key: "cptda-range-limit",
+    label: __('Limit'),
+    value: limit,
+    onChange: function onChange(value) {
+      onLimitChange(value);
+    },
+    min: 1,
+    max: 100
+  }), onOrderChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
+    key: "cptda-select-order",
+    label: __('Order'),
+    value: "".concat(order),
+    options: orderOptions,
+    onChange: function onChange(value) {
+      onOrderChange(value);
+    }
+  }), onTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
+    key: "cptda-select-order",
+    label: __('Type of archives'),
+    value: "".concat(type),
+    options: typeOptions,
+    onChange: function onChange(value) {
+      onTypeChange(value);
+    }
+  }), onFormatChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
+    key: "cptda-select-format",
+    label: __('Format'),
+    value: "".concat(format),
+    options: formatOptions,
+    onChange: function onChange(value) {
+      onFormatChange(value);
+    }
+  })];
+}
+var orderOptions = [{
+  value: 'ASC',
+  label: __('Ascending')
+}, {
+  value: 'DESC',
+  label: __('Descending')
+}];
+var typeOptions = [{
+  value: 'alpha',
+  label: __('Alphabetical')
+}, {
+  value: 'daily',
+  label: __('Daily')
+}, {
+  value: 'monthly',
+  label: __('Monthly')
+}, {
+  value: 'postbypost',
+  label: __('Post By Post')
+}, {
+  value: 'weekly',
+  label: __('Weekly')
+}, {
+  value: 'yearly',
+  label: __('Yearly')
+}];
+var formatOptions = [{
+  value: 'custom',
+  label: __('Custom')
+}, {
+  value: 'html',
+  label: __('HTML')
+}, {
+  value: 'option',
+  label: __('Option')
+}];
+
+/***/ }),
+
 /***/ "./components/server-side-render.js":
 /*!******************************************!*\
   !*** ./components/server-side-render.js ***!
@@ -499,7 +838,6 @@ function (_Component) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, CPTDA_ServerSideRender);
 
     _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(CPTDA_ServerSideRender).call(this, props));
-    _this.postTypes = Object(_post_types_js__WEBPACK_IMPORTED_MODULE_9__["getPostTypes"])();
     _this.state = {
       response: null
     };
@@ -584,16 +922,20 @@ function (_Component) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(EmptyResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
           response: response
         }, this.props, {
-          postTypes: this.postTypes
+          label: this.props.title
         }));
       } else if (!response) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(LoadingResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
           response: response
-        }, this.props));
+        }, this.props, {
+          label: this.props.title
+        }));
       } else if (response.error) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(ErrorResponsePlaceholder, _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0___default()({
           response: response
-        }, this.props));
+        }, this.props, {
+          label: this.props.title
+        }));
       }
 
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(RawHTML, {
@@ -608,40 +950,32 @@ function (_Component) {
 CPTDA_ServerSideRender.defaultProps = {
   EmptyResponsePlaceholder: function EmptyResponsePlaceholder(_ref) {
     var className = _ref.className,
-        attributes = _ref.attributes,
-        postTypes = _ref.postTypes;
+        label = _ref.label;
 
-    var emptyResponseMessage = __('No posts found');
-
-    var post_type = attributes.post_type;
-
-    if (post_type) {
-      var postTypeObj = Object(lodash__WEBPACK_IMPORTED_MODULE_8__["find"])(postTypes, {
-        'value': post_type
-      });
-
-      if (postTypeObj) {
-        emptyResponseMessage = __('No posts found for post type ') + postTypeObj.label;
-      }
-    }
+    var emptyResponseMessage = __('No posts found with the current block settings');
 
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
-      className: className
+      className: className,
+      label: label
     }, emptyResponseMessage);
   },
   ErrorResponsePlaceholder: function ErrorResponsePlaceholder(_ref2) {
     var response = _ref2.response,
-        className = _ref2.className;
+        className = _ref2.className,
+        label = _ref2.label;
     // translators: %s: error message describing the problem
     var errorMessage = sprintf(__('Error loading block: %s'), response.errorMsg);
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
-      className: className
+      className: className,
+      label: label
     }, errorMessage);
   },
   LoadingResponsePlaceholder: function LoadingResponsePlaceholder(_ref3) {
-    var className = _ref3.className;
+    var className = _ref3.className,
+        label = _ref3.label;
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
-      className: className
+      className: className,
+      label: label
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Spinner, null));
   }
 };
@@ -1187,6 +1521,7 @@ function (_Component) {
       }))));
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(react__WEBPACK_IMPORTED_MODULE_7__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_9__["default"], {
         block: "recent-posts",
+        title: "Custom Post Type Latest Posts",
         attributes: this.props.attributes
       })));
     }
@@ -1298,7 +1633,7 @@ var registerBlockType = wp.blocks.registerBlockType;
 
 
 registerBlockType('cptda/recent-posts', {
-  title: __('Custom post type recent Posts'),
+  title: __('Custom Post Type latest Posts'),
   description: __('Display a list of your most recent posts.'),
   icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
   category: 'widgets',
@@ -1317,14 +1652,15 @@ registerBlockType('cptda/recent-posts', {
 /***/ }),
 
 /***/ 0:
-/*!*********************************************************!*\
-  !*** multi ./calendar/index.js ./recent-posts/index.js ***!
-  \*********************************************************/
+/*!*****************************************************************************!*\
+  !*** multi ./calendar/index.js ./recent-posts/index.js ./archives/index.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./calendar/index.js */"./calendar/index.js");
-module.exports = __webpack_require__(/*! ./recent-posts/index.js */"./recent-posts/index.js");
+__webpack_require__(/*! ./recent-posts/index.js */"./recent-posts/index.js");
+module.exports = __webpack_require__(/*! ./archives/index.js */"./archives/index.js");
 
 
 /***/ }),

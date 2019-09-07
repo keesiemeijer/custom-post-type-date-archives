@@ -109,6 +109,7 @@ class LatestPostsEdit extends Component {
 				<Disabled>
 					<CPTDA_ServerSideRender
 						block='recent-posts'
+						title='Custom Post Type Latest Posts'
 						attributes={ this.props.attributes }					/>
 				</Disabled>
 			</Fragment>

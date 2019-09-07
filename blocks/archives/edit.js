@@ -2,31 +2,23 @@
  * External dependencies
  */
 import { Fragment } from 'react';
-import moment from 'moment';
-import memoize from 'memize';
 
 /**
  * WordPress dependencies
  */
 const { __ } = wp.i18n;
-const { Disabled, PanelBody } = wp.components;
+const { Disabled, PanelBody, ToggleControl } = wp.components;
 const { Component } = wp.element;
 const { withSelect } = wp.data;
 const { InspectorControls } = wp.editor;
 
 import CPTDA_ServerSideRender from '../components/server-side-render';
 import PostTypePanel from '../components/post-types.js';
+import QueryPanel from '../components/query-panel.js';
 
 class CalendarEdit extends Component {
 	constructor() {
 		super(...arguments);
-
-		this.getYearMonth = memoize(
-			this.getYearMonth.bind(this), { maxSize: 1 }
-		);
-		this.getServerSideAttributes = memoize(
-			this.getServerSideAttributes.bind(this), { maxSize: 1 }
-		);
 	}
 
 	componentDidMount() {
@@ -39,27 +31,9 @@ class CalendarEdit extends Component {
 		}
 	}
 
-	getYearMonth(date) {
-		if (!date) {
-			return {};
-		}
-		const momentDate = moment(date);
-		return {
-			year: momentDate.year(),
-			month: momentDate.month() + 1,
-		};
-	}
-
-	getServerSideAttributes(attributes, date) {
-		return {
-			...attributes,
-			...this.getYearMonth(date),
-		};
-	}
-
 	render() {
 		const { setAttributes, attributes } = this.props;
-		let { post_type } = attributes;
+		const { post_type, type, format, order, limit, show_post_count } = attributes;
 
 		// Return if post type has not been set yet
 		if (!post_type) {
@@ -73,6 +47,21 @@ class CalendarEdit extends Component {
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
 					/>
+					<ToggleControl
+						label={ __( 'Show post count' ) }
+						checked={ show_post_count }
+						onChange={ ( value ) => setAttributes( { show_post_count: value } ) }
+					/>
+					<QueryPanel
+						limit={limit}
+						onLimitChange={ ( value ) => setAttributes( { limit: value } ) }
+						type={type}
+						onTypeChange={ ( value ) => setAttributes( { type: value } ) }
+						format={format}
+						onFormatChange={ ( value ) => setAttributes( { format: value } ) }
+						order={order}
+						onOrderChange={ ( value ) => setAttributes( { order: value } ) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
@@ -82,13 +71,9 @@ class CalendarEdit extends Component {
 				{inspectorControls}
 				<Disabled>
 					<CPTDA_ServerSideRender
-						block='calendar'
-						title='Custom Post Type Calendar'
-						attributes={
-							this.getServerSideAttributes(
-							this.props.attributes,
-							this.props.date
-						) }
+						block='archives'
+						title='Custom Post Type Archives'
+						attributes={  this.props.attributes }
 					/>
 				</Disabled>
 			</Fragment>
@@ -109,7 +94,6 @@ export default withSelect((select) => {
 	// This overwrite should only happen for 'post' post types.
 	// For other post types the calendar always displays the current month.
 	return {
-		date: getEditedPostAttribute('date'),
 		postType: postType
 	};
 })(CalendarEdit);

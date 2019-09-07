@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { isEqual, debounce, find } from 'lodash';
+import { isEqual, debounce } from 'lodash';
 
 import { getPostTypes } from './post-types.js';
 
@@ -29,7 +29,6 @@ export function rendererPath(block, attributes = null, urlQueryArgs = {} ) {
 export class CPTDA_ServerSideRender extends Component {
 	constructor( props ) {
 		super( props );
-		this.postTypes = getPostTypes();
 		this.state = {
 			response: null,
 		};
@@ -88,15 +87,15 @@ export class CPTDA_ServerSideRender extends Component {
 
 		if ( response === '' ) {
 			return (
-				<EmptyResponsePlaceholder response={ response } { ...this.props } postTypes={this.postTypes} />
+				<EmptyResponsePlaceholder response={ response } { ...this.props } label={this.props.title} />
 			);
 		} else if ( ! response ) {
 			return (
-				<LoadingResponsePlaceholder response={ response } { ...this.props } />
+				<LoadingResponsePlaceholder response={ response } { ...this.props } label={this.props.title} />
 			);
 		} else if ( response.error ) {
 			return (
-				<ErrorResponsePlaceholder response={ response } { ...this.props } />
+				<ErrorResponsePlaceholder response={ response } { ...this.props } label={this.props.title} />
 			);
 		}
 
@@ -112,40 +111,35 @@ export class CPTDA_ServerSideRender extends Component {
 }
 
 CPTDA_ServerSideRender.defaultProps = {
-	EmptyResponsePlaceholder: ( { className, attributes, postTypes } ) => {
+	EmptyResponsePlaceholder: ( { className, label } ) => {
 
-	let emptyResponseMessage = __( 'No posts found' );
-	const {post_type} = attributes;
-	if(post_type) {
-		const postTypeObj = find( postTypes, {'value': post_type});
-		if(postTypeObj) {
-			emptyResponseMessage = __( 'No posts found for post type ' ) + postTypeObj.label;
-		}
-	}
-
+	let emptyResponseMessage = __( 'No posts found with the current block settings' );
 	return (
 		<Placeholder
 			className={ className }
+			label={label}
 		>
 			{ emptyResponseMessage }
 		</Placeholder>
 	)
 },
-	ErrorResponsePlaceholder: ( { response, className } ) => {
+	ErrorResponsePlaceholder: ( { response, className, label } ) => {
 		// translators: %s: error message describing the problem
 		const errorMessage = sprintf( __( 'Error loading block: %s' ), response.errorMsg );
 		return (
 			<Placeholder
 				className={ className }
+				label={label}
 			>
 				{ errorMessage }
 			</Placeholder>
 		);
 	},
-	LoadingResponsePlaceholder: ( { className } ) => {
+	LoadingResponsePlaceholder: ( { className, label } ) => {
 		return (
 			<Placeholder
 				className={ className }
+				label={label}
 			>
 				<Spinner />
 			</Placeholder>

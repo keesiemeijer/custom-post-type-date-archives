@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Date Archives 2.6.2-alpha\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2019-06-01 14:56:34+00:00\n"
+"POT-Creation-Date: 2019-09-07 14:27:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,6 +24,43 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: blocks/archives/index.php:35 includes/register-blocks.php:215
+#: includes/widgets/class-cptda-widget-archives.php:36
+#: includes/widgets/class-cptda-widget-archives.php:125
+#: includes/widgets/class-cptda-widget-calendar.php:38
+#: tests/test-widgets.php:45
+msgid "Archives"
+msgstr ""
+
+#: blocks/archives/index.php:53 includes/register-blocks.php:233
+#: includes/utils/archives.php:136
+msgid "Select Year"
+msgstr ""
+
+#: blocks/archives/index.php:56 includes/register-blocks.php:236
+#: includes/utils/archives.php:138
+msgid "Select Month"
+msgstr ""
+
+#: blocks/archives/index.php:59 includes/register-blocks.php:239
+#: includes/utils/archives.php:142
+msgid "Select Day"
+msgstr ""
+
+#: blocks/archives/index.php:62 includes/register-blocks.php:242
+#: includes/utils/archives.php:140
+msgid "Select Week"
+msgstr ""
+
+#: blocks/archives/index.php:65 includes/register-blocks.php:245
+#: includes/utils/archives.php:144
+msgid "Select Post"
+msgstr ""
+
+#: blocks/archives/index.php:104 includes/register-blocks.php:284
+msgid "No archives to show."
+msgstr ""
 
 #: custom-post-type-date-archives.php:126
 #: custom-post-type-date-archives.php:138
@@ -233,43 +270,16 @@ msgstr ""
 msgid "Rendered calendar HTML"
 msgstr ""
 
-#: includes/rest-api/class-rest-api-recent-posts.php:195
+#: includes/rest-api/class-rest-api-recent-posts.php:196
 msgid "Recent Posts post type."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-recent-posts.php:203
+#: includes/rest-api/class-rest-api-recent-posts.php:204
 msgid "Rendered recent posts HTML"
-msgstr ""
-
-#: includes/utils/archives.php:136
-msgid "Select Year"
-msgstr ""
-
-#: includes/utils/archives.php:138
-msgid "Select Month"
-msgstr ""
-
-#: includes/utils/archives.php:140
-msgid "Select Week"
-msgstr ""
-
-#: includes/utils/archives.php:142
-msgid "Select Day"
-msgstr ""
-
-#: includes/utils/archives.php:144
-msgid "Select Post"
 msgstr ""
 
 #: includes/widgets/class-cptda-widget-archives.php:31
 msgid "A monthly archive of your site&#8217;s Posts."
-msgstr ""
-
-#: includes/widgets/class-cptda-widget-archives.php:36
-#: includes/widgets/class-cptda-widget-archives.php:125
-#: includes/widgets/class-cptda-widget-calendar.php:38
-#: tests/test-widgets.php:45
-msgid "Archives"
 msgstr ""
 
 #: includes/widgets/class-cptda-widget-archives.php:38

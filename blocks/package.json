@@ -4,17 +4,18 @@
   "license": "GPL-2.0-or-later",
   "main": "recent-posts/index.js",
   "devDependencies": {
-    "@wordpress/components": "^8.1.0",
-    "@wordpress/scripts": "^3.4.0",
+    "@wordpress/components": "^8.2.0",
+    "@wordpress/scripts": "^4.1.0",
     "classnames": "^2.2.6"
   },
   "scripts": {
     "test": "wp-scripts test-unit-js",
-    "start": "wp-scripts start calendar/index.js recent-posts/index.js --output-path=../includes/assets/js/blocks",
-    "build": "wp-scripts build",
+    "start": "wp-scripts start calendar/index.js recent-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
+    "build": "wp-scripts build calendar/index.js recent-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks-minified",
     "build:calendar": "wp-scripts build calendar/index.js --output-path=../includes/assets/js/calendar",
-    "start:calendar": "wp-scripts start calendar/index.js --output-path=../includes/assets/js/calendar",
-    "start:recent": "wp-scripts start recent-posts/index.js --output-path=../includes/assets/js/blocks"
+    "start:calendar": "wp-scripts start calendar/index.js --output-path=../includes/assets/js/blocks",
+    "start:recent": "wp-scripts start recent-posts/index.js --output-path=../includes/assets/js/blocks",
+    "start:archives": "wp-scripts start archives/index.js --output-path=../includes/assets/js/blocks"
   },
   "dependencies": {
     "memize": "^1.0.5",

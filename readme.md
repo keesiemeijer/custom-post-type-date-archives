@@ -1,4 +1,4 @@
-# Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=develop)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
+# Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=gutenberg)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
 
 Version:           2.6.2-alpha  
 Requires at least: 4.2  

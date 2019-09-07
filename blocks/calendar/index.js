@@ -15,7 +15,7 @@ import icon from './icon';
 registerBlockType('cptda/calendar', {
 	title: __( 'Custom Post Type Calendar' ),
 	description: __( 'A calendar of your site’s custom post type posts.' ),
-	//icon,
+	icon,
 	category: 'widgets',
 	keywords: [ __( 'posts' ), __( 'archive' ) ],
 	supports: {
