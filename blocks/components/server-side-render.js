@@ -113,7 +113,7 @@ export class CPTDA_ServerSideRender extends Component {
 CPTDA_ServerSideRender.defaultProps = {
 	EmptyResponsePlaceholder: ( { className, label } ) => {
 
-	let emptyResponseMessage = __( 'No posts found with the current block settings' );
+	let emptyResponseMessage = __( 'No posts found with the current block settings', 'custom-post-type-date-archives' );
 	return (
 		<Placeholder
 			className={ className }
@@ -125,7 +125,7 @@ CPTDA_ServerSideRender.defaultProps = {
 },
 	ErrorResponsePlaceholder: ( { response, className, label } ) => {
 		// translators: %s: error message describing the problem
-		const errorMessage = sprintf( __( 'Error loading block: %s' ), response.errorMsg );
+		const errorMessage = sprintf( __( 'Error loading block: %s', 'custom-post-type-date-archives' ), response.errorMsg );
 		return (
 			<Placeholder
 				className={ className }

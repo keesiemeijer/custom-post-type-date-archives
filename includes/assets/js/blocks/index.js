@@ -169,7 +169,7 @@ function (_Component) {
       }
 
       var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(PanelBody, {
-        title: __('Calendar Settings')
+        title: __('Calendar Settings', 'custom-post-type-date-archives')
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_8__["default"], {
         postType: post_type,
         onPostTypeChange: function onPostTypeChange(value) {
@@ -178,7 +178,7 @@ function (_Component) {
           });
         }
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(ToggleControl, {
-        label: __('Show post count'),
+        label: __('Show post count', 'custom-post-type-date-archives'),
         checked: show_post_count,
         onChange: function onChange(value) {
           return setAttributes({
@@ -292,8 +292,8 @@ var registerBlockType = wp.blocks.registerBlockType;
 
 
 registerBlockType('cptda/archives', {
-  title: __('Custom Post Type Archives'),
-  description: __('Display a monthly archive of your posts.'),
+  title: __('Custom Post Type Archives', 'custom-post-type-date-archives'),
+  description: __('Display a monthly archive of your posts.', 'custom-post-type-date-archives'),
   icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
   category: 'widgets',
   supports: {
@@ -442,7 +442,7 @@ function (_Component) {
       }
 
       var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(PanelBody, {
-        title: __('Calendar Settings')
+        title: __('Calendar Settings', 'custom-post-type-date-archives')
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_12__["default"], {
         postType: post_type,
         onPostTypeChange: function onPostTypeChange(value) {
@@ -536,11 +536,11 @@ var registerBlockType = wp.blocks.registerBlockType;
 
 
 registerBlockType('cptda/calendar', {
-  title: __('Custom Post Type Calendar'),
-  description: __('A calendar of your site’s custom post type posts.'),
+  title: __('Custom Post Type Calendar', 'custom-post-type-date-archives'),
+  description: __('A calendar of your site’s custom post type posts.', 'custom-post-type-date-archives'),
   icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
   category: 'widgets',
-  keywords: [__('posts'), __('archive')],
+  keywords: [__('posts', 'custom-post-type-date-archives'), __('archive', 'custom-post-type-date-archives')],
   supports: {
     align: true
   },
@@ -592,7 +592,7 @@ function IncludePosts(_ref) {
       onIncludeChange = _ref.onIncludeChange;
   return [onIncludeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
     key: "cptda-select-post-type",
-    label: __('Include Posts'),
+    label: __('Include Posts', 'custom-post-type-date-archives'),
     value: "".concat(include),
     options: options,
     onChange: function onChange(value) {
@@ -645,7 +645,7 @@ function PostTypePanel(_ref) {
       onPostTypeChange = _ref.onPostTypeChange;
   return [onPostTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
     key: "cptda-select-post-type",
-    label: __('Post Type'),
+    label: __('Post Type', 'custom-post-type-date-archives'),
     value: "".concat(postType),
     options: getPostTypes(),
     onChange: function onChange(value) {
@@ -684,7 +684,7 @@ function QueryPanel(_ref) {
       onOrderChange = _ref.onOrderChange;
   return [onLimitChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
     key: "cptda-range-limit",
-    label: __('Limit'),
+    label: __('Limit', 'custom-post-type-date-archives'),
     value: limit,
     onChange: function onChange(value) {
       onLimitChange(value);
@@ -693,7 +693,7 @@ function QueryPanel(_ref) {
     max: 100
   }), onOrderChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
     key: "cptda-select-order",
-    label: __('Order'),
+    label: __('Order', 'custom-post-type-date-archives'),
     value: "".concat(order),
     options: orderOptions,
     onChange: function onChange(value) {
@@ -701,7 +701,7 @@ function QueryPanel(_ref) {
     }
   }), onTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
     key: "cptda-select-order",
-    label: __('Type of archives'),
+    label: __('Type of archives', 'custom-post-type-date-archives'),
     value: "".concat(type),
     options: typeOptions,
     onChange: function onChange(value) {
@@ -709,7 +709,7 @@ function QueryPanel(_ref) {
     }
   }), onFormatChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
     key: "cptda-select-format",
-    label: __('Format'),
+    label: __('Format', 'custom-post-type-date-archives'),
     value: "".concat(format),
     options: formatOptions,
     onChange: function onChange(value) {
@@ -952,7 +952,7 @@ CPTDA_ServerSideRender.defaultProps = {
     var className = _ref.className,
         label = _ref.label;
 
-    var emptyResponseMessage = __('No posts found with the current block settings');
+    var emptyResponseMessage = __('No posts found with the current block settings', 'custom-post-type-date-archives');
 
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
       className: className,
@@ -964,7 +964,7 @@ CPTDA_ServerSideRender.defaultProps = {
         className = _ref2.className,
         label = _ref2.label;
     // translators: %s: error message describing the problem
-    var errorMessage = sprintf(__('Error loading block: %s'), response.errorMsg);
+    var errorMessage = sprintf(__('Error loading block: %s', 'custom-post-type-date-archives'), response.errorMsg);
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_7__["createElement"])(Placeholder, {
       className: className,
       label: label
@@ -1476,7 +1476,7 @@ function (_Component) {
       }
 
       var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(PanelBody, {
-        title: __('Latest Posts Settings')
+        title: __('Latest Posts Settings', 'custom-post-type-date-archives')
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_10__["default"], {
         postType: post_type,
         onPostTypeChange: function onPostTypeChange(value) {
@@ -1485,7 +1485,7 @@ function (_Component) {
           });
         }
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(RangeControl, {
-        label: __('Number of posts'),
+        label: __('Number of posts', 'custom-post-type-date-archives'),
         value: number,
         onChange: function onChange(value) {
           return setAttributes({
@@ -1502,7 +1502,7 @@ function (_Component) {
           });
         }
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(ToggleControl, {
-        label: __('Display post date'),
+        label: __('Display post date', 'custom-post-type-date-archives'),
         checked: show_date,
         onChange: function onChange(value) {
           return setAttributes({
@@ -1510,7 +1510,7 @@ function (_Component) {
           });
         }
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(BaseControl, {
-        label: __('Message when no posts are found'),
+        label: __('Message when no posts are found', 'custom-post-type-date-archives'),
         id: textareaID
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("textarea", {
         className: "components-textarea-control__input",
@@ -1633,11 +1633,11 @@ var registerBlockType = wp.blocks.registerBlockType;
 
 
 registerBlockType('cptda/recent-posts', {
-  title: __('Custom Post Type latest Posts'),
-  description: __('Display a list of your most recent posts.'),
+  title: __('Custom Post Type latest Posts', 'custom-post-type-date-archives'),
+  description: __('Display a list of your most recent posts.', 'custom-post-type-date-archives'),
   icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
   category: 'widgets',
-  keywords: [__('recent posts')],
+  keywords: [__('recent posts', 'custom-post-type-date-archives')],
   supports: {
     align: true,
     html: false

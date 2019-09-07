@@ -15,7 +15,7 @@ export default function QueryPanel({
 		onLimitChange && (
 			<RangeControl
 				key="cptda-range-limit"
-				label={ __( 'Limit' ) }
+				label={ __( 'Limit', 'custom-post-type-date-archives' ) }
 				value={ limit }
 				onChange={ ( value ) => { onLimitChange( value ); } }
 				min={ 1 }
@@ -24,7 +24,7 @@ export default function QueryPanel({
 		onOrderChange && (
 			<SelectControl
 			key="cptda-select-order"
-			label={ __( 'Order' ) }
+			label={ __( 'Order', 'custom-post-type-date-archives' ) }
 			value={ `${order}` }
 			options={ orderOptions }
 			onChange={ ( value ) => { onOrderChange( value ); } }
@@ -32,7 +32,7 @@ export default function QueryPanel({
 		onTypeChange && (
 			<SelectControl
 			key="cptda-select-order"
-			label={ __( 'Type of archives' ) }
+			label={ __( 'Type of archives', 'custom-post-type-date-archives' ) }
 			value={ `${type}` }
 			options={ typeOptions }
 			onChange={ ( value ) => { onTypeChange( value ); } }
@@ -40,7 +40,7 @@ export default function QueryPanel({
 		onFormatChange && (
 			<SelectControl
 			key="cptda-select-format"
-			label={ __( 'Format' ) }
+			label={ __( 'Format', 'custom-post-type-date-archives' ) }
 			value={ `${format}` }
 			options={ formatOptions }
 			onChange={ ( value ) => { onFormatChange( value ); } }

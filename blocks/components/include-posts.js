@@ -30,7 +30,7 @@ export default function IncludePosts({
 		onIncludeChange && (
 			<SelectControl
 			key="cptda-select-post-type"
-			label={ __( 'Include Posts' ) }
+			label={ __( 'Include Posts', 'custom-post-type-date-archives' ) }
 			value={ `${ include}` }
 			options={ options }
 			onChange={ ( value ) => { onIncludeChange( value ); } }

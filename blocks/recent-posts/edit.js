@@ -69,13 +69,13 @@ class LatestPostsEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Latest Posts Settings' ) }>
+				<PanelBody title={ __( 'Latest Posts Settings', 'custom-post-type-date-archives' ) }>
 					<PostTypePanel
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
 					/>
 					<RangeControl
-							label={ __( 'Number of posts' ) }
+							label={ __( 'Number of posts', 'custom-post-type-date-archives' ) }
 							value={ number }
 							onChange={ ( value ) => setAttributes( { number: value } ) }
 							min={ 1 }
@@ -86,11 +86,11 @@ class LatestPostsEdit extends Component {
 						onIncludeChange={ ( value ) => setAttributes( { include: value } ) }
 					/>
 					<ToggleControl
-						label={ __( 'Display post date' ) }
+						label={ __( 'Display post date', 'custom-post-type-date-archives' ) }
 						checked={ show_date }
 						onChange={ ( value ) => setAttributes( { show_date: value } ) }
 					/>
-					<BaseControl label={ __( 'Message when no posts are found' ) } id={textareaID}>
+					<BaseControl label={ __( 'Message when no posts are found', 'custom-post-type-date-archives' ) } id={textareaID}>
 						<textarea
 							className="components-textarea-control__input"
 							id={textareaID}

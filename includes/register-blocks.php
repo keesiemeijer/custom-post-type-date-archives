@@ -127,7 +127,7 @@ function cptda_register_blocks() {
 					'type' => 'string',
 				),
 			),
-			'render_callback' => 'cptda_render_block_latest_posts',
+			'render_callback' => 'cptda_render_block_archives',
 		)
 	);
 }

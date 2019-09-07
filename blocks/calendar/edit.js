@@ -68,7 +68,7 @@ class CalendarEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Calendar Settings' ) }>
+				<PanelBody title={ __( 'Calendar Settings', 'custom-post-type-date-archives' ) }>
 					<PostTypePanel
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }

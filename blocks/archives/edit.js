@@ -42,13 +42,13 @@ class CalendarEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Calendar Settings' ) }>
+				<PanelBody title={ __( 'Calendar Settings', 'custom-post-type-date-archives' ) }>
 					<PostTypePanel
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
 					/>
 					<ToggleControl
-						label={ __( 'Show post count' ) }
+						label={ __( 'Show post count', 'custom-post-type-date-archives' ) }
 						checked={ show_post_count }
 						onChange={ ( value ) => setAttributes( { show_post_count: value } ) }
 					/>

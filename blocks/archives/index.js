@@ -11,8 +11,8 @@ import edit from './edit';
 import icon from './icon';
 
 registerBlockType('cptda/archives', {
-	title: __( 'Custom Post Type Archives' ),
-	description: __( 'Display a monthly archive of your posts.' ),
+	title: __( 'Custom Post Type Archives', 'custom-post-type-date-archives' ),
+	description: __( 'Display a monthly archive of your posts.', 'custom-post-type-date-archives' ),
 	icon,
 	category: 'widgets',
 	supports: {

@@ -31,7 +31,7 @@ export default function PostTypePanel({
 		onPostTypeChange && (
 			<SelectControl
 			key="cptda-select-post-type"
-			label={ __( 'Post Type' ) }
+			label={ __( 'Post Type', 'custom-post-type-date-archives' ) }
 			value={ `${ postType}` }
 			options={ getPostTypes() }
 			onChange={ ( value ) => { onPostTypeChange( value ); } }
