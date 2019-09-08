@@ -45,17 +45,7 @@ module.exports = function( grunt ) {
 		// Clean up build directory
 		clean: {
 			main: [ 'build/<%= pkg.name %>' ],
-			release: [
-				'**',
-				'.travis.yml',
-				'.gitignore',
-				'.git/**',
-				'!lang/**',
-				'!templates/**',
-				'!includes/**',
-				'!related-posts-by-taxonomy.php',
-				'!readme.txt'
-			]
+			blocks: ['includes/assets/js/blocks']
 		},
 
 		// Copy the theme into the build directory
@@ -166,11 +156,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'travis', [ 'githash', 'replace:replace_branch' ] );
 
 	// Creates build
-	grunt.registerTask( 'build', [ 'clean:main', 'run:build', 'version', 'makepot', 'travis', 'copy:main' ] );
-
-	// Removes ALL development files in the root directory
-	// !!! be careful with this
-	grunt.registerTask( 'release', [ 'version', 'clean:release', ] );
+	grunt.registerTask( 'build', [ 'clean:main', 'clean:blocks', 'run:build', 'version', 'makepot', 'travis', 'copy:main' ] );
 
 	grunt.util.linefeed = '\n';
 
