@@ -104,12 +104,9 @@ export default withSelect((select) => {
 	const {
 		getEditedPostAttribute,
 	} = coreEditorSelect;
-	const postType = getEditedPostAttribute('type');
-	// Dates are used to overwrite year and month used on the calendar.
-	// This overwrite should only happen for 'post' post types.
-	// For other post types the calendar always displays the current month.
+
 	return {
 		date: getEditedPostAttribute('date'),
-		postType: postType
+		postType: getEditedPostAttribute('type')
 	};
 })(CalendarEdit);

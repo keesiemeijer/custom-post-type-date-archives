@@ -42,7 +42,7 @@ class CalendarEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Calendar Settings', 'custom-post-type-date-archives' ) }>
+				<PanelBody title={ __( 'Archives Settings', 'custom-post-type-date-archives' ) }>
 					<PostTypePanel
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
@@ -86,14 +86,8 @@ export default withSelect((select) => {
 	if (!coreEditorSelect) {
 		return;
 	}
-	const {
-		getEditedPostAttribute,
-	} = coreEditorSelect;
-	const postType = getEditedPostAttribute('type');
-	// Dates are used to overwrite year and month used on the calendar.
-	// This overwrite should only happen for 'post' post types.
-	// For other post types the calendar always displays the current month.
-	return {
-		postType: postType
-	};
+
+	const { getEditedPostAttribute } = coreEditorSelect;
+
+	return { postType: getEditedPostAttribute('type') };
 })(CalendarEdit);
