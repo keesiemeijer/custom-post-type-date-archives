@@ -14,7 +14,7 @@ add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
 function cptda_block_editor_assets() {
 	wp_enqueue_script(
 		'cptda-editor-block', // Handle.
-		CPT_DATE_ARCHIVES_PLUGIN_URL . "includes/assets/js/blocks-minified/index.js",
+		CPT_DATE_ARCHIVES_PLUGIN_URL . "includes/assets/js/blocks/index.js",
 		array( 'wp-blocks', 'wp-i18n', 'wp-url', 'wp-element', 'wp-data', 'wp-api-fetch', 'wp-editor', 'wp-components' )
 	);
 
