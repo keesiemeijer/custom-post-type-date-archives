@@ -74,7 +74,6 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	public function get_item( $request ) {
 		$args  = $request->get_params();
 		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
-		$data  = array();
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
 		$types     = cptda_get_post_types();
@@ -84,13 +83,11 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 			return $error;
 		}
 
-		$defaults = cptda_get_recent_posts_settings();
-		$args     = wp_parse_args( $args, $defaults );
-
-		$args['post_type'] = $post_type;
 		unset( $args['cptda_type'] );
 
 		$args = cptda_sanitize_recent_posts_settings( $args );
+		$args['post_type'] = $post_type;
+
 		$args = $this->prepare_item_for_response( $args, $request );
 
 		return rest_ensure_response( $args );
@@ -140,6 +137,11 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
+		$post_type = $args['post_type'];
+
+		$defaults = cptda_get_recent_posts_settings();
+		$args     = array_merge( $defaults, $args );
+
 		// Default recent posts number is 5
 		$number = $args['number'] ? $args['number'] : 5;
 
@@ -157,7 +159,12 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 			$args[ $value ] = '';
 		}
 
-		$args['message'] = wp_kses_post($args['message']);
+		$args['message'] = wp_kses_post( $args['message'] );
+
+		$args = apply_filters( 'rest_api_recent_posts_args', $args, $request );
+		$args = array_merge( $defaults, $args );
+
+		$args['post_type'] = $post_type;
 
 		$query_args   = cptda_get_recent_posts_query( $args );
 		$recent_posts = get_posts( $query_args );
