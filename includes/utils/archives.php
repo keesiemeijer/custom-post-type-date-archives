@@ -115,6 +115,15 @@ function cptda_get_archives_html( $args ) {
 		$html .= $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
+	$class = isset( $args['class'] ) ? $args['class'] : '';
+	if ( $class && ( 'wp-block-archives' === $class ) ) {
+		// Add extra classes from the editor block
+		$archive_type = ( 'option' === $args['format'] ) ? 'dropdown' : 'list';
+		$type_class = " {$class}-{$archive_type}";
+		$class = cptda_get_block_classes( $args, $class );
+		$class .= $type_class;
+	}
+
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : 0;
 	$paged = ( 1 < $paged ) ? $paged : 0;
 	if ( $paged ) {
@@ -150,7 +159,8 @@ function cptda_get_archives_html( $args ) {
 		$html .= $archives;
 		$html .= '</select></p>';
 	} elseif ( 'html' === $args['format'] ) {
-		$html .= '<ul>' . $archives . '</ul>';
+		$class = $class ? ' class="' . esc_attr( trim( $class ) ) . '"' : '';
+		$html .= '<ul' . $class . '>' . $archives . '</ul>';
 	} else {
 		$html .= $archives;
 	}

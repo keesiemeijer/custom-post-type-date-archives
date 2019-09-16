@@ -140,35 +140,36 @@ add_action( 'init', 'cptda_register_blocks' );
  *
  * @since 2.6.2
  *
- * @param array $attributes The block attributes.
+ * @param array $args The block attributes.
  * @return string Returns the block content.
  */
-function cptda_render_block_calendar( $attributes ) {
+function cptda_render_block_calendar( $args ) {
 	global $monthnum, $year;
 
 	$previous_monthnum = $monthnum;
 	$previous_year     = $year;
+	$post_type = $args['post_type'];
 
-	if ( isset( $attributes['month'] ) && isset( $attributes['year'] ) ) {
+	if ( isset( $args['month'] ) && isset( $args['year'] ) ) {
 		$permalink_structure = get_option( 'permalink_structure' );
 		if (
 			strpos( $permalink_structure, '%monthnum%' ) !== false &&
 			strpos( $permalink_structure, '%year%' ) !== false
 		) {
 			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
-			$monthnum = $attributes['month'];
+			$monthnum = $args['month'];
 			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
-			$year = $attributes['year'];
+			$year = $args['year'];
 		}
 	}
 
-	$custom_class_name = empty( $attributes['className'] ) ? '' : ' ' . $attributes['className'];
-	$align_class_name  = empty( $attributes['align'] ) ? '' : ' ' . "align{$attributes['align']}";
+	$custom_class_name = empty( $args['className'] ) ? '' : ' ' . $args['className'];
+	$align_class_name  = empty( $args['align'] ) ? '' : ' ' . "align{$args['align']}";
 
 	$output = sprintf(
 		'<div class="%1$s">%2$s</div>',
-		esc_attr( 'wp-block-calendar' . $custom_class_name . $align_class_name ),
-		get_calendar( true, false )
+		esc_attr( cptda_get_block_classes( $args, 'wp-block-calendar' ) ),
+		cptda_get_calendar( $post_type, true, false )
 	);
 
 	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
@@ -180,52 +181,44 @@ function cptda_render_block_calendar( $attributes ) {
 }
 
 
-function cptda_render_block_latest_posts(){
- 	return 'hello';
+function cptda_render_block_latest_posts() {
+	return 'hello';
 }
+
 
 /**
  * Renders the `core/archives` block on server.
  *
  * @see WP_Widget_Archives
  *
- * @param array $attributes The block attributes.
+ * @param array $args The block attributes.
  *
  * @return string Returns the post content with archives added.
  */
-function cptda_render_block_archives( $attributes ) {
-	$show_post_count = ! empty( $attributes['showPostCounts'] );
+function cptda_render_block_archives( $args ) {
+	$args = cptda_validate_archive_settings( $args );
+	$show_post_count = ! empty( $args['show_post_count'] );
 
-	$class = 'wp-block-archives';
+	$class = cptda_get_block_classes( $args, 'wp-block-archives' );
 
-	if ( isset( $attributes['align'] ) ) {
-		$class .= " align{$attributes['align']}";
+	$title = $args['title'];
+	if ( $title ) {
+		$title .= $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
-	if ( isset( $attributes['className'] ) ) {
-		$class .= " {$attributes['className']}";
-	}
-
-	if ( ! empty( $attributes['displayAsDropdown'] ) ) {
+	if ( 'option' === $args['format'] ) {
 
 		$class .= ' wp-block-archives-dropdown';
 
 		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
-		$title       = __( 'Archives' );
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
-		$dropdown_args = apply_filters(
-			'widget_archives_dropdown_args',
-			array(
-				'type'            => 'monthly',
-				'format'          => 'option',
-				'show_post_count' => $show_post_count,
-			)
-		);
+		$dropdown_args = apply_filters( 'widget_archives_dropdown_args', $args );
 
 		$dropdown_args['echo'] = 0;
+		$title = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
 
-		$archives = wp_get_archives( $dropdown_args );
+		$archives = cptda_get_archives( $dropdown_args );
 
 		switch ( $dropdown_args['type'] ) {
 			case 'yearly':
@@ -261,31 +254,27 @@ function cptda_render_block_archives( $attributes ) {
 	$class .= ' wp-block-archives-list';
 
 	/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
-	$archives_args = apply_filters(
-		'widget_archives_args',
-		array(
-			'type'            => 'monthly',
-			'show_post_count' => $show_post_count,
-		)
-	);
+	$archives_args = apply_filters( 'widget_archives_args', $args );
 
 	$archives_args['echo'] = 0;
 
-	$archives = wp_get_archives( $archives_args );
+	$archives = cptda_get_archives( $archives_args );
 
 	$classnames = esc_attr( $class );
 
 	if ( empty( $archives ) ) {
 
 		return sprintf(
-			'<div class="%1$s">%2$s</div>',
+			'<div class="%1$s">%2$s%3$s</div>',
 			$classnames,
+			$title,
 			__( 'No archives to show.' )
 		);
 	}
 
 	return sprintf(
-		'<ul class="%1$s">%2$s</ul>',
+		'%1$s<ul class="%2$s">%3$s</ul>',
+		$title,
 		$classnames,
 		$archives
 	);

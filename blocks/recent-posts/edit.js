@@ -110,6 +110,7 @@ class LatestPostsEdit extends Component {
 					<CPTDA_ServerSideRender
 						block='recent-posts'
 						title='Custom Post Type Latest Posts'
+						defaultClass='wp-block-recent-posts'
 						attributes={ this.props.attributes }					/>
 				</Disabled>
 			</Fragment>

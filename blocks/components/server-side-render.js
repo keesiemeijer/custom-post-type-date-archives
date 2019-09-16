@@ -14,11 +14,15 @@ const apiFetch = wp.apiFetch;
 const { addQueryArgs } = wp.url;
 const { Placeholder, Spinner } = wp.components;
 
-export function rendererPath(block, attributes = null, urlQueryArgs = {} ) {
-	const {post_type} = attributes;
+export function rendererPath( props ) {
+
+	const { block, defaultClass, attributes = null, urlQueryArgs = {} } = props;
+	const { post_type } = attributes;
 
 	let attributesClone = Object.assign({}, attributes);
+	attributesClone.class = defaultClass
 	delete attributesClone.post_type;
+	console.log('clones', attributesClone);
 
 	return addQueryArgs( `/custom_post_type_date_archives/v1/${ post_type }/${ block }`, {
 		...urlQueryArgs,
@@ -60,8 +64,9 @@ export class CPTDA_ServerSideRender extends Component {
 			this.setState( { response: null } );
 		}
 		const { block, attributes = null, urlQueryArgs = {} } = props;
+		console.log('url', urlQueryArgs)
 
-		const path = rendererPath( block, attributes, urlQueryArgs );
+		const path = rendererPath( props );
 		// Store the latest fetch request so that when we process it, we can
 		// check if it is the current request, to avoid race conditions on slow networks.
 		const fetchRequest = this.currentFetchRequest = apiFetch( { path } )

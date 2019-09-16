@@ -176,6 +176,14 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 
 		$calendar = $this->get_calendar( $args );
 
+		$class = isset( $args['class'] ) ? $args['class'] : '';
+		if ( $class && ( 'wp-block-calendar' === $class ) ) {
+			// Add extra classes from the editor block
+			$class = cptda_get_block_classes( $args, $class );
+
+			$calendar = sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar );
+		}
+
 		$data = array(
 			'post_type' => $post_type,
 			'year'      => (int) $args['year'],

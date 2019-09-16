@@ -162,3 +162,17 @@ function cptda_get_post_type_base( $post_type = '' ) {
 	$rewrite = new CPTDA_CPT_Rewrite( $post_type );
 	return $rewrite->get_base_permastruct();
 }
+
+function cptda_get_block_classes( $args, $default = '' ) {
+	$class = '';
+	if ( isset( $args['align'] ) && $args['align'] ) {
+		$class .= " align{$args['align']}";
+	}
+
+	if ( isset( $args['className'] ) && $args['className'] ) {
+		$class .= " {$args['className']}";
+	}
+
+	$default = sanitize_html_class( $default );
+	return esc_attr( trim( $default . $class ) );
+}

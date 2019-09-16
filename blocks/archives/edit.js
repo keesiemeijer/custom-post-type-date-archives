@@ -73,6 +73,7 @@ class CalendarEdit extends Component {
 					<CPTDA_ServerSideRender
 						block='archives'
 						title='Custom Post Type Archives'
+						defaultClass='wp-block-archives'
 						attributes={  this.props.attributes }
 					/>
 				</Disabled>

@@ -84,6 +84,7 @@ class CalendarEdit extends Component {
 					<CPTDA_ServerSideRender
 						block='calendar'
 						title='Custom Post Type Calendar'
+						defaultClass='wp-block-calendar'
 						attributes={
 							this.getServerSideAttributes(
 							this.props.attributes,
