@@ -124,7 +124,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 	/**
 	 * Test pagination.
 	 */
-	function test_recent_posts_pagination() {
+	function test_archive_pagination() {
 		global $wp_locale;
 		$this->init();
 		$year = (int) date( "Y" ) - 1;
@@ -136,7 +136,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 			$url  = cptda_get_month_link( $year, $month, 'cpt' );
 			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
 			if ( '02' === $month ) {
-				$expected .=  trim( get_archives_link( $url, $text ) );
+				$expected .= get_archives_link( $url, $text );
 			}
 		}
 
@@ -148,9 +148,9 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		);
 
 		$data     = $this->rest_cptda_get_archives( 'cpt', $args );
-		$expected = "<ul>{$expected}</ul>";
+		$expected = "<ul>\n{$expected}\n</ul>";
 
 		$this->assertEquals( 1 , count( $data['archives'] ) );
-		$this->assertEquals( $expected , $data['rendered'] );
+		$this->assertEquals( strip_ws( $expected ) , strip_ws( $data['rendered'] ) );
 	}
 }

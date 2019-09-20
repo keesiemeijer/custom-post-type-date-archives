@@ -135,7 +135,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 			$post  = $this->factory->post->create( $args );
 			$title = get_the_title( $post );
 			$url   = get_the_permalink( $post );
-			$expected .= '<li><a href="' . $url . '">' . $title . '</a></li>';
+			$expected .= '<li><a href="' . $url . '">' . $title . "</a></li>\n";
 		}
 
 		$posts = get_posts( 'post_type=cpt&fields=ids' );
