@@ -170,8 +170,18 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 			'date'      => array()
 		);
 
-		$args = apply_filters( 'rest_api_calendar_args', $args, $request );
+		/**
+		 * Filter calendar Rest API request arguments.
+		 *
+		 * @since 2.6.2
+		 *
+		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $request Rest API request.
+		 */
+		$args = apply_filters( 'cptda_rest_api_calendar_args', $args, $request );
 		$args = array_merge( $defaults, $args );
+
+		// Unfilterable argument
 		$args['post_type'] = $post_type;
 
 		$calendar = $this->get_calendar( $args );

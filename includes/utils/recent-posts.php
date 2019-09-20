@@ -71,15 +71,29 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
 	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
+	$class    = isset( $args['class'] ) ? $args['class'] : '';
+	$is_block = false;
 	$html     = '';
-	$title    = '';
 
+	$title = '';
 	if ( $args['title'] ) {
 		$title = $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
+	$message = $message ? $title . $message : '';
+
+	if ( $class && ( 'wp-block-recent-posts' === $class ) ) {
+		$is_block = true;
+
+		// Add extra classes from the editor block
+		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
+		$class .= ' cptda-block-recent-posts';
+
+		$message = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
+	}
+
 	if ( ! $recent_posts ) {
-		return $message ? $title . $message : '';
+		return $message;
 	}
 
 	ob_start();
@@ -87,10 +101,16 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$recent_posts_html = ob_get_clean();
 
 	if ( ! $recent_posts_html ) {
-		return $message ? $title . $message : '';
+		return $message;
 	}
 
-	return "{$title}\n<ul>\n{$recent_posts_html}</ul>";
+	if ( $is_block ) {
+		$class = esc_attr( $class );
+		return "<div>{$title}\n<ul class=\"{$class}\">\n{$recent_posts_html}\n</ul>\n</div>\n";
+	}
+
+	$title = $title ? "{$title}\n" : '';
+	return "{$title}<ul>\n{$recent_posts_html}\n</ul>";
 }
 
 /**

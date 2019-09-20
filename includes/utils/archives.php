@@ -94,6 +94,28 @@ function cptda_validate_archive_settings( $args ) {
 	return $args;
 }
 
+function cptda_get_archive_label( $type ) {
+	switch ( $type ) {
+		case 'yearly':
+			$label = __( 'Select Year' );
+			break;
+		case 'monthly':
+			$label = __( 'Select Month' );
+			break;
+		case 'daily':
+			$label = __( 'Select Day' );
+			break;
+		case 'weekly':
+			$label = __( 'Select Week' );
+			break;
+		default:
+			$label = __( 'Select Post' );
+			break;
+	}
+
+	return $label;
+}
+
 /**
  * Get the archives feature HTML.
  *
@@ -106,23 +128,30 @@ function cptda_get_archives_html( $args ) {
 	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
 	$html     = '';
+	$is_block = false;
 
 	/* Override archive $args if needed. */
 	$args['echo']   = false;
 	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
 
-	if ( ! empty( $args['title'] ) ) {
-		$html .= $args['before_title'] . $args['title'] . $args['after_title'];
+	$title = $args['title'];
+	if ( ! empty( $title ) ) {
+		$title = $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
 	$class = isset( $args['class'] ) ? $args['class'] : '';
 	if ( $class && ( 'wp-block-archives' === $class ) ) {
+		$is_block = true;
+
 		// Add extra classes from the editor block
 		$archive_type = ( 'option' === $args['format'] ) ? 'dropdown' : 'list';
 		$type_class = " {$class}-{$archive_type}";
 		$class = cptda_get_block_classes( $args, $class );
+		$class .= ' cptda-block-archives';
 		$class .= $type_class;
 	}
+
+	$class = esc_attr( trim( $class ) );
 
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : 0;
 	$paged = ( 1 < $paged ) ? $paged : 0;
@@ -131,36 +160,31 @@ function cptda_get_archives_html( $args ) {
 	}
 
 	/* Get the archives list. */
-	$archives = str_replace( array( "\r", "\n", "\t" ), '', cptda_get_archives( $args ) );
+	$archives = cptda_get_archives( $args );
 
 	if ( ! $archives ) {
-		return '';
+		$no_archives = __( 'No archives to show.', 'custom-post-type-date-archives' );
+		$empty_block = "<div class=\"{$class}\">\n{$title}\n{$no_archives}\n</div>\n";
+		return $is_block ? $empty_block : '';
 	}
 
 	/* If the archives should be shown in a <select> drop-down. */
 	if ( 'option' === $args['format'] ) {
+		$label       = cptda_get_archive_label( $args['type'] );
+		$title       = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
+		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
 
-		/* Create a title for the drop-down based on the archive type. */
-		if ( 'yearly' === $args['type'] ) {
-			$option_title = esc_html__( 'Select Year', 'custom-post-type-date-archives' );
-		} elseif ( 'monthly' === $args['type'] ) {
-			$option_title = esc_html__( 'Select Month', 'custom-post-type-date-archives' );
-		} elseif ( 'weekly' === $args['type'] ) {
-			$option_title = esc_html__( 'Select Week', 'custom-post-type-date-archives' );
-		} elseif ( 'daily' === $args['type'] ) {
-			$option_title = esc_html__( 'Select Day', 'custom-post-type-date-archives' );
-		} elseif ( 'postbypost' === $args['type'] || 'alpha' === $args['type'] ) {
-			$option_title = esc_html__( 'Select Post', 'custom-post-type-date-archives' );
-		}
+		$html .= $title;
+		$html .= ( $is_block ) ? "<div class=\"{$class}\">\n" : '';
+		$html .= '<label class="screen-reader-text" for="' . $dropdown_id . '">' . $title . '</label>';
+		$html .= '<select id="' . $dropdown_id . '" name="archive-dropdown"';
+		$html .= ' onchange="document.location.href=this.options[this.selectedIndex].value;">';
+		$html .= '<option value="">' . $option_title . '</option>' . $archives . '</select>';
+		$html .= ( $is_block ) ? "</div>\n" : '';
 
-		/* Output the <select> element and each <option>. */
-		$html .= '<p><select name="archive-dropdown" onchange=\'document.location.href=this.options[this.selectedIndex].value;\'>';
-		$html .= '<option value="">' . $option_title . '</option>';
-		$html .= $archives;
-		$html .= '</select></p>';
 	} elseif ( 'html' === $args['format'] ) {
 		$class = $class ? ' class="' . esc_attr( trim( $class ) ) . '"' : '';
-		$html .= '<ul' . $class . '>' . $archives . '</ul>';
+		$html .= "{$title}<ul{$class}>\n{$archives}</ul>\n";
 	} else {
 		$html .= $archives;
 	}

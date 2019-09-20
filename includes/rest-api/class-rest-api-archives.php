@@ -152,31 +152,37 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		// Don't allow large queries.
 		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
 
-		// Don't allow these archive arguments.
-		$blacklisted = array(
-			'title',
-			'before_title',
-			'after_title',
-			'before',
-			'after',
-		);
+		// Not needed for the rest API. can be filtered below.
+		$args['title'] = '';
+		$args['before_title'] = '';
+		$args['after_title'] = '';
 
-		foreach ( $blacklisted as $value ) {
-			$args[ $value ] = '';
-		}
-
-		$args = apply_filters( 'rest_api_archives_args', $args, $request );
+		/**
+		 * Filter archive Rest API request arguments
+		 *
+		 * @since 2.6.2
+		 *
+		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $request Rest API request.
+		 */
+		$args = apply_filters( 'cptda_rest_api_archives_args', $args, $request );
 		$args = cptda_validate_archive_settings( $args );
+
+		// Unfiltarable arguments
 		$args['post_type'] = $post_type;
 		$args['echo'] = false;
 
 		$rendered = $this->get_archives( $args );
+
+		// Archive arguments could contain HTML or Javascript.
+		$rendered = wp_kses_post( $rendered );
 
 		$data = array(
 			'archives' => $this->archives,
 			'rendered' => $rendered,
 		);
 
+		// Reset archives property
 		$this->archives = array();
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

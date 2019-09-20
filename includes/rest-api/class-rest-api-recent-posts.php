@@ -148,27 +148,31 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		// Don't allow queries over 100 posts
 		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
-		// Don't allow title and message arguments.
-		$blacklisted = array(
-			'title',
-			'before_title',
-			'after_title',
-		);
+		// Not needed for the rest API. (can be filtered below).
+		$args['title'] = '';
+		$args['before_title'] = '';
+		$args['after_title'] = '';
 
-		foreach ( $blacklisted as $value ) {
-			$args[ $value ] = '';
-		}
-
-		$args['message'] = wp_kses_post( $args['message'] );
-
-		$args = apply_filters( 'rest_api_recent_posts_args', $args, $request );
+		/**
+		 * Filter recent posts Rest API request arguments.
+		 *
+		 * @since 2.6.2
+		 *
+		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $request Rest API request.
+		 */
+		$args = apply_filters( 'cptda_rest_api_recent_posts_args', $args, $request );
 		$args = array_merge( $defaults, $args );
 
+		// Unfilterable argument
 		$args['post_type'] = $post_type;
 
 		$query_args   = cptda_get_recent_posts_query( $args );
 		$recent_posts = get_posts( $query_args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
+
+		// Recent posts arguments could contain HTML or Javascript.
+		$rendered = wp_kses_post( $rendered );
 
 		$data = array(
 			'posts'    => $recent_posts,
