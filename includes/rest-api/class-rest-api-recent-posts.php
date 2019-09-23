@@ -148,11 +148,6 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		// Don't allow queries over 100 posts
 		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
-		// Not needed for the rest API. (can be filtered below).
-		$args['title'] = '';
-		$args['before_title'] = '';
-		$args['after_title'] = '';
-
 		/**
 		 * Filter recent posts Rest API request arguments.
 		 *
@@ -162,10 +157,13 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		 * @param array $request Rest API request.
 		 */
 		$args = apply_filters( 'cptda_rest_api_recent_posts_args', $args, $request );
-		$args = array_merge( $defaults, $args );
+		$args = cptda_validate_recent_posts_settings($args);
 
-		// Unfilterable argument
+		// Unfilterable arguments
 		$args['post_type'] = $post_type;
+		$args['title'] = '';
+		$args['before_title'] = '';
+		$args['after_title'] = '';
 
 		$query_args   = cptda_get_recent_posts_query( $args );
 		$recent_posts = get_posts( $query_args );

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Editor blocks.
+ *
+ * @package     Custom_Post_Type_Date_Archives
+ * @subpackage  Editor_Block
+ * @copyright   Copyright (c) 2019, Kees Meijer
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.6.2
+ */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
 
@@ -147,7 +161,7 @@ function cptda_render_block_calendar( $args ) {
 
 	$previous_monthnum = $monthnum;
 	$previous_year     = $year;
-	$post_type = $args['post_type'];
+	$post_type         = $args['post_type'];
 
 	if ( isset( $args['month'] ) && isset( $args['year'] ) ) {
 		$permalink_structure = get_option( 'permalink_structure' );
@@ -188,18 +202,24 @@ function cptda_render_block_calendar( $args ) {
  * @return string Returns the block content.
  */
 function cptda_render_block_recent_posts( $args ) {
-	$args = cptda_sanitize_recent_posts_settings( $args );
-	$post_type = $args['post_type'];
-
+	$args       = cptda_validate_recent_posts_settings( $args );
 	$query_args = cptda_get_recent_posts_query( $args );
 
-	/** This filter is documented in wp-includes/widgets/class-wp-widget-archives.php */
-	$query_args = apply_filters( 'cptda_block_recent_posts_args', $query_args );
-	$query_args['post_type'] = $post_type;
+	/**
+	 * Filters the arguments for the Recent Posts block before rendering.
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param array $query_args Array of arguments used to retrieve the recent posts.
+	 */
+	$query_args = apply_filters( 'cptda_block_latest_posts_args', $query_args );
 
 	$recent_posts = get_posts( $query_args );
 
 	$args['class']        = 'wp-block-latest-posts';
+	$args['title']        = '';
+	$args['before_title'] = '';
+	$args['after_title']  = '';
 
 	return cptda_get_recent_posts_html( $recent_posts, $args );
 }
@@ -209,23 +229,25 @@ function cptda_render_block_recent_posts( $args ) {
  *
  * @since 2.6.2
  *
- * @see WP_Widget_Archives
- *
  * @param array $args The block arguments.
- *
- * @return string Returns the post content with archives added.
+ * @return string Returns archives block HTML.
  */
 function cptda_render_block_archives( $args ) {
 	$args = cptda_validate_archive_settings( $args );
-	$show_post_count = ! empty( $args['show_post_count'] );
 
-	$args['class'] = 'wp-block-archives';
+	/**
+	 * Filters the arguments for the Archives block before rendering.
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param array $args Array of archives block arguments.
+	 */
+	$args = apply_filters( 'cptda_block_archives_args', $args );
 
-	if ( 'option' === $args['format'] ) {
-		$args = apply_filters( 'cptda_block_archives_dropdown_args', $args );
-	} else {
-		$args = apply_filters( 'cptda_block_archives_args', $args );
-	}
+	$args['class']        = 'wp-block-archives';
+	$args['title']        = '';
+	$args['before_title'] = '';
+	$args['after_title']  = '';
 
 	return cptda_get_archives_html( $args );
 }
