@@ -122,6 +122,76 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 	}
 
 	/**
+	 * Test test rendered output.
+	 *
+	 */
+	function test_rendered_archives_wp_kses() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		$expected_with_script = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$url  = cptda_get_month_link( $year, $month, 'cpt' );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			$expected .=  trim( get_archives_link( $url, $text, 'html', 'alert("hello");' ) ) . "\n";
+		}
+
+		$args = array(
+			'post_type'    => 'cpt',
+			'type'         => 'monthly',
+			'before'       => '<script type="text/javascript">alert("hello");</script>'
+		);
+
+		$data = $this->rest_cptda_get_archives( 'cpt', $args );
+		// Script tags are removed from output
+		$expected = "<ul>\n{$expected}</ul>";
+		$this->assertEquals( strip_ws( $expected ),  strip_ws( $data['rendered'] ) );
+	}
+
+	/**
+	 * Test test rendered output.
+	 * @group hh
+	 */
+	function test_rendered_archives_dropdown() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		$expected_with_script = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$url  = cptda_get_month_link( $year, $month, 'cpt' );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			$expected .=  trim( get_archives_link( $url, $text, 'option' ) ) . "\n";
+		}
+
+		$select = '<label class="screen-reader-text" for="wp-block-archives-">Archives</label>';
+		$select .= '<select id="wp-block-archives-" name="archive-dropdown"';
+		$select .= ' onchange="document.location.href=this.options[this.selectedIndex].value;">';
+		$select .= '<option value="">Select Month</option>';
+		$expected = $select . "\t" . $expected . '</select>';
+		$args = array(
+			'format'    => 'option',
+			'post_type' => 'cpt',
+			'type'      => 'monthly',
+		);
+
+		$data = $this->rest_cptda_get_archives( 'cpt', $args );
+
+		// Remove id number
+		$data = preg_replace("#id=\"wp-block-archives\-(.*?)\"#", 'id="wp-block-archives-"',  $data['rendered'] );
+		$data = preg_replace("#for=\"wp-block-archives\-(.*?)\"#", 'for="wp-block-archives-"',  $data );
+
+		$this->assertEquals( strip_ws( $expected ),  strip_ws( $data ) );
+	}
+
+	/**
 	 * Test pagination.
 	 */
 	function test_archive_pagination() {

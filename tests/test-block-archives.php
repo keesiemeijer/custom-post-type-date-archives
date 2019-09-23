@@ -3,10 +3,9 @@
 /**
  * Tests for public plugin functions
  *
- * @group Calendar
+ * @group Archive
  */
 class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
-
 
 	/**
 	 * Set up.
@@ -17,7 +16,7 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 	}
 
 	/**
-	 * Test test archives output.
+	 * Test test archives block output.
 	 */
 	function test_archive_block_in_post_content() {
 		global $wp_locale;
@@ -51,4 +50,41 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
 	}
 
+	/**
+	 * Test test archives block output.
+	 */
+	function test_output_of_archive_block_is_equal_to_wp_block() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'post' );
+			$post = $this->factory->post->create( $args );
+			$url = get_month_link( $year, $month );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			$expected .= trim( get_archives_link( $url, $text ) ) . "\n";
+		}
+
+		$block = '<!-- wp:archives /-->';
+		$block = apply_filters('the_content', $block );
+
+		$expected = "<ul class=\"wp-block-archives wp-block-archives-list\">\n{$expected}</ul>\n";
+
+		// Markup same as WP archives block
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $block ) );
+
+		$archive = cptda_get_archives_html( array(
+			'post_type' => 'post',
+			'echo' => false,
+			'class' => 'wp-block-archives'
+			)
+		);
+
+		$archive = str_replace(' cptda-block-archives ', ' ', $archive);
+
+		// Markup same as WP archives block
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $archive ) );
+	}
 }
