@@ -39,6 +39,36 @@ function cptda_get_archive_settings() {
 }
 
 /**
+ * Get the label of type of archive.
+ *
+ * @since 2.6.2
+ *
+ * @param sting $type Type of archive. Accepts 'yearly', 'monthly', 'daily', 'weekly'.
+ * @return string Archive label.
+ */
+function cptda_get_archive_label( $type ) {
+	switch ( $type ) {
+		case 'yearly':
+			$label = __( 'Select Year' );
+			break;
+		case 'monthly':
+			$label = __( 'Select Month' );
+			break;
+		case 'daily':
+			$label = __( 'Select Day' );
+			break;
+		case 'weekly':
+			$label = __( 'Select Week' );
+			break;
+		default:
+			$label = __( 'Select Post' );
+			break;
+	}
+
+	return $label;
+}
+
+/**
  * Sanitize recent archive settings.
  *
  * @since 2.6.0
@@ -92,28 +122,6 @@ function cptda_validate_archive_settings( $args ) {
 	$args['format'] = in_array( $args['format'], $format ) ? $args['format'] : 'html';
 
 	return $args;
-}
-
-function cptda_get_archive_label( $type ) {
-	switch ( $type ) {
-		case 'yearly':
-			$label = __( 'Select Year' );
-			break;
-		case 'monthly':
-			$label = __( 'Select Month' );
-			break;
-		case 'daily':
-			$label = __( 'Select Day' );
-			break;
-		case 'weekly':
-			$label = __( 'Select Week' );
-			break;
-		default:
-			$label = __( 'Select Post' );
-			break;
-	}
-
-	return $label;
 }
 
 /**
