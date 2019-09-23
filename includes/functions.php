@@ -163,6 +163,15 @@ function cptda_get_post_type_base( $post_type = '' ) {
 	return $rewrite->get_base_permastruct();
 }
 
+/**
+ * Get classes for the editor blocks.
+ *
+ * @since  2.6.2
+ *
+ * @param array  $args    Block arguments.
+ * @param string $default Default block class.
+ * @return string String with block class names.
+ */
 function cptda_get_block_classes( $args, $default = '' ) {
 	$class = '';
 	if ( isset( $args['align'] ) && $args['align'] ) {
