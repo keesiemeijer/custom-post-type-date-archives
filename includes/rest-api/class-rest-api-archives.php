@@ -152,17 +152,12 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		// Don't allow large queries.
 		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
 
-		// Not needed for the rest API. can be filtered below.
-		$args['title'] = '';
-		$args['before_title'] = '';
-		$args['after_title'] = '';
-
 		/**
 		 * Filter archive Rest API request arguments
 		 *
 		 * @since 2.6.2
 		 *
-		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $args    Sanitized Rest API request arguments.
 		 * @param array $request Rest API request.
 		 */
 		$args = apply_filters( 'cptda_rest_api_archives_args', $args, $request );
@@ -170,12 +165,33 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 
 		// Unfiltarable arguments
 		$args['post_type'] = $post_type;
+		$args['title'] = '';
+		$args['before_title'] = '';
+		$args['after_title'] = '';
 		$args['echo'] = false;
 
 		$rendered = $this->get_archives( $args );
 
+		$tags = wp_kses_allowed_html( 'post' );
+
+		// Needed for dropdown
+		if ( 'option' === $args['format'] ) {
+			$allowed_tags = array(
+				'select' => array(
+					'id'       => true,
+					'name'     => true,
+					'onchange' => true,
+				),
+				'option' => array(
+					'value' => true,
+				),
+			);
+
+			$tags = array_merge( $tags, $allowed_tags );
+		}
+
 		// Archive arguments could contain HTML or Javascript.
-		$rendered = wp_kses_post( $rendered );
+		$rendered = wp_kses( $rendered, $tags );
 
 		$data = array(
 			'archives' => $this->archives,
