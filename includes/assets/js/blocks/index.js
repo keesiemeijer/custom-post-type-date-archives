@@ -1523,7 +1523,7 @@ function (_Component) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(react__WEBPACK_IMPORTED_MODULE_7__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_9__["default"], {
         block: "recent-posts",
         title: "Custom Post Type Latest Posts",
-        defaultClass: "wp-block-recent-posts",
+        defaultClass: "wp-block-latest-posts",
         attributes: this.props.attributes
       })));
     }
@@ -1630,7 +1630,7 @@ var registerBlockType = wp.blocks.registerBlockType;
 
 
 
-registerBlockType('cptda/recent-posts', {
+registerBlockType('cptda/latest-posts', {
   title: __('Custom Post Type latest Posts', 'custom-post-type-date-archives'),
   description: __('Display a list of your most recent posts.', 'custom-post-type-date-archives'),
   icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],

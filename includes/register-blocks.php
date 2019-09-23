@@ -59,7 +59,7 @@ function cptda_register_blocks() {
 	);
 
 	register_block_type(
-		'cptda/recent-posts',
+		'cptda/latest-posts',
 		array(
 			'attributes' => array(
 				'align' => array(
@@ -199,8 +199,7 @@ function cptda_render_block_recent_posts( $args ) {
 
 	$recent_posts = get_posts( $query_args );
 
-	// Add block classes
-	$args['class'] = 'wp-block-recent-posts';
+	$args['class']        = 'wp-block-latest-posts';
 
 	return cptda_get_recent_posts_html( $recent_posts, $args );
 }

@@ -82,12 +82,12 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 
 	$message = $message ? $title . $message : '';
 
-	if ( $class && ( 'wp-block-recent-posts' === $class ) ) {
+	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;
 
 		// Add extra classes from the editor block
 		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
-		$class .= ' cptda-block-recent-posts';
+		$class .= ' cptda-block-latest-posts';
 
 		$message = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
 	}
