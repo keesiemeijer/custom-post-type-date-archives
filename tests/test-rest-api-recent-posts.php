@@ -122,6 +122,39 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 	}
 
 	/**
+	 * Test test rendered output.
+	 */
+	function test_rendered_recent_posts_block() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$title = get_the_title( $post );
+			$url   = get_the_permalink( $post );
+			$expected .= '<li><a href="' . $url . '">' . $title . '</a></li>';
+		}
+
+		$args = array(
+			'post_type'    => 'cpt',
+			'title'        => 'Recent Posts',
+			'before_title' => '<h2>',
+			'after_title'  => '</h2>',
+			'message'      => 'No posts found',
+			'class'        => 'wp-block-latest-posts',
+		);
+
+		$data = $this->rest_cptda_get_recent_posts( 'cpt', $args );
+
+		// Title and message are not allowed for the rest api.
+		$expected = "<ulclass=\"wp-block-latest-postscptda-block-latest-posts\">{$expected}</ul>";
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+	}
+
+	/**
 	 * Test pagination.
 	 */
 	function test_recent_posts_pagination() {

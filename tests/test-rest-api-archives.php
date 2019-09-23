@@ -123,6 +123,38 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test rendered output.
+	 */
+	function test_rendered_block_archives() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		foreach ( array( '03', '02' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+			$url  = cptda_get_month_link( $year, $month, 'cpt' );
+			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
+			$expected .=  trim( get_archives_link( $url, $text ) );
+		}
+
+		$args = array(
+			'title'        => 'Archives',
+			'before_title' => '<h2>',
+			'after_title'  => '</h2>',
+			'post_type'    => 'cpt',
+			'type'         => 'monthly',
+			'class'        => 'wp-block-archives',
+		);
+
+		$data = $this->rest_cptda_get_archives( 'cpt', $args );
+		// Title is not allowed for the rest api.
+		$expected = "<ulclass=\"wp-block-archivescptda-block-archiveswp-block-archives-list\">{$expected}</ul>";
+		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+	}
+
+	/**
+	 * Test test rendered output.
 	 *
 	 */
 	function test_rendered_archives_wp_kses() {
