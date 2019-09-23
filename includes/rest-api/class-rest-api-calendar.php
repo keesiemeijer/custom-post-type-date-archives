@@ -175,7 +175,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		 *
 		 * @since 2.6.2
 		 *
-		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $args    Sanitized Rest API request arguments.
 		 * @param array $request Rest API request.
 		 */
 		$args = apply_filters( 'cptda_rest_api_calendar_args', $args, $request );
@@ -190,6 +190,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		if ( $class && ( 'wp-block-calendar' === $class ) ) {
 			// Add extra classes from the editor block
 			$class = cptda_get_block_classes( $args, $class );
+			$class .= ' cptda-block-calendar';
 
 			$calendar = sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar );
 		}
