@@ -80,37 +80,35 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 		$title = $args['before_title'] . $args['title'] . $args['after_title'];
 	}
 
-	$message = $message ? $title . $message : '';
+	$no_posts_found = $message ? $title . $message : '';
 
 	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;
+		$title    = '';
 
 		// Add extra classes from the editor block
 		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
 		$class .= ' cptda-block-latest-posts';
 
-		$message = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
+		$no_posts_found = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
 	}
 
 	if ( ! $recent_posts ) {
-		return $message;
+		return $no_posts_found;
 	}
 
 	ob_start();
 	include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
 	$recent_posts_html = ob_get_clean();
+	$recent_posts_html = trim($recent_posts_html);
 
 	if ( ! $recent_posts_html ) {
-		return $message;
-	}
-
-	if ( $is_block ) {
-		$class = esc_attr( $class );
-		return "<div>{$title}\n<ul class=\"{$class}\">\n{$recent_posts_html}\n</ul>\n</div>\n";
+		return $no_posts_found;
 	}
 
 	$title = $title ? "{$title}\n" : '';
-	return "{$title}<ul>\n{$recent_posts_html}\n</ul>";
+	$class = $is_block ? " class=\"{$class}\"" : '';
+	return "{$title}<ul{$class}>\n{$recent_posts_html}\n</ul>";
 }
 
 /**

@@ -105,11 +105,12 @@ function cptda_sanitize_archive_settings( $args ) {
  * @return array Array with validated archives settings.
  */
 function cptda_validate_archive_settings( $args ) {
-	$plugin = cptda_date_archives();
 	$args   = cptda_sanitize_archive_settings( $args );
 
+	$plugin       = cptda_date_archives();
 	$post_types   = $plugin->post_type->get_post_types( 'names' );
 	$post_types[] = 'post';
+
 	if ( ! in_array( $args['post_type'], $post_types ) ) {
 		$args['post_type'] = 'post';
 	}
@@ -133,10 +134,9 @@ function cptda_validate_archive_settings( $args ) {
  * @return string Archives HTML.
  */
 function cptda_get_archives_html( $args ) {
-	$defaults = cptda_get_archive_settings();
-	$args     = array_merge( $defaults, $args );
-	$html     = '';
+	$args     = cptda_validate_archive_settings( $args );
 	$is_block = false;
+	$html     = '';
 
 	/* Override archive $args if needed. */
 	$args['echo']   = false;
@@ -150,6 +150,7 @@ function cptda_get_archives_html( $args ) {
 	$class = isset( $args['class'] ) ? $args['class'] : '';
 	if ( $class && ( 'wp-block-archives' === $class ) ) {
 		$is_block = true;
+		$title = '';
 
 		// Add extra classes from the editor block
 		$archive_type = ( 'option' === $args['format'] ) ? 'dropdown' : 'list';
@@ -172,28 +173,29 @@ function cptda_get_archives_html( $args ) {
 
 	if ( ! $archives ) {
 		$no_archives = __( 'No archives to show.', 'custom-post-type-date-archives' );
-		$empty_block = "<div class=\"{$class}\">\n{$title}\n{$no_archives}\n</div>\n";
+		$empty_block = "<div class=\"{$class}\">{$no_archives}</div>\n";
 		return $is_block ? $empty_block : '';
 	}
 
 	/* If the archives should be shown in a <select> drop-down. */
 	if ( 'option' === $args['format'] ) {
 		$label       = cptda_get_archive_label( $args['type'] );
-		$title       = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
+		$label_title = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
 		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
 
 		$html .= $title;
 		$html .= ( $is_block ) ? "<div class=\"{$class}\">\n" : '';
-		$html .= '<label class="screen-reader-text" for="' . $dropdown_id . '">' . $title . '</label>';
+		$html .= '<label class="screen-reader-text" for="' . $dropdown_id . '">' . $label_title . '</label>';
 		$html .= '<select id="' . $dropdown_id . '" name="archive-dropdown"';
 		$html .= ' onchange="document.location.href=this.options[this.selectedIndex].value;">';
-		$html .= '<option value="">' . $option_title . '</option>' . $archives . '</select>';
+		$html .= '<option value="">' . $label . '</option>' . $archives . '</select>';
 		$html .= ( $is_block ) ? "</div>\n" : '';
 
 	} elseif ( 'html' === $args['format'] ) {
-		$class = $class ? ' class="' . esc_attr( trim( $class ) ) . '"' : '';
+		$class = $class ? ' class="' . $class . '"' : '';
 		$html .= "{$title}<ul{$class}>\n{$archives}</ul>\n";
 	} else {
+
 		$html .= $archives;
 	}
 
