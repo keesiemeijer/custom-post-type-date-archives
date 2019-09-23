@@ -192,10 +192,6 @@ function cptda_get_recent_posts_query( $args ) {
 	$date_query = array();
 	$include    = $args['include'] ? $args['include'] : 'all';
 
-	$include_keys = array(
-		'all', 'future'
-	);
-
 	switch ( $include ) {
 		case 'future':
 			$date_query = array( 'after' => $date );
