@@ -11,7 +11,7 @@ const { registerBlockType } = wp.blocks;
 import edit from './edit';
 import icon from './icon';
 
-registerBlockType('cptda/recent-posts', {
+registerBlockType('cptda/latest-posts', {
 	title: __( 'Custom Post Type latest Posts', 'custom-post-type-date-archives' ),
 	description: __( 'Display a list of your most recent posts.', 'custom-post-type-date-archives' ),
 	icon,
@@ -23,8 +23,8 @@ registerBlockType('cptda/recent-posts', {
 	},
 	edit,
 	save() {
-			// Rendering in PHP
-			return null;
-		}
+		// Rendering in PHP
+		return null;
+	}
 } );
 
