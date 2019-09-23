@@ -35,6 +35,23 @@ function cptda_get_recent_posts_settings() {
 }
 
 /**
+ * Get date query types
+ *
+ * @since 2.6.2
+ *
+ * @return array Array with all date query types and their labels.
+ */
+function cptda_get_recent_posts_date_query_types() {
+	return array(
+		'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
+		'future' => __( 'posts with future dates only', 'custom-post-type-date-archives' ),
+		'year'   => __( 'posts from the current year', 'custom-post-type-date-archives' ),
+		'month'  => __( 'posts from the current month', 'custom-post-type-date-archives' ),
+		'day'    => __( 'posts from today', 'custom-post-type-date-archives' ),
+	);
+}
+
+/**
  * Sanitize recent posts feature settings.
  *
  * @since 2.6.0
@@ -59,6 +76,34 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 }
 
 /**
+ * Validates recent posts settings.
+ *
+ * @since  2.6.2
+ *
+ * @param array $args Recent posts arguments.
+ * @return array Validated recent posts arguments.
+ */
+function cptda_validate_recent_posts_settings( $args ) {
+	$plugin = cptda_date_archives();
+	$args   = cptda_sanitize_recent_posts_settings( $args );
+
+	$args['number'] = $args['number'] ? $args['number'] : 5;
+
+	$types = cptda_get_recent_posts_date_query_types();
+	if ( ! in_array( $args['include'], array_keys( $types ) ) ) {
+		$args['include'] = 'all';
+	}
+
+	$post_types   = $plugin->post_type->get_post_types( 'names' );
+	$post_types[] = 'post';
+	if ( ! in_array( $args['post_type'], $post_types ) ) {
+		$args['post_type'] = 'post';
+	}
+
+	return $args;
+}
+
+/**
  * Get te recent posts feature HTML.
  *
  * @since 2.6.0
@@ -68,8 +113,7 @@ function cptda_sanitize_recent_posts_settings( $args ) {
  * @return string Recent posts HTML.
  */
 function cptda_get_recent_posts_html( $recent_posts, $args ) {
-	$defaults = cptda_get_recent_posts_settings();
-	$args     = array_merge( $defaults, $args );
+	$args     = cptda_validate_recent_posts_settings( $args );
 	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
 	$class    = isset( $args['class'] ) ? $args['class'] : '';
 	$is_block = false;
@@ -120,17 +164,13 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
  * @return array Recent posts query.
  */
 function cptda_get_recent_posts_query( $args ) {
-	$defaults = cptda_get_recent_posts_settings();
-	$args     = array_merge( $defaults, $args );
-
-	// Default recent posts is 5
-	$number = $args['number'] ? $args['number'] : 5;
+	$args = cptda_validate_recent_posts_settings( $args );
 
 	$query_args = array(
 		'post_type'           => $args['post_type'],
 		'fields'              => 'ids',
 		'post_status'         => cptda_get_cpt_date_archive_stati( $args['post_type'] ),
-		'posts_per_page'      => $number,
+		'posts_per_page'      => $args['number'],
 		'no_found_rows'       => true,
 		'ignore_sticky_posts' => true,
 		'cptda_recent_posts'  => true, // To check if it's a query from this plugin
@@ -139,7 +179,7 @@ function cptda_get_recent_posts_query( $args ) {
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : '';
 	$paged = ( 1 < $paged ) ? $paged : '';
 	if ( $paged ) {
-		$query_args['offset'] = ( ( $paged - 1 ) * $number );
+		$query_args['offset'] = ( ( $paged - 1 ) * $args['number'] );
 	}
 
 	$today = getdate();
@@ -151,6 +191,10 @@ function cptda_get_recent_posts_query( $args ) {
 
 	$date_query = array();
 	$include    = $args['include'] ? $args['include'] : 'all';
+
+	$include_keys = array(
+		'all', 'future'
+	);
 
 	switch ( $include ) {
 		case 'future':

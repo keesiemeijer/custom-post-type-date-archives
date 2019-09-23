@@ -28,13 +28,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	public function __construct() {
 		$this->plugin = cptda_date_archives();
 
-		$this->include = array(
-			'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
-			'future' => __( 'posts with future dates only', 'custom-post-type-date-archives' ),
-			'year'   => __( 'posts from the current year', 'custom-post-type-date-archives' ),
-			'month'  => __( 'posts from the current month', 'custom-post-type-date-archives' ),
-			'day'    => __( 'posts from today', 'custom-post-type-date-archives' ),
-		);
+		$this->include = cptda_get_recent_posts_date_query_types();
 
 		$widget_ops = array(
 			'classname'                   => 'widget_recent_entries',
@@ -103,24 +97,13 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance              = $old_instance;
-		$new_instance          = cptda_sanitize_recent_posts_settings( $new_instance );
+		$new_instance          = cptda_validate_recent_posts_settings( $new_instance );
 		$instance['title']     = sanitize_text_field( (string) $new_instance['title'] );
-		$instance['number']    = $new_instance['number'] ? $new_instance['number'] : 5;
+		$instance['message']   = sanitize_text_field( (string) $new_instance['message'] );
+		$instance['number']    = (int) $new_instance['number'];
 		$instance['show_date'] = (bool) $new_instance['show_date'];
-		$instance['message']   = (string) $new_instance['message'];
-
-		$post_types = $this->plugin->post_type->get_post_types( 'names' );
-		$post_types[] = 'post';
-
-		$instance['post_type'] = $new_instance['post_type'];
-		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
-			$instance['post_type'] = 'post';
-		}
-
-		$instance['include'] = $new_instance['include'];
-		if ( ! in_array( $new_instance['include'], array_keys( $this->include ) ) ) {
-			$instance['include'] = 'all';
-		}
+		$instance['include']   = (string) $new_instance['include'];
+		$instance['post_type'] = (string) $new_instance['post_type'];
 
 		// Back compat.
 		unset( $instance['status_future'] );
