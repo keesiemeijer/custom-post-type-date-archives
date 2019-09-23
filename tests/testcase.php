@@ -92,6 +92,7 @@ class CPTDA_UnitTestCase extends WP_UnitTestCase {
 
 
 	function init( $post_type = 'cpt', $type = 'publish', $rewrite = false ) {
+		_delete_all_posts();
 		$this->unregister_post_type( $post_type );
 		$supports = ( 'future' === $type ) ? array( 'date-archives', 'publish-future-posts' ) : array( 'date-archives' );
 		$this->register_post_type( $post_type, $rewrite );
