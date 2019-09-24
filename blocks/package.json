@@ -2,7 +2,7 @@
   "name": "custom-post-type-date-archives-calendar-block",
   "version": "1.0.0",
   "license": "GPL-2.0-or-later",
-  "main": "recent-posts/index.js",
+  "main": "latest-posts/index.js",
   "devDependencies": {
     "@wordpress/components": "^8.2.0",
     "@wordpress/scripts": "^4.1.0",
@@ -10,11 +10,11 @@
   },
   "scripts": {
     "test": "wp-scripts test-unit-js",
-    "start": "wp-scripts start calendar/index.js recent-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
-    "build": "wp-scripts build calendar/index.js recent-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
+    "start": "wp-scripts start calendar/index.js latest-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
+    "build": "wp-scripts build calendar/index.js latest-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
     "build:calendar": "wp-scripts build calendar/index.js --output-path=../includes/assets/js/calendar",
     "start:calendar": "wp-scripts start calendar/index.js --output-path=../includes/assets/js/blocks",
-    "start:recent": "wp-scripts start recent-posts/index.js --output-path=../includes/assets/js/blocks",
+    "start:recent": "wp-scripts start latest-posts/index.js --output-path=../includes/assets/js/blocks",
     "start:archives": "wp-scripts start archives/index.js --output-path=../includes/assets/js/blocks"
   },
   "dependencies": {

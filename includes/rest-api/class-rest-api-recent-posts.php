@@ -153,11 +153,11 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		 *
 		 * @since 2.6.2
 		 *
-		 * @param array $args Sanitized Rest API request arguments.
+		 * @param array $args    Sanitized Rest API request arguments.
 		 * @param array $request Rest API request.
 		 */
 		$args = apply_filters( 'cptda_rest_api_recent_posts_args', $args, $request );
-		$args = cptda_validate_recent_posts_settings($args);
+		$args = cptda_validate_recent_posts_settings( $args );
 
 		// Unfilterable arguments
 		$args['post_type'] = $post_type;
@@ -169,8 +169,15 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		$recent_posts = get_posts( $query_args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
 
-		// Recent posts arguments could contain HTML or Javascript.
-		$rendered = wp_kses_post( $rendered );
+		$tags = wp_kses_allowed_html( 'post' );
+
+		// For show date
+		$tags['time'] = array(
+			'datetime' => true,
+			'class' => true,
+		);
+
+		$rendered = wp_kses( $rendered, $tags );
 
 		$data = array(
 			'posts'    => $recent_posts,

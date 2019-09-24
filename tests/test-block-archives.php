@@ -75,10 +75,9 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 		// Markup same as WP archives block
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $block ) );
 
-		$archive = cptda_get_archives_html( array(
+		$archive = cptda_render_block_archives( array(
 			'post_type' => 'post',
-			'echo' => false,
-			'class' => 'wp-block-archives'
+			'echo' => true,
 			)
 		);
 

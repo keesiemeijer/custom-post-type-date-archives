@@ -48,12 +48,46 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$block = '<!-- wp:cptda/calendar {"post_type":"cpt"} /-->';
 		$block = apply_filters( 'the_content', $block );
 
-		$expected = $calendar = cptda_get_calendar( 'cpt', true, false );
+		$expected = cptda_get_calendar( 'cpt', true, false );
 		$expected = "<div class=\"wp-block-calendar cptda-block-calendar\">{$expected}</div>";
 
 		$monthnum = $previous_monthnum;
 		$year = $previous_year;
 
+		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+	}
+
+	/**
+	 * Test test calendar block output.
+	 */
+	function test_calendar_block_is_equal_to_wp_calendar_block() {
+		global $monthnum, $year;
+
+		$previous_monthnum = $monthnum;
+		$previous_year     = $year;
+
+		// Set globals
+		$year = (int) date( "Y" ) - 1;
+		$monthnum = 3;
+
+		//$this->init();
+
+		$expected = '';
+		foreach ( array( '03', '01' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'post' );
+			$post = $this->factory->post->create( $args );
+		}
+
+		$block = '<!-- wp:calendar /-->';
+		$block = apply_filters( 'the_content', $block );
+
+		$expected = cptda_render_block_calendar( array('post_type' => 'post') );
+		$expected = str_replace(' cptda-block-calendar', '', $expected);
+
+		$monthnum = $previous_monthnum;
+		$year = $previous_year;
+
+		// Same as WP calendar
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
 	}
 

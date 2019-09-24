@@ -56,11 +56,11 @@ function cptda_get_calendar_date() {
 	$last_day = (int) date( 't', $unixmonth );
 
 	return array(
-		'year'          => $thisyear,
-		'month'         => $thismonth,
-		'last_day'      => $last_day,
-		'unixmonth'     => $unixmonth,
-		'timestamp'     => $ts,
+		'year'      => $thisyear,
+		'month'     => $thismonth,
+		'last_day'  => $last_day,
+		'unixmonth' => $unixmonth,
+		'timestamp' => $ts,
 	);
 }
 
@@ -73,8 +73,8 @@ function cptda_get_calendar_date() {
  * @return string SQL for the post type
  */
 function cptda_get_calendar_post_type_sql( $post_type ) {
-	$types     = cptda_get_post_types();
-	$types[]   = 'post';
+	$types   = cptda_get_post_types();
+	$types[] = 'post';
 
 	if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 		return '';
@@ -114,9 +114,9 @@ function cptda_get_adjacent_archive_date( $post_type, $calendar_date, $type = 'p
 		return $date;
 	}
 
-	$month     = zeroise( $month, 2 );
-	$order     = 'DESC';
-	$date_sql  = "post_date < '$year-$month-01'";
+	$month    = zeroise( $month, 2 );
+	$order    = 'DESC';
+	$date_sql = "post_date < '$year-$month-01'";
 
 	if ( isset( $calendar_date['last_day'] ) && ( 'next' === $type ) ) {
 		$order    = 'ASC';

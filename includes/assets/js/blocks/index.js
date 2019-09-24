@@ -162,7 +162,11 @@ function (_Component) {
           format = attributes.format,
           order = attributes.order,
           limit = attributes.limit,
-          show_post_count = attributes.show_post_count; // Return if post type has not been set yet
+          show_post_count = attributes.show_post_count,
+          displayAsDropdown = attributes.displayAsDropdown;
+      var serverAttributes = Object.assign({}, attributes); // Clean up attributes
+
+      delete serverAttributes.displayAsDropdown; // Return if post type has not been set yet
 
       if (!post_type) {
         return null;
@@ -175,6 +179,15 @@ function (_Component) {
         onPostTypeChange: function onPostTypeChange(value) {
           return setAttributes({
             post_type: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(ToggleControl, {
+        label: __('Display as Dropdown'),
+        checked: displayAsDropdown,
+        onChange: function onChange() {
+          return setAttributes({
+            displayAsDropdown: !displayAsDropdown,
+            format: !displayAsDropdown ? 'option' : 'html'
           });
         }
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(ToggleControl, {
@@ -198,12 +211,6 @@ function (_Component) {
             type: value
           });
         },
-        format: format,
-        onFormatChange: function onFormatChange(value) {
-          return setAttributes({
-            format: value
-          });
-        },
         order: order,
         onOrderChange: function onOrderChange(value) {
           return setAttributes({
@@ -215,7 +222,7 @@ function (_Component) {
         block: "archives",
         title: "Custom Post Type Archives",
         defaultClass: "wp-block-archives",
-        attributes: this.props.attributes
+        attributes: serverAttributes
       })));
     }
   }]);
@@ -670,13 +677,19 @@ var _wp$components = wp.components,
 function QueryPanel(_ref) {
   var limit = _ref.limit,
       onLimitChange = _ref.onLimitChange,
-      format = _ref.format,
-      onFormatChange = _ref.onFormatChange,
       type = _ref.type,
       onTypeChange = _ref.onTypeChange,
       order = _ref.order,
       onOrderChange = _ref.onOrderChange;
-  return [onLimitChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
+  return [onTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
+    key: "cptda-select-order",
+    label: __('Type of archives', 'custom-post-type-date-archives'),
+    value: "".concat(type),
+    options: typeOptions,
+    onChange: function onChange(value) {
+      onTypeChange(value);
+    }
+  }), onLimitChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(RangeControl, {
     key: "cptda-range-limit",
     label: __('Limit', 'custom-post-type-date-archives'),
     value: limit,
@@ -692,22 +705,6 @@ function QueryPanel(_ref) {
     options: orderOptions,
     onChange: function onChange(value) {
       onOrderChange(value);
-    }
-  }), onTypeChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
-    key: "cptda-select-order",
-    label: __('Type of archives', 'custom-post-type-date-archives'),
-    value: "".concat(type),
-    options: typeOptions,
-    onChange: function onChange(value) {
-      onTypeChange(value);
-    }
-  }), onFormatChange && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(SelectControl, {
-    key: "cptda-select-format",
-    label: __('Format', 'custom-post-type-date-archives'),
-    value: "".concat(format),
-    options: formatOptions,
-    onChange: function onChange(value) {
-      onFormatChange(value);
     }
   })];
 }
@@ -736,16 +733,6 @@ var typeOptions = [{
 }, {
   value: 'yearly',
   label: __('Yearly')
-}];
-var formatOptions = [{
-  value: 'custom',
-  label: __('Custom')
-}, {
-  value: 'html',
-  label: __('HTML')
-}, {
-  value: 'option',
-  label: __('Option')
 }];
 
 /***/ }),
@@ -821,11 +808,11 @@ function rendererPath(props) {
       _props$urlQueryArgs = props.urlQueryArgs,
       urlQueryArgs = _props$urlQueryArgs === void 0 ? {} : _props$urlQueryArgs;
   var post_type = attributes.post_type;
-  var attributesClone = Object.assign({}, attributes);
-  attributesClone.class = defaultClass;
-  delete attributesClone.post_type;
-  console.log('clones', attributesClone);
-  return addQueryArgs("/custom_post_type_date_archives/v1/".concat(post_type, "/").concat(block), _objectSpread({}, urlQueryArgs, {}, attributesClone));
+  var serverAttributes = Object.assign({}, attributes);
+  serverAttributes.class = defaultClass;
+  delete serverAttributes.post_type;
+  console.log('serverAttributes', serverAttributes);
+  return addQueryArgs("/custom_post_type_date_archives/v1/".concat(post_type, "/").concat(block), _objectSpread({}, urlQueryArgs, {}, serverAttributes));
 }
 var CPTDA_ServerSideRender =
 /*#__PURE__*/
@@ -885,7 +872,6 @@ function (_Component) {
           attributes = _props$attributes2 === void 0 ? null : _props$attributes2,
           _props$urlQueryArgs2 = props.urlQueryArgs,
           urlQueryArgs = _props$urlQueryArgs2 === void 0 ? {} : _props$urlQueryArgs2;
-      console.log('url', urlQueryArgs);
       var path = rendererPath(props); // Store the latest fetch request so that when we process it, we can
       // check if it is the current request, to avoid race conditions on slow networks.
 
@@ -981,6 +967,315 @@ CPTDA_ServerSideRender.defaultProps = {
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (CPTDA_ServerSideRender);
+
+/***/ }),
+
+/***/ "./latest-posts/edit.js":
+/*!******************************!*\
+  !*** ./latest-posts/edit.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _components_server_side_render__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/server-side-render */ "./components/server-side-render.js");
+/* harmony import */ var _components_post_types_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/post-types.js */ "./components/post-types.js");
+/* harmony import */ var _components_include_posts_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/include-posts.js */ "./components/include-posts.js");
+
+
+
+
+
+
+
+
+/**
+ * External dependencies
+ */
+
+
+/**
+ * WordPress dependencies
+ */
+
+var __ = wp.i18n.__;
+var _wp$components = wp.components,
+    Disabled = _wp$components.Disabled,
+    PanelBody = _wp$components.PanelBody,
+    ToggleControl = _wp$components.ToggleControl,
+    RangeControl = _wp$components.RangeControl,
+    TextareaControl = _wp$components.TextareaControl,
+    BaseControl = _wp$components.BaseControl;
+var Component = wp.element.Component;
+var withSelect = wp.data.withSelect;
+var InspectorControls = wp.editor.InspectorControls;
+
+
+
+var instances = 0;
+
+var LatestPostsEdit =
+/*#__PURE__*/
+function (_Component) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(LatestPostsEdit, _Component);
+
+  function LatestPostsEdit() {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, LatestPostsEdit);
+
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(LatestPostsEdit).apply(this, arguments)); // The title is updated 1 second after a change.
+    // This allows the user more time to type.
+
+    _this.onMessageChange = _this.onMessageChange.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
+    _this.messageDebounced = Object(lodash__WEBPACK_IMPORTED_MODULE_8__["debounce"])(_this.updateMessage, 1000);
+    _this.instanceId = instances++;
+    return _this;
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(LatestPostsEdit, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this$props = this.props,
+          postType = _this$props.postType,
+          setAttributes = _this$props.setAttributes,
+          attributes = _this$props.attributes;
+      var post_type = attributes.post_type;
+
+      if (!post_type) {
+        // Default to current post type
+        setAttributes({
+          post_type: postType
+        });
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.messageDebounced.cancel();
+    }
+  }, {
+    key: "onMessageChange",
+    value: function onMessageChange(e) {
+      // React pools events, so we read the value before debounce.
+      // Alternately we could call `event.persist()` and pass the entire event.
+      // For more info see reactjs.org/docs/events.html#event-pooling
+      this.messageDebounced(e.target.value);
+    }
+  }, {
+    key: "updateMessage",
+    value: function updateMessage(value) {
+      var setAttributes = this.props.setAttributes;
+      setAttributes({
+        message: value
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          setAttributes = _this$props2.setAttributes,
+          attributes = _this$props2.attributes;
+      var textareaID = 'inspector-textarea-control-' + this.instanceId;
+      var post_type = attributes.post_type,
+          number = attributes.number,
+          show_date = attributes.show_date,
+          include = attributes.include,
+          message = attributes.message; // Return if post type has not been set yet
+
+      if (!post_type) {
+        return null;
+      }
+
+      var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(PanelBody, {
+        title: __('Latest Posts Settings', 'custom-post-type-date-archives')
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        postType: post_type,
+        onPostTypeChange: function onPostTypeChange(value) {
+          return setAttributes({
+            post_type: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(RangeControl, {
+        label: __('Number of posts', 'custom-post-type-date-archives'),
+        value: number,
+        onChange: function onChange(value) {
+          return setAttributes({
+            number: value
+          });
+        },
+        min: 1,
+        max: 100
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_include_posts_js__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        include: include,
+        onIncludeChange: function onIncludeChange(value) {
+          return setAttributes({
+            include: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(ToggleControl, {
+        label: __('Display post date', 'custom-post-type-date-archives'),
+        checked: show_date,
+        onChange: function onChange(value) {
+          return setAttributes({
+            show_date: value
+          });
+        }
+      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(BaseControl, {
+        label: __('Message when no posts are found', 'custom-post-type-date-archives'),
+        id: textareaID
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("textarea", {
+        className: "components-textarea-control__input",
+        id: textareaID,
+        rows: "4",
+        onChange: this.onMessageChange,
+        defaultValue: message
+      }))));
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(react__WEBPACK_IMPORTED_MODULE_7__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        block: "recent-posts",
+        title: "Custom Post Type Latest Posts",
+        defaultClass: "wp-block-latest-posts",
+        attributes: this.props.attributes
+      })));
+    }
+  }]);
+
+  return LatestPostsEdit;
+}(Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (withSelect(function (select) {
+  var coreEditorSelect = select('core/editor');
+
+  if (!coreEditorSelect) {
+    return;
+  }
+
+  var getEditedPostAttribute = coreEditorSelect.getEditedPostAttribute;
+  return {
+    postType: getEditedPostAttribute('type')
+  };
+})(LatestPostsEdit));
+
+/***/ }),
+
+/***/ "./latest-posts/icon.js":
+/*!******************************!*\
+  !*** ./latest-posts/icon.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * WordPress dependencies
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg"
+}, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Path"], {
+  d: "M0,0h24v24H0V0z",
+  fill: "none"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "11",
+  y: "7",
+  width: "6",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "11",
+  y: "11",
+  width: "6",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "11",
+  y: "15",
+  width: "6",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "7",
+  y: "7",
+  width: "2",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "7",
+  y: "11",
+  width: "2",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+  x: "7",
+  y: "15",
+  width: "2",
+  height: "2"
+}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Path"], {
+  d: "M20.1,3H3.9C3.4,3,3,3.4,3,3.9v16.2C3,20.5,3.4,21,3.9,21h16.2c0.4,0,0.9-0.5,0.9-0.9V3.9C21,3.4,20.5,3,20.1,3z M19,19H5V5h14V19z"
+})));
+
+/***/ }),
+
+/***/ "./latest-posts/index.js":
+/*!*******************************!*\
+  !*** ./latest-posts/index.js ***!
+  \*******************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./edit */ "./latest-posts/edit.js");
+/* harmony import */ var _icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./icon */ "./latest-posts/icon.js");
+/**
+ * WordPress dependencies
+ */
+var __ = wp.i18n.__;
+var registerBlockType = wp.blocks.registerBlockType;
+/**
+ * Internal dependencies
+ */
+
+
+
+registerBlockType('cptda/latest-posts', {
+  title: __('Custom Post Type latest Posts', 'custom-post-type-date-archives'),
+  description: __('Display a list of your most recent posts.', 'custom-post-type-date-archives'),
+  icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
+  category: 'widgets',
+  keywords: [__('recent posts', 'custom-post-type-date-archives')],
+  supports: {
+    align: true,
+    html: false
+  },
+  edit: _edit__WEBPACK_IMPORTED_MODULE_0__["default"],
+  save: function save() {
+    // Rendering in PHP
+    return null;
+  }
+});
 
 /***/ }),
 
@@ -1340,324 +1635,15 @@ module.exports = function memize( fn, options ) {
 
 /***/ }),
 
-/***/ "./recent-posts/edit.js":
-/*!******************************!*\
-  !*** ./recent-posts/edit.js ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _components_server_side_render__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/server-side-render */ "./components/server-side-render.js");
-/* harmony import */ var _components_post_types_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/post-types.js */ "./components/post-types.js");
-/* harmony import */ var _components_include_posts_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/include-posts.js */ "./components/include-posts.js");
-
-
-
-
-
-
-
-
-/**
- * External dependencies
- */
-
-
-/**
- * WordPress dependencies
- */
-
-var __ = wp.i18n.__;
-var _wp$components = wp.components,
-    Disabled = _wp$components.Disabled,
-    PanelBody = _wp$components.PanelBody,
-    ToggleControl = _wp$components.ToggleControl,
-    RangeControl = _wp$components.RangeControl,
-    TextareaControl = _wp$components.TextareaControl,
-    BaseControl = _wp$components.BaseControl;
-var Component = wp.element.Component;
-var withSelect = wp.data.withSelect;
-var InspectorControls = wp.editor.InspectorControls;
-
-
-
-var instances = 0;
-
-var LatestPostsEdit =
-/*#__PURE__*/
-function (_Component) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5___default()(LatestPostsEdit, _Component);
-
-  function LatestPostsEdit() {
-    var _this;
-
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, LatestPostsEdit);
-
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(LatestPostsEdit).apply(this, arguments)); // The title is updated 1 second after a change.
-    // This allows the user more time to type.
-
-    _this.onMessageChange = _this.onMessageChange.bind(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4___default()(_this));
-    _this.messageDebounced = Object(lodash__WEBPACK_IMPORTED_MODULE_8__["debounce"])(_this.updateMessage, 1000);
-    _this.instanceId = instances++;
-    return _this;
-  }
-
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(LatestPostsEdit, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this$props = this.props,
-          postType = _this$props.postType,
-          setAttributes = _this$props.setAttributes,
-          attributes = _this$props.attributes;
-      var post_type = attributes.post_type;
-
-      if (!post_type) {
-        // Default to current post type
-        setAttributes({
-          post_type: postType
-        });
-      }
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this.messageDebounced.cancel();
-    }
-  }, {
-    key: "onMessageChange",
-    value: function onMessageChange(e) {
-      // React pools events, so we read the value before debounce.
-      // Alternately we could call `event.persist()` and pass the entire event.
-      // For more info see reactjs.org/docs/events.html#event-pooling
-      this.messageDebounced(e.target.value);
-    }
-  }, {
-    key: "updateMessage",
-    value: function updateMessage(value) {
-      var setAttributes = this.props.setAttributes;
-      setAttributes({
-        message: value
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props2 = this.props,
-          setAttributes = _this$props2.setAttributes,
-          attributes = _this$props2.attributes;
-      var textareaID = 'inspector-textarea-control-' + this.instanceId;
-      var post_type = attributes.post_type,
-          number = attributes.number,
-          show_date = attributes.show_date,
-          include = attributes.include,
-          message = attributes.message; // Return if post type has not been set yet
-
-      if (!post_type) {
-        return null;
-      }
-
-      var inspectorControls = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(InspectorControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(PanelBody, {
-        title: __('Latest Posts Settings', 'custom-post-type-date-archives')
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_post_types_js__WEBPACK_IMPORTED_MODULE_10__["default"], {
-        postType: post_type,
-        onPostTypeChange: function onPostTypeChange(value) {
-          return setAttributes({
-            post_type: value
-          });
-        }
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(RangeControl, {
-        label: __('Number of posts', 'custom-post-type-date-archives'),
-        value: number,
-        onChange: function onChange(value) {
-          return setAttributes({
-            number: value
-          });
-        },
-        min: 1,
-        max: 100
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_include_posts_js__WEBPACK_IMPORTED_MODULE_11__["default"], {
-        include: include,
-        onIncludeChange: function onIncludeChange(value) {
-          return setAttributes({
-            include: value
-          });
-        }
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(ToggleControl, {
-        label: __('Display post date', 'custom-post-type-date-archives'),
-        checked: show_date,
-        onChange: function onChange(value) {
-          return setAttributes({
-            show_date: value
-          });
-        }
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(BaseControl, {
-        label: __('Message when no posts are found', 'custom-post-type-date-archives'),
-        id: textareaID
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("textarea", {
-        className: "components-textarea-control__input",
-        id: textareaID,
-        rows: "4",
-        onChange: this.onMessageChange,
-        defaultValue: message
-      }))));
-      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(react__WEBPACK_IMPORTED_MODULE_7__["Fragment"], null, inspectorControls, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(Disabled, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_components_server_side_render__WEBPACK_IMPORTED_MODULE_9__["default"], {
-        block: "recent-posts",
-        title: "Custom Post Type Latest Posts",
-        defaultClass: "wp-block-latest-posts",
-        attributes: this.props.attributes
-      })));
-    }
-  }]);
-
-  return LatestPostsEdit;
-}(Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (withSelect(function (select) {
-  var coreEditorSelect = select('core/editor');
-
-  if (!coreEditorSelect) {
-    return;
-  }
-
-  var getEditedPostAttribute = coreEditorSelect.getEditedPostAttribute;
-  return {
-    postType: getEditedPostAttribute('type')
-  };
-})(LatestPostsEdit));
-
-/***/ }),
-
-/***/ "./recent-posts/icon.js":
-/*!******************************!*\
-  !*** ./recent-posts/icon.js ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-
-
-/**
- * WordPress dependencies
- */
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
-  viewBox: "0 0 24 24",
-  xmlns: "http://www.w3.org/2000/svg"
-}, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Path"], {
-  d: "M0,0h24v24H0V0z",
-  fill: "none"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "11",
-  y: "7",
-  width: "6",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "11",
-  y: "11",
-  width: "6",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "11",
-  y: "15",
-  width: "6",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "7",
-  y: "7",
-  width: "2",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "7",
-  y: "11",
-  width: "2",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
-  x: "7",
-  y: "15",
-  width: "2",
-  height: "2"
-}), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__["Path"], {
-  d: "M20.1,3H3.9C3.4,3,3,3.4,3,3.9v16.2C3,20.5,3.4,21,3.9,21h16.2c0.4,0,0.9-0.5,0.9-0.9V3.9C21,3.4,20.5,3,20.1,3z M19,19H5V5h14V19z"
-})));
-
-/***/ }),
-
-/***/ "./recent-posts/index.js":
-/*!*******************************!*\
-  !*** ./recent-posts/index.js ***!
-  \*******************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./edit */ "./recent-posts/edit.js");
-/* harmony import */ var _icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./icon */ "./recent-posts/icon.js");
-/**
- * WordPress dependencies
- */
-var __ = wp.i18n.__;
-var registerBlockType = wp.blocks.registerBlockType;
-/**
- * Internal dependencies
- */
-
-
-
-registerBlockType('cptda/latest-posts', {
-  title: __('Custom Post Type latest Posts', 'custom-post-type-date-archives'),
-  description: __('Display a list of your most recent posts.', 'custom-post-type-date-archives'),
-  icon: _icon__WEBPACK_IMPORTED_MODULE_1__["default"],
-  category: 'widgets',
-  keywords: [__('recent posts', 'custom-post-type-date-archives')],
-  supports: {
-    align: true,
-    html: false
-  },
-  edit: _edit__WEBPACK_IMPORTED_MODULE_0__["default"],
-  save: function save() {
-    // Rendering in PHP
-    return null;
-  }
-});
-
-/***/ }),
-
 /***/ 0:
 /*!*****************************************************************************!*\
-  !*** multi ./calendar/index.js ./recent-posts/index.js ./archives/index.js ***!
+  !*** multi ./calendar/index.js ./latest-posts/index.js ./archives/index.js ***!
   \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./calendar/index.js */"./calendar/index.js");
-__webpack_require__(/*! ./recent-posts/index.js */"./recent-posts/index.js");
+__webpack_require__(/*! ./latest-posts/index.js */"./latest-posts/index.js");
 module.exports = __webpack_require__(/*! ./archives/index.js */"./archives/index.js");
 
 

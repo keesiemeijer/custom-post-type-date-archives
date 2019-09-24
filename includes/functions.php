@@ -58,7 +58,6 @@ function cptda_is_date_post_type( $post_type = '' ) {
  * @return boolean True if it's a valid post type.
  */
 function cptda_is_valid_post_type( $post_type ) {
-
 	$post_type = get_post_type_object( trim( (string) $post_type ) );
 
 	if ( ! $post_type ) {
@@ -84,7 +83,6 @@ function cptda_is_valid_post_type( $post_type ) {
  * @return bool True on custom post type date archives.
  */
 function cptda_is_cpt_date() {
-
 	if ( is_date() && is_post_type_archive() ) {
 
 		$post_type = get_query_var( 'post_type' );
@@ -105,7 +103,6 @@ function cptda_is_cpt_date() {
  * @return string Post type name if the current query is for a custom post type date archive. Else empty string.
  */
 function cptda_get_queried_date_archive_post_type() {
-
 	if ( cptda_is_cpt_date() ) {
 		$post_type = get_query_var( 'post_type' );
 		if ( is_array( $post_type ) ) {
@@ -128,7 +125,6 @@ function cptda_get_queried_date_archive_post_type() {
  * @return array Array with post stati for the post type. Default array( 'publish' ).
  */
 function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
-
 	$post_status = array( 'publish' );
 
 	if ( empty( $post_type ) || ! cptda_is_date_post_type( $post_type ) ) {
@@ -154,7 +150,6 @@ function cptda_get_cpt_date_archive_stati( $post_type = '' ) {
  * @return string Post type base (front + slug).
  */
 function cptda_get_post_type_base( $post_type = '' ) {
-
 	if ( ! cptda_is_date_post_type( $post_type ) ) {
 		return '';
 	}

@@ -133,6 +133,7 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 		// Add extra classes from the editor block
 		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
 		$class .= ' cptda-block-latest-posts';
+		$class .= $args['show_date'] ? ' has-dates' : '';
 
 		$no_posts_found = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
 	}
@@ -142,7 +143,11 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	}
 
 	ob_start();
-	include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
+	if($is_block) {
+		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/latest-posts-block-display.php';
+	} else {
+		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
+	}
 	$recent_posts_html = ob_get_clean();
 	$recent_posts_html = trim($recent_posts_html);
 

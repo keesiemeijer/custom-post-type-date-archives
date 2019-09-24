@@ -33,7 +33,12 @@ class CalendarEdit extends Component {
 
 	render() {
 		const { setAttributes, attributes } = this.props;
-		const { post_type, type, format, order, limit, show_post_count } = attributes;
+		const { post_type, type, format, order, limit, show_post_count, displayAsDropdown } = attributes;
+
+		let serverAttributes = Object.assign({}, attributes);
+
+	    // Clean up attributes
+	    delete serverAttributes.displayAsDropdown;
 
 		// Return if post type has not been set yet
 		if (!post_type) {
@@ -48,6 +53,14 @@ class CalendarEdit extends Component {
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
 					/>
 					<ToggleControl
+						label={ __( 'Display as Dropdown' ) }
+						checked={ displayAsDropdown }
+						onChange={ () => setAttributes( {
+							displayAsDropdown: ! displayAsDropdown,
+							format: ! displayAsDropdown ? 'option' : 'html'
+						} ) }
+					/>
+					<ToggleControl
 						label={ __( 'Show post count', 'custom-post-type-date-archives' ) }
 						checked={ show_post_count }
 						onChange={ ( value ) => setAttributes( { show_post_count: value } ) }
@@ -57,8 +70,6 @@ class CalendarEdit extends Component {
 						onLimitChange={ ( value ) => setAttributes( { limit: value } ) }
 						type={type}
 						onTypeChange={ ( value ) => setAttributes( { type: value } ) }
-						format={format}
-						onFormatChange={ ( value ) => setAttributes( { format: value } ) }
 						order={order}
 						onOrderChange={ ( value ) => setAttributes( { order: value } ) }
 					/>
@@ -74,7 +85,7 @@ class CalendarEdit extends Component {
 						block='archives'
 						title='Custom Post Type Archives'
 						defaultClass='wp-block-archives'
-						attributes={  this.props.attributes }
+						attributes={ serverAttributes }
 					/>
 				</Disabled>
 			</Fragment>

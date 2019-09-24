@@ -4,14 +4,20 @@ const { SelectControl, RangeControl } = wp.components;
 export default function QueryPanel({
 	limit,
 	onLimitChange,
-	format,
-	onFormatChange,
 	type,
 	onTypeChange,
 	order,
 	onOrderChange,
 }) {
 	return [
+		onTypeChange && (
+			<SelectControl
+			key="cptda-select-order"
+			label={ __( 'Type of archives', 'custom-post-type-date-archives' ) }
+			value={ `${type}` }
+			options={ typeOptions }
+			onChange={ ( value ) => { onTypeChange( value ); } }
+		/>),
 		onLimitChange && (
 			<RangeControl
 				key="cptda-range-limit"
@@ -28,22 +34,6 @@ export default function QueryPanel({
 			value={ `${order}` }
 			options={ orderOptions }
 			onChange={ ( value ) => { onOrderChange( value ); } }
-		/>),
-		onTypeChange && (
-			<SelectControl
-			key="cptda-select-order"
-			label={ __( 'Type of archives', 'custom-post-type-date-archives' ) }
-			value={ `${type}` }
-			options={ typeOptions }
-			onChange={ ( value ) => { onTypeChange( value ); } }
-		/>),
-		onFormatChange && (
-			<SelectControl
-			key="cptda-select-format"
-			label={ __( 'Format', 'custom-post-type-date-archives' ) }
-			value={ `${format}` }
-			options={ formatOptions }
-			onChange={ ( value ) => { onFormatChange( value ); } }
 		/>)
 	]
 }
@@ -61,10 +51,4 @@ const typeOptions = [
 	{ value: 'weekly', label: __('Weekly') },
 	{ value: 'yearly', label: __('Yearly') },
 
-];
-
-const formatOptions = [
-	{ value: 'custom', label: __('Custom') },
-	{ value: 'html', label: __('HTML') },
-	{ value: 'option', label: __('Option') },
 ];

@@ -60,11 +60,9 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		$year = (int) date( "Y" ) - 1;
 
 		$expected = '';
-		$posts = array();
 		foreach ( array( '03', '02' ) as $month ) {
 			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'post' );
 			$post = $this->factory->post->create( $args );
-			$posts[] = $post;
 			$title = get_the_title( $post );
 			$url   = get_the_permalink( $post );
 			$expected .= "<li><a href=\"{$url}\">{$title}</a></li>\n";
@@ -80,15 +78,13 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 
 		$args = array(
 			'post_type' => 'post',
-			'class'     => 'wp-block-latest-posts',
 		);
 
-		$recent_posts_html = cptda_get_recent_posts_html( $posts, $args );
+		$recent_posts_html = cptda_render_block_recent_posts( $args );
 		$recent_posts_html = str_replace(' cptda-block-latest-posts', '', $recent_posts_html);
 
 		// Same as WP latest posts block mark up (with extra newlines)
 		$this->assertEquals(  preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $recent_posts_html ) );
-
 	}
 
 }

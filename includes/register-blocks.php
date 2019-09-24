@@ -139,6 +139,10 @@ function cptda_register_blocks() {
 					'type'    => 'boolean',
 					'default' => false,
 				),
+				'displayAsDropdown' => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
 				'post_type' => array(
 					'type' => 'string',
 				),
