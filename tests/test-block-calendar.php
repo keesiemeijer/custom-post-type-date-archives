@@ -59,6 +59,8 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test calendar block output.
+	 *
+	 * @requires function register_block_core_calendar
 	 */
 	function test_calendar_block_is_equal_to_wp_calendar_block() {
 		global $monthnum, $year;
