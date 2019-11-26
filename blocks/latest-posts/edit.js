@@ -11,7 +11,7 @@ const { __ } = wp.i18n;
 const { Disabled, PanelBody, ToggleControl, RangeControl, TextareaControl, BaseControl } = wp.components;
 const { Component } = wp.element;
 const { withSelect } = wp.data;
-const { InspectorControls } = wp.editor;
+const { InspectorControls } = wp.blockEditor;
 
 import CPTDA_ServerSideRender from '../components/server-side-render';
 import PostTypePanel from '../components/post-types.js';

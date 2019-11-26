@@ -4,8 +4,8 @@
   "license": "GPL-2.0-or-later",
   "main": "latest-posts/index.js",
   "devDependencies": {
-    "@wordpress/components": "^8.2.0",
-    "@wordpress/scripts": "^4.1.0",
+    "@wordpress/components": "^8.4.0",
+    "@wordpress/scripts": "^6.0.0",
     "classnames": "^2.2.6"
   },
   "scripts": {

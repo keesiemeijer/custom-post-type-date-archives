@@ -128,14 +128,16 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 
 	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;
+		$block_class = 'cptda-block-latest-posts';
 		$title    = '';
 
 		// Add extra classes from the editor block
 		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
-		$class .= ' cptda-block-latest-posts';
+		$class .= " wp-block-latest-posts__list {$block_class}";
 		$class .= $args['show_date'] ? ' has-dates' : '';
 
-		$no_posts_found = $message ? "<div class=\"{$class}\">\n{$message}\n</div>\n" : '';
+		$no_posts_class = "{$block_class} cptda-no-posts";
+		$no_posts_found = $message ? "<div class=\"{$no_posts_class}\">\n{$message}\n</div>\n" : '';
 	}
 
 	if ( ! $recent_posts ) {

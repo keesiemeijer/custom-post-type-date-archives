@@ -37,7 +37,9 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		$block = '<!-- wp:cptda/latest-posts {"post_type":"cpt"} /-->';
 		$block = apply_filters( 'the_content', $block );
 
-		$expected = "<ul class=\"wp-block-latest-posts cptda-block-latest-posts\">\n{$expected}</ul>\n";
+		$block_class = $this->get_latest_posts_class();
+
+		$expected = "<ul class=\"{$block_class} cptda-block-latest-posts\">\n{$expected}</ul>\n";
 
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
 
@@ -70,8 +72,9 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 
 		$block = '<!-- wp:latest-posts /-->';
 		$block = apply_filters( 'the_content', $block );
+		$block_class = $this->get_latest_posts_class();
 
-		$expected = "<ul class=\"wp-block-latest-posts\">{$expected}</ul>\n\n";
+		$expected = "<ul class=\"{$block_class}\">{$expected}</ul>\n\n";
 
 		// Same as WP latest posts block mark up
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
@@ -81,10 +84,35 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		);
 
 		$recent_posts_html = cptda_render_block_recent_posts( $args );
-		$recent_posts_html = str_replace(' cptda-block-latest-posts', '', $recent_posts_html);
+		$recent_posts_html = str_replace( ' cptda-block-latest-posts', ' ', $recent_posts_html );
 
 		// Same as WP latest posts block mark up (with extra newlines)
 		$this->assertEquals(  preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $recent_posts_html ) );
+	}
+
+	function test_no_posts_found() {
+		$this->init();
+
+		$args = array(
+			'post_type' => 'cpt',
+		);
+
+		$recent_posts_html = cptda_render_block_recent_posts( $args );
+		$expected = '';
+		$this->assertEquals( strip_ws( $expected ), strip_ws( $recent_posts_html ) );
+	}
+
+	function test_no_posts_found_message() {
+		$this->init();
+
+		$args = array(
+			'post_type' => 'cpt',
+			'message' => 'No posts found',
+		);
+
+		$recent_posts_html = cptda_render_block_recent_posts( $args );
+		$expected = "<div class=\"cptda-block-latest-posts cptda-no-posts\">\n<p>No posts found</p>\n</div>";
+		$this->assertEquals( strip_ws( $expected ), strip_ws( $recent_posts_html ) );
 	}
 
 }
