@@ -69,10 +69,10 @@ class CPTDA_UnitTestCase extends WP_UnitTestCase {
 		return $posts;
 	}
 
-	function get_latest_posts_class() {
+	function get_back_compat_latest_posts_class() {
 		$version = $GLOBALS['wp_version'];
 		$class = 'wp-block-latest-posts';
-		if( version_compare($version , '5.2', '>') ) {
+		if ( version_compare( $version , '5.2', '>' ) ) {
 			$class .= ' wp-block-latest-posts__list';
 		}
 

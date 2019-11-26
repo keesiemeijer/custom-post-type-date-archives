@@ -148,11 +148,10 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 		);
 
 		$data        = $this->rest_cptda_get_recent_posts( 'cpt', $args );
-		$block_class = $this->get_latest_posts_class();
-
+		$block_class = 'wp-block-latest-posts wp-block-latest-posts__list cptda-block-latest-posts';
 
 		// Title and message are not allowed for the rest api.
-		$expected = "<ulclass=\"{$block_class}cptda-block-latest-posts\">{$expected}</ul>";
+		$expected = "<ulclass=\"{$block_class}\">{$expected}</ul>";
 		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 

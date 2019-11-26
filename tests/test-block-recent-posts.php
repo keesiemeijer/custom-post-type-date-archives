@@ -19,7 +19,7 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 	 * Test test recent posts block output.
 	 */
 	function test_recent_posts_block_in_post_content() {
-		global $wp_locale;
+		global $wp_locale, $wp_version;
 		$this->init();
 		$year = (int) date( "Y" ) - 1;
 
@@ -37,11 +37,10 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		$block = '<!-- wp:cptda/latest-posts {"post_type":"cpt"} /-->';
 		$block = apply_filters( 'the_content', $block );
 
-		$block_class = $this->get_latest_posts_class();
+		$block_class = 'wp-block-latest-posts wp-block-latest-posts__list cptda-block-latest-posts';
+		$cptda_latest_posts = "<ul class=\"{$block_class}\">\n{$expected}</ul>\n";
 
-		$expected = "<ul class=\"{$block_class} cptda-block-latest-posts\">\n{$expected}</ul>\n";
-
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertEquals( strip_ws( $cptda_latest_posts ), strip_ws( $block ) );
 
 		$args = array(
 			'post_type' => 'cpt',
@@ -49,8 +48,11 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		);
 
 		$recent_posts_html = cptda_get_recent_posts_html( $posts, $args );
+		// $wp_latest_posts = "<ul class=\"{$block_class}\">\n{$expected}</ul>\n";
+		// $block_class = $this->get_back_compat_latest_posts_class();
 
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $recent_posts_html ) );
+
+		$this->assertEquals( strip_ws( $cptda_latest_posts ), strip_ws( $recent_posts_html ) );
 	}
 
 	/**
@@ -72,22 +74,24 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 
 		$block = '<!-- wp:latest-posts /-->';
 		$block = apply_filters( 'the_content', $block );
-		$block_class = $this->get_latest_posts_class();
+		$block_class = $this->get_back_compat_latest_posts_class();
 
-		$expected = "<ul class=\"{$block_class}\">{$expected}</ul>\n\n";
+		$wp_latest_posts = "<ul class=\"{$block_class}\">{$expected}</ul>\n\n";
 
 		// Same as WP latest posts block mark up
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertEquals( strip_ws( $wp_latest_posts ), strip_ws( $block ) );
 
 		$args = array(
 			'post_type' => 'post',
 		);
 
 		$recent_posts_html = cptda_render_block_recent_posts( $args );
-		$recent_posts_html = str_replace( ' cptda-block-latest-posts', ' ', $recent_posts_html );
+
+		$block_class = 'wp-block-latest-posts wp-block-latest-posts__list cptda-block-latest-posts';
+		$cptda_latest_posts = "<ul class=\"{$block_class}\">{$expected}</ul>\n\n";
 
 		// Same as WP latest posts block mark up (with extra newlines)
-		$this->assertEquals(  preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $recent_posts_html ) );
+		$this->assertEquals(  preg_replace( '/\s+/', '', $cptda_latest_posts ), preg_replace( '/\s+/', '', $recent_posts_html ) );
 	}
 
 	function test_no_posts_found() {

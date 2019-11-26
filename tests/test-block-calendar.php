@@ -83,8 +83,8 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$block = '<!-- wp:calendar /-->';
 		$block = apply_filters( 'the_content', $block );
 
-		$expected = cptda_render_block_calendar( array('post_type' => 'post') );
-		$expected = str_replace(' cptda-block-calendar', '', $expected);
+		$expected = cptda_render_block_calendar( array( 'post_type' => 'post' ) );
+		$expected = str_replace( ' cptda-block-calendar', '', $expected );
 
 		$monthnum = $previous_monthnum;
 		$year = $previous_year;
