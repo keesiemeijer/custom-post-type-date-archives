@@ -1,0 +1,19 @@
+{
+  "name": "custom-post-type-date-archives-blocks",
+  "version": "2.6.2-alpha",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@wordpress/components": "^8.4.0",
+    "@wordpress/scripts": "^6.0.0",
+    "classnames": "^2.2.6"
+  },
+  "scripts": {
+    "test": "wp-scripts test-unit-js",
+    "start": "wp-scripts start calendar/index.js latest-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks",
+    "build": "wp-scripts build calendar/index.js latest-posts/index.js archives/index.js --output-path=../includes/assets/js/blocks"
+  },
+  "dependencies": {
+    "memize": "^1.0.5",
+    "moment": "^2.24.0"
+  }
+}

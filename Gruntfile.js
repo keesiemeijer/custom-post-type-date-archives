@@ -45,17 +45,7 @@ module.exports = function( grunt ) {
 		// Clean up build directory
 		clean: {
 			main: [ 'build/<%= pkg.name %>' ],
-			release: [
-				'**',
-				'.travis.yml',
-				'.gitignore',
-				'.git/**',
-				'!lang/**',
-				'!templates/**',
-				'!includes/**',
-				'!related-posts-by-taxonomy.php',
-				'!readme.txt'
-			]
+			blocks: ['includes/assets/js/blocks']
 		},
 
 		// Copy the theme into the build directory
@@ -67,6 +57,7 @@ module.exports = function( grunt ) {
 					'!bin/**',
 					'!tests/**',
 					'!build/**',
+					'!blocks/**',
 					'!.git/**',
 					'!Gruntfile.js',
 					'!package.json',
@@ -121,6 +112,12 @@ module.exports = function( grunt ) {
 				},
 				src: [ 'readme.md', 'custom-post-type-date-archives.php' ]
 			},
+			blocks: {
+				options: {
+					prefix: '"version": "*"'
+				},
+				src: [ 'blocks/package.json' ]
+			},
 			define: {
 				options: {
 					prefix: "'CPT_DATE_ARCHIVES_VERSION', '*"
@@ -141,7 +138,21 @@ module.exports = function( grunt ) {
 					to: "custom-post-type-date-archives/tree/<%= githash.main.branch %>#"
 				} ]
 			}
+		},
+
+		run: {
+			build: {
+				cmd: 'npm',
+				options: {
+					cwd: 'blocks'
+  				},
+				args: [
+					'run',
+					'build'
+				]
+	 		}
 		}
+
 
 	} );
 
@@ -151,11 +162,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'travis', [ 'githash', 'replace:replace_branch' ] );
 
 	// Creates build
-	grunt.registerTask( 'build', [ 'clean:main', 'version', 'makepot', 'travis', 'copy:main' ] );
-
-	// Removes ALL development files in the root directory
-	// !!! be careful with this
-	grunt.registerTask( 'release', [ 'version', 'clean:release', ] );
+	grunt.registerTask( 'build', [ 'clean:main', 'clean:blocks', 'version', 'run:build', 'makepot', 'travis', 'copy:main' ] );
 
 	grunt.util.linefeed = '\n';
 

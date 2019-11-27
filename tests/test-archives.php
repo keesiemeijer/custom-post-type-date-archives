@@ -3,7 +3,7 @@
 /**
  * Tests for public plugin functions
  *
- * @group Calendar
+ * @group Archive
  */
 class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 
