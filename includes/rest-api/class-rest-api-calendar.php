@@ -185,6 +185,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$args['post_type'] = $post_type;
 
 		$calendar = $this->get_calendar( $args );
+		$calendar = $calendar ? $calendar : '';
 
 		$class = isset( $args['class'] ) ? $args['class'] : '';
 		if ( $class && ( 'wp-block-calendar' === $class ) ) {
@@ -192,7 +193,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 			$class = cptda_get_block_classes( $args, $class );
 			$class .= ' cptda-block-calendar';
 
-			$calendar = sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar );
+			$calendar = $calendar ? sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar ) : '';
 		}
 
 		$data = array(

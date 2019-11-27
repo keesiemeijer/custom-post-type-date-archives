@@ -192,6 +192,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 
 		// Archive arguments could contain HTML or Javascript.
 		$rendered = wp_kses( $rendered, $tags );
+		$rendered = $rendered ? $rendered : '';
 
 		$data = array(
 			'archives' => $this->archives,

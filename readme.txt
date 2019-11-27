@@ -10,13 +10,14 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Add date archives to WordPress custom post types
 
 == Description ==
-Add Date archives to custom post types right in the dashboard itself. This plugin also provides you with a calendar, archive and recent posts widget. This allows you to use this plugin as a super simple events calendar.
+Add Date archives to custom post types right in the dashboard itself. This plugin also provides you with a calendar, archive and recent posts widget, and editor blocks. This allows you to use this plugin as a super simple events calendar.
 
 **Features**:
 
 * Adds a date archives submenu for each custom post type
 * Adds the rewrite rules needed for viewing the date archives
-* Adds extra options to the calendar, archive and recent posts widget
+* Adds extra (post type) options to the calendar, archive and recent posts widget
+* Adds calendar, archive and recent posts editor blocks for use in your posts.
 * Allows you to publish scheduled posts with future dates like normal posts
 * Allows you to use specific theme templates files for cpt date archives
 * Adds WP Rest API endpoints for the calendar, archives and recent posts

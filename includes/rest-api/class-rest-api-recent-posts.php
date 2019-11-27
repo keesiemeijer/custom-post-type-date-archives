@@ -178,6 +178,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		);
 
 		$rendered = wp_kses( $rendered, $tags );
+		$rendered = $rendered ? $rendered : '';
 
 		$data = array(
 			'posts'    => $recent_posts,
