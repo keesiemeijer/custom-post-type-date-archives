@@ -1,6 +1,6 @@
 {
   "name": "custom-post-type-date-archives-blocks",
-  "version": "1.0.0",
+  "version": "2.6.2-alpha",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
     "@wordpress/components": "^8.4.0",

@@ -112,6 +112,12 @@ module.exports = function( grunt ) {
 				},
 				src: [ 'readme.md', 'custom-post-type-date-archives.php' ]
 			},
+			blocks: {
+				options: {
+					prefix: '"version": "*"'
+				},
+				src: [ 'blocks/package.json' ]
+			},
 			define: {
 				options: {
 					prefix: "'CPT_DATE_ARCHIVES_VERSION', '*"
@@ -156,7 +162,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'travis', [ 'githash', 'replace:replace_branch' ] );
 
 	// Creates build
-	grunt.registerTask( 'build', [ 'clean:main', 'clean:blocks', 'run:build', 'version', 'makepot', 'travis', 'copy:main' ] );
+	grunt.registerTask( 'build', [ 'clean:main', 'clean:blocks', 'version', 'run:build', 'makepot', 'travis', 'copy:main' ] );
 
 	grunt.util.linefeed = '\n';
 

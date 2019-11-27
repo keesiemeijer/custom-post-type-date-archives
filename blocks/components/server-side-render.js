@@ -21,7 +21,6 @@ export function rendererPath( props ) {
 	let serverAttributes = Object.assign({}, attributes);
 	serverAttributes.class = defaultClass;
 	delete serverAttributes.post_type;
-	console.log('serverAttributes', serverAttributes);
 
 	return addQueryArgs( `/custom_post_type_date_archives/v1/${ post_type }/${ block }`, {
 		...urlQueryArgs,
