@@ -76,8 +76,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
-		$types     = cptda_get_post_types();
-		$types[]   = 'post';
+		$types     = array_keys( cptda_get_public_post_types() );
 
 		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 			return $error;

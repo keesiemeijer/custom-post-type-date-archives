@@ -60,7 +60,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			$args = apply_filters( 'widget_archives_args', $args, $instance );
 		}
 
-		$args = cptda_validate_archive_settings( $args );
+		$args = cptda_validate_archive_settings( $args, 'date_archives' );
 
 		/* Overwrite the $echo argument and set it to false. */
 		$args['echo'] = false;
@@ -73,16 +73,17 @@ class CPTDA_Widget_Archives extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance  = cptda_validate_archive_settings( $new_instance );
+		$new_instance  = cptda_validate_archive_settings( $new_instance, 'date_archives' );
+		$instance      = array_merge( $old_instance, $new_instance);
+
 		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 5;
 
 		return $instance;
 	}
 
 	public function form( $instance ) {
-		$defaults = $this->get_defaults();
 		/* Merge the user-selected arguments with the defaults. */
-		$instance = wp_parse_args( (array) $instance, $defaults );
+		$instance = wp_parse_args( (array) $instance, $this->get_defaults() );
 
 		/* Create an array of archive types. */
 		$type = array(
@@ -107,14 +108,26 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			'option' => esc_attr__( 'Option', 'custom-post-type-date-archives' ),
 		);
 
-		$post_type = ( isset( $instance['post_type'] ) ) ? (string) $instance['post_type'] : 'post';
+		$desc            = '';
+		$style           = '';
+		$show_post_types = true;
+		$post_type       = $instance['post_type'] ? (string) $instance['post_type'] : 'post';
+		$post_types      = $this->plugin->post_type->get_post_types( 'labels' );
+		$post_types      = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
 
-		$show_post_types = false;
-		$post_types = $this->plugin->post_type->get_post_types( 'labels' );
+		if ( ! in_array( $post_type, array_keys( $post_types ) ) ) {
+			// Post type doesnt exist or has no date archives
+			$post_types[ $post_type ] = $post_type;
+			$style = ' style="border-color: red;"';
+			if ( ! post_type_exists( $post_type ) ) {
+				$desc = sprintf( __( "<strong>Note</strong>: The post type '%s' doesn't exist anymore", 'custom-post-type-date-archives' ), $post_type );
+			} else {
+				$desc = sprintf( __( "<strong>Note</strong>: The post type '%s' doesn't have date archives", 'custom-post-type-date-archives' ), $post_type );
+			}
+		}
 
-		if ( ! empty( $post_types ) ) {
-			$show_post_types = true;
-			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+		if ( 1 === count( $post_types ) && in_array( 'post', $post_types ) ) {
+			$show_post_types = false;
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/archive-widget.php';

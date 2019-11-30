@@ -8,14 +8,18 @@ import memoize from 'memize';
 /**
  * WordPress dependencies
  */
-const { __ } = wp.i18n;
-const { Disabled, PanelBody } = wp.components;
-const { Component } = wp.element;
-const { withSelect } = wp.data;
-const { InspectorControls } = wp.blockEditor;
+import { __ } from '@wordpress/i18n';
+import { Disabled, PanelBody } from '@wordpress/components';
+import { Component } from '@wordpress/element';
+import { withSelect } from '@wordpress/data';
+import { InspectorControls } from '@wordpress/block-editor';
 
+/**
+ * Internal dependencies
+ */
+import {hasDateArchive} from '../components/post-types.js';
 import CPTDA_ServerSideRender from '../components/server-side-render';
-import PostTypePanel from '../components/post-types.js';
+import PostTypeSelect from '../components/post-types.js';
 
 class CalendarEdit extends Component {
 	constructor() {
@@ -34,8 +38,10 @@ class CalendarEdit extends Component {
 		let { post_type } = attributes;
 
 		if (!post_type) {
+			const current = hasDateArchive(postType) ? postType : 'post';
+
 			// Default to current post type
-			setAttributes({ post_type: postType })
+			setAttributes({ post_type: current })
 		}
 	}
 
@@ -69,9 +75,10 @@ class CalendarEdit extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Calendar Settings', 'custom-post-type-date-archives' ) }>
-					<PostTypePanel
+					<PostTypeSelect
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
+						dateArchives={true}
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -85,6 +92,7 @@ class CalendarEdit extends Component {
 						block='calendar'
 						title='Custom Post Type Calendar'
 						defaultClass='wp-block-calendar'
+						dateArchives={true}
 						attributes={
 							this.getServerSideAttributes(
 							this.props.attributes,

@@ -83,16 +83,11 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance     = $old_instance;
+		$new_instance = array_merge( $this->defaults, $new_instance );
 
-		$post_types = $this->plugin->post_type->get_post_types( 'names' );
-		$post_types[] = 'post';
-
-		$instance['post_type'] = $new_instance['post_type'];
-		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
-			$instance['post_type'] = 'post';
-		}
+		$instance['title']     = strip_tags( $new_instance['title'] );
+		$instance['post_type'] = strip_tags( $new_instance['post_type'] );
 
 		return $instance;
 	}
@@ -101,13 +96,27 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		/* Merge the user-selected arguments with the defaults. */
 		$instance    = wp_parse_args( (array) $instance, $this->defaults );
 		$title       = esc_attr__( strip_tags( $instance['title'] ) );
-		$post_types  = $this->plugin->post_type->get_post_types( 'labels' );
-		$post_type   = isset( $instance['post_type'] ) ? (string) $instance['post_type'] : 'post';
 
-		$show_post_types = false;
-		if ( ! empty( $post_types ) ) {
-			$show_post_types = true;
-			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+		$desc            = '';
+		$style           = '';
+		$show_post_types = true;
+		$post_type       = $instance['post_type'] ? (string) $instance['post_type'] : 'post';
+		$post_types      = $this->plugin->post_type->get_post_types( 'labels' );
+		$post_types      = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+
+		if ( ! in_array( $post_type, array_keys( $post_types ) ) ) {
+			// Post type doesnt exist or has no date archives
+			$post_types[ $post_type ] = $post_type;
+			$style = ' style="border-color: red;"';
+			if ( ! post_type_exists( $post_type ) ) {
+				$desc = __( "<strong>Note</strong>: The selected post type doesn't exist anymore", 'custom-post-type-date-archives' );
+			} else {
+				$desc = __( "<strong>Note</strong>: The selected post type doesn't have date archives", 'custom-post-type-date-archives' );
+			}
+		}
+
+		if ( 1 === count( $post_types ) && in_array( 'post', $post_types ) ) {
+			$show_post_types = false;
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/calendar-widget.php';

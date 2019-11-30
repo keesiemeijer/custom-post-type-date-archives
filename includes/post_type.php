@@ -229,6 +229,9 @@ class CPTDA_Post_Types {
 	 */
 	public function get_post_types_by_context( $context = 'date_archive' ) {
 		switch ( $context ) {
+			case 'public':
+				$post_types = $this->post_types;
+				break;
 			case 'admin':
 				$args = array(
 					'show_ui'      => true,

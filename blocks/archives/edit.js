@@ -6,17 +6,21 @@ import { Fragment } from 'react';
 /**
  * WordPress dependencies
  */
-const { __ } = wp.i18n;
-const { Disabled, PanelBody, ToggleControl } = wp.components;
-const { Component } = wp.element;
-const { withSelect } = wp.data;
-const { InspectorControls } = wp.blockEditor;
+import { __ } from '@wordpress/i18n';
+import { Disabled, PanelBody, ToggleControl } from '@wordpress/components';
+import { Component } from '@wordpress/element';
+import { withSelect } from '@wordpress/data';
+import { InspectorControls } from '@wordpress/block-editor';
 
+/**
+ * Internal dependencies
+ */
 import CPTDA_ServerSideRender from '../components/server-side-render';
-import PostTypePanel from '../components/post-types.js';
+import { hasDateArchive } from '../components/post-types.js';
+import PostTypeSelect from '../components/post-types.js';
 import QueryPanel from '../components/query-panel.js';
 
-class CalendarEdit extends Component {
+class ArchivesEdit extends Component {
 	constructor() {
 		super(...arguments);
 	}
@@ -24,21 +28,23 @@ class CalendarEdit extends Component {
 	componentDidMount() {
 		const { postType, setAttributes, attributes } = this.props;
 		let { post_type } = attributes;
+		let current;
 
 		if (!post_type) {
+			current = hasDateArchive(postType) ? postType : 'post';
+
 			// Default to current post type
-			setAttributes({ post_type: postType })
+			setAttributes({ post_type: current })
 		}
 	}
 
 	render() {
 		const { setAttributes, attributes } = this.props;
 		const { post_type, type, format, order, limit, show_post_count, displayAsDropdown } = attributes;
-
 		let serverAttributes = Object.assign({}, attributes);
 
-	    // Clean up attributes
-	    delete serverAttributes.displayAsDropdown;
+		// Clean up attributes
+		delete serverAttributes.displayAsDropdown;
 
 		// Return if post type has not been set yet
 		if (!post_type) {
@@ -48,9 +54,10 @@ class CalendarEdit extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Archives Settings', 'custom-post-type-date-archives' ) }>
-					<PostTypePanel
-						postType={post_type}
+					<PostTypeSelect
+						postType={ post_type }
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
+						dateArchives={true}
 					/>
 					<ToggleControl
 						label={ __( 'Display as Dropdown' ) }
@@ -63,7 +70,7 @@ class CalendarEdit extends Component {
 					<ToggleControl
 						label={ __( 'Show post count', 'custom-post-type-date-archives' ) }
 						checked={ show_post_count }
-						onChange={ ( value ) => setAttributes( { show_post_count: value } ) }
+						onChange={ () => setAttributes( { show_post_count: ! show_post_count } ) }
 					/>
 					<QueryPanel
 						limit={limit}
@@ -85,6 +92,7 @@ class CalendarEdit extends Component {
 						block='archives'
 						title='Custom Post Type Archives'
 						defaultClass='wp-block-archives'
+						dateArchives={true}
 						attributes={ serverAttributes }
 					/>
 				</Disabled>
@@ -102,4 +110,4 @@ export default withSelect((select) => {
 	const { getEditedPostAttribute } = coreEditorSelect;
 
 	return { postType: getEditedPostAttribute('type') };
-})(CalendarEdit);
+})(ArchivesEdit);

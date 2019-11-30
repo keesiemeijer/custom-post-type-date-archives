@@ -82,7 +82,6 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 		$args  = $request->get_params();
-		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid calendar request.', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 		$data  = array();
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
@@ -90,6 +89,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$types[]   = 'post';
 
 		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
+			$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 			return $error;
 		}
 
@@ -106,6 +106,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		}
 
 		if ( ! ( $args['year'] && $args['month'] ) ) {
+			$error = new WP_Error( 'rest_invalid_request', __( 'Invalid calendar request.', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
 			return $error;
 		}
 

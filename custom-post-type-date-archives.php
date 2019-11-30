@@ -215,8 +215,6 @@ if ( ! class_exists( 'Custom_Post_Type_Date_Archives' ) ) :
 		$dir = dirname( plugin_basename( CPT_DATE_ARCHIVES_PLUGIN_FILE ) ) . '/languages/';
 		load_plugin_textdomain( 'custom-post-type-date-archives', '', $dir );
 	}
-
-
 }
 endif;
 

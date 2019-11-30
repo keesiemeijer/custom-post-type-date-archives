@@ -24,17 +24,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 function cptda_get_archive_settings() {
 	return array(
 		'post_type'       => 'post',
-		'title'           => '',
-		'before_title'    => '',
-		'after_title'     => '',
+		'type'            => 'monthly',
 		'limit'           => '',
 		'offset'          => '',
-		'type'            => 'monthly',
 		'order'           => 'DESC',
 		'format'          => 'html',
 		'show_post_count' => false,
+		'echo'            => true,
 		'before'          => '',
 		'after'           => '',
+		'title'           => '',
+		'before_title'    => '',
+		'after_title'     => '',
 	);
 }
 
@@ -81,17 +82,18 @@ function cptda_sanitize_archive_settings( $args ) {
 	$args     = array_merge( $defaults, $args );
 
 	$args['post_type']       = sanitize_key( trim( (string) $args['post_type'] ) );
-	$args['title']           = strip_tags( trim( (string) $args['title'] ) );
-	$args['before_title']    = trim( (string) $args['before_title'] ) ;
-	$args['after_title']     = trim( (string) $args['after_title'] );
+	$args['type']            = strip_tags( trim( (string) $args['type'] ) );
 	$args['limit']           = absint( $args['limit'] );
 	$args['offset']          = absint( $args['offset'] );
-	$args['type']            = strip_tags( trim( (string) $args['type'] ) );
 	$args['order']           = strtoupper( strip_tags( trim( (string) $args['order'] ) ) );
 	$args['format']          = strip_tags( trim( (string) $args['format'] ) );
 	$args['show_post_count'] = wp_validate_boolean( $args['show_post_count'] );
+	$args['echo']            = wp_validate_boolean( $args['echo'] );
 	$args['before']          = trim( (string) $args['before'] ) ;
 	$args['after']           = trim( (string) $args['after'] );
+	$args['title']           = strip_tags( trim( (string) $args['title'] ) );
+	$args['before_title']    = trim( (string) $args['before_title'] ) ;
+	$args['after_title']     = trim( (string) $args['after_title'] );
 
 	return $args;
 }
@@ -101,26 +103,21 @@ function cptda_sanitize_archive_settings( $args ) {
  *
  * @since 2.6.0
  *
- * @param array $args Array with archives settings.
+ * @param array  $args    Array with archives settings.
+ * @param string $context Set context to 'date_archives' to only allow date archive post types.
  * @return array Array with validated archives settings.
  */
-function cptda_validate_archive_settings( $args ) {
-	$args   = cptda_sanitize_archive_settings( $args );
+function cptda_validate_archive_settings( $args, $context = '' ) {
+	$date_archives = ( 'date_archives' === $context );
+	$args          = cptda_sanitize_archive_settings( $args );
 
-	$plugin       = cptda_date_archives();
-	$post_types   = $plugin->post_type->get_post_types( 'names' );
-	$post_types[] = 'post';
+	$type   = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
+	$format = array( 'custom', 'html', 'option', 'object' );
+	$order  = array( 'ASC', 'DESC' );
 
-	if ( ! in_array( $args['post_type'], $post_types ) ) {
-		$args['post_type'] = 'post';
-	}
-
-	$type           = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
-	$order          = array( 'ASC', 'DESC' );
-	$format         = array( 'custom', 'html', 'option' );
 	$args['type']   = in_array( $args['type'], $type )     ? $args['type']   : 'monthly';
-	$args['order']  = in_array( $args['order'], $order )   ? $args['order']  : 'DESC';
 	$args['format'] = in_array( $args['format'], $format ) ? $args['format'] : 'html';
+	$args['order']  = in_array( $args['order'], $order )   ? $args['order']  : 'DESC';
 
 	return $args;
 }
@@ -170,11 +167,8 @@ function cptda_get_archives_html( $args ) {
 
 	/* Get the archives list. */
 	$archives = cptda_get_archives( $args );
-
 	if ( ! $archives ) {
-		$no_archives = __( 'No archives to show.', 'custom-post-type-date-archives' );
-		$empty_block = "<div class=\"{$class}\">{$no_archives}</div>\n";
-		return $is_block ? $empty_block : '';
+		return '';
 	}
 
 	/* If the archives should be shown in a <select> drop-down. */

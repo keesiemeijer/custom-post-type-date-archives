@@ -79,6 +79,30 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 	}
 
 	/**
+	 * Test test archives post type.
+	 */
+	function test_cptda_get_archives_post_type() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$args = array( 'post_date' => "$year-03-20 00:00:00", 'post_type' => 'post' );
+		$post = $this->factory->post->create( $args );
+
+		// No post type in args defaults to 'post'
+		$archive = cptda_get_archives( array( 'echo' => false ) );
+		$this->assertNotEmpty( $archive );
+
+		// Post type in args
+		$archive = cptda_get_archives( array( 'post_type' => 'post', 'echo' => false ) );
+		$this->assertNotEmpty( $archive );
+
+		// Empty post type in args (doesn't default to post)
+		$archive = cptda_get_archives( array( 'post_type' => '', 'echo' => false ) );
+		$this->assertEmpty( $archive );
+	}
+
+	/**
 	 * Test offset.
 	 */
 	function test_archive_offset() {

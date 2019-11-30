@@ -94,12 +94,6 @@ function cptda_validate_recent_posts_settings( $args ) {
 		$args['include'] = 'all';
 	}
 
-	$post_types   = $plugin->post_type->get_post_types( 'names' );
-	$post_types[] = 'post';
-	if ( ! in_array( $args['post_type'], $post_types ) ) {
-		$args['post_type'] = 'post';
-	}
-
 	return $args;
 }
 

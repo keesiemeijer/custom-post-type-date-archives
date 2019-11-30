@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
+add_action( 'wp_loaded', 'cptda_block_editor_init', 20 );
 
 /**
  * Enqueue Gutenberg block assets for backend editor.
@@ -25,21 +25,37 @@ add_action( 'enqueue_block_editor_assets', 'cptda_block_editor_assets' );
  *
  * @since 2.6.2
  */
-function cptda_block_editor_assets() {
-	wp_enqueue_script(
-		'cptda-editor-block', // Handle.
+function cptda_block_editor_init() {
+	// automatically load dependencies and version
+	$asset_file = include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/assets/js/blocks/index.asset.php';
+
+	// This script is loaded when the block editor is loading on the current screen
+	// See wp_enqueue_registered_block_scripts_and_styles().
+	wp_register_script(
+		'cptda-editor-block-script', // Handle.
 		CPT_DATE_ARCHIVES_PLUGIN_URL . "includes/assets/js/blocks/index.js",
-		array( 'wp-blocks', 'wp-i18n', 'wp-url', 'wp-element', 'wp-data', 'wp-api-fetch', 'wp-editor', 'wp-components' )
+		$asset_file['dependencies']
 	);
 
-	wp_localize_script( 'cptda-editor-block', 'cptda_data',
+	wp_localize_script( 'cptda-editor-block-script', 'cptda_data',
 		array(
 			'post_type' => cptda_get_post_types( 'labels' ),
+			'public'    => cptda_get_public_post_types(),
 		)
 	);
-}
 
-add_action( 'init', 'cptda_register_blocks' );
+	if ( function_exists( 'wp_set_script_translations' ) ) {
+		wp_set_script_translations( 'cptda-editor-block-script', 'custom-post-type-date-archives' );
+	}
+
+	wp_register_style(
+		'cptda-editor-block-style',
+		CPT_DATE_ARCHIVES_PLUGIN_URL . "includes/assets/css/blocks/editor-styles.css",
+		array( )
+	);
+
+	cptda_register_blocks();
+}
 
 /**
  * Registers blocks on server.
@@ -50,6 +66,9 @@ function cptda_register_blocks() {
 	register_block_type(
 		'cptda/calendar',
 		array(
+			'render_callback' => 'cptda_render_block_calendar',
+			'editor_script'   => 'cptda-editor-block-script',
+			'editor_style'    => 'cptda-editor-block-style',
 			'attributes' => array(
 				'align' => array(
 					'type' => 'string',
@@ -68,13 +87,15 @@ function cptda_register_blocks() {
 					'type' => 'string',
 				),
 			),
-			'render_callback' => 'cptda_render_block_calendar',
 		)
 	);
 
 	register_block_type(
 		'cptda/latest-posts',
 		array(
+			'render_callback' => 'cptda_render_block_recent_posts',
+			'editor_script'   => 'cptda-editor-block-script',
+			'editor_style'    => 'cptda-editor-block-style',
 			'attributes' => array(
 				'align' => array(
 					'type' => 'string',
@@ -104,13 +125,15 @@ function cptda_register_blocks() {
 				),
 
 			),
-			'render_callback' => 'cptda_render_block_recent_posts',
 		)
 	);
 
 	register_block_type(
 		'cptda/archives',
 		array(
+			'render_callback' => 'cptda_render_block_archives',
+			'editor_script'   => 'cptda-editor-block-script',
+			'editor_style'    => 'cptda-editor-block-style',
 			'attributes' => array(
 				'align'             => array(
 					'type' => 'string',
@@ -147,7 +170,6 @@ function cptda_register_blocks() {
 					'type' => 'string',
 				),
 			),
-			'render_callback' => 'cptda_render_block_archives',
 		)
 	);
 }

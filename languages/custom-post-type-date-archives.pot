@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Date Archives 2.6.2-alpha\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/custom-post-type-date-archives\n"
-"POT-Creation-Date: 2019-11-27 15:54:22+00:00\n"
+"POT-Creation-Date: 2019-11-27 14:31:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -203,11 +203,11 @@ msgstr ""
 msgid "Invalid post type"
 msgstr ""
 
-#: includes/rest-api/class-rest-api-archives.php:230
+#: includes/rest-api/class-rest-api-archives.php:229
 msgid "Archive date objects."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-archives.php:238
+#: includes/rest-api/class-rest-api-archives.php:237
 msgid "Rendered archive HTML"
 msgstr ""
 
@@ -215,31 +215,31 @@ msgstr ""
 msgid "Invalid calendar request."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-calendar.php:235
+#: includes/rest-api/class-rest-api-calendar.php:234
 msgid "Calendar post type."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-calendar.php:240
+#: includes/rest-api/class-rest-api-calendar.php:239
 msgid "Calendar year."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-calendar.php:245
+#: includes/rest-api/class-rest-api-calendar.php:244
 msgid "Calendar month."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-calendar.php:250
+#: includes/rest-api/class-rest-api-calendar.php:249
 msgid "Calendar Date"
 msgstr ""
 
-#: includes/rest-api/class-rest-api-calendar.php:258
+#: includes/rest-api/class-rest-api-calendar.php:257
 msgid "Rendered calendar HTML"
 msgstr ""
 
-#: includes/rest-api/class-rest-api-recent-posts.php:213
+#: includes/rest-api/class-rest-api-recent-posts.php:212
 msgid "Recent Posts post type."
 msgstr ""
 
-#: includes/rest-api/class-rest-api-recent-posts.php:221
+#: includes/rest-api/class-rest-api-recent-posts.php:220
 msgid "Rendered recent posts HTML"
 msgstr ""
 

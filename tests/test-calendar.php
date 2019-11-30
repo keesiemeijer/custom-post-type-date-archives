@@ -76,6 +76,24 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 	}
 
 	/**
+	 * Test invalid post type
+	 */
+	function test_cptda_get_calendar_empty_post_type() {
+		global $wp_locale, $monthnum, $year;
+
+		$monthnum = 3;
+		$year = (int) date( "Y" ) - 1;
+
+		// No post type
+		$calendar = cptda_get_calendar( '', true, false );
+		$this->assertEmpty( $calendar );
+
+		// Not a post type with archives
+		$calendar = cptda_get_calendar( 'noarchive', true, false );
+		$this->assertEmpty( $calendar );
+	}
+
+	/**
 	 * Test calendar output with date set to march 18 with filter.
 	 */
 	function test_cptda_filter_days_of_calendar() {

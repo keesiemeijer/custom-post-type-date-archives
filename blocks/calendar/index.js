@@ -1,16 +1,14 @@
 /**
  * WordPress dependencies
  */
-const { __ } = wp.i18n;
-const { registerBlockType } = wp.blocks;
-
+import { __ } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
  */
 import edit from './edit';
 import icon from './icon';
-
 
 registerBlockType('cptda/calendar', {
 	title: __( 'Custom Post Type Calendar', 'custom-post-type-date-archives' ),

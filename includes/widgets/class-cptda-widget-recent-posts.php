@@ -130,11 +130,21 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$show_date = (bool) $instance['show_date'];
 		$include   = trim( (string) $instance['include'] );
 
-		$show_post_types = false;
-		$post_types      = $this->plugin->post_type->get_post_types( 'labels' );
-		if ( ! empty( $post_types ) ) {
-			$show_post_types = true;
-			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+		$desc            = '';
+		$style           = '';
+		$show_post_types = true;
+		$post_type       = $instance['post_type'] ? (string) $instance['post_type'] : 'post';
+		$post_types      = cptda_get_public_post_types();
+
+		if ( ! in_array( $post_type, array_keys( $post_types ) ) ) {
+			// Post type doesnt exist
+			$post_types[ $post_type ] = $post_type;
+			$style = ' style="border-color: red;"';
+			$desc = __( "<strong>Note</strong>: The selected post type doesn't exist anymore", 'custom-post-type-date-archives' );
+		}
+
+		if ( 1 === count( $post_types ) && in_array( 'post', $post_types ) ) {
+			$show_post_types = false;
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-widget.php';

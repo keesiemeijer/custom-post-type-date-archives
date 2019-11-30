@@ -56,12 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function cptda_get_archives( $args = '' ) {
 	global $wpdb, $wp_locale;
 
-	$defaults = array(
-		'type' => 'monthly', 'limit' => '', 'offset' => '',
-		'format' => 'html', 'before' => '',
-		'after' => '', 'show_post_count' => false,
-		'echo' => 1, 'order' => 'DESC', 'post_type' => ''
-	);
+	$defaults = cptda_get_archive_settings();
 
 	$r = wp_parse_args( $args, $defaults );
 	$r = cptda_sanitize_archive_settings( $r );
@@ -74,6 +69,7 @@ function cptda_get_archives( $args = '' ) {
 	$types     = cptda_get_post_types();
 	$types[]   = 'post';
 
+	// Check if the post type has archives we can link to.
 	if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 		return '';
 	}

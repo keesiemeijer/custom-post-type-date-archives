@@ -8,13 +8,16 @@
 	<label for="<?php echo $this->get_field_id( 'post_type' ); ?>">
 		<?php _e( 'Post Type:', 'custom-post-type-date-archives' ); ?>
 	</label> 
-	<select name="<?php echo $this->get_field_name( 'post_type' ); ?>" id="<?php echo $this->get_field_id( 'post_type' ); ?>" class="widefat">
+	<select name="<?php echo $this->get_field_name( 'post_type' ); ?>" id="<?php echo $this->get_field_id( 'post_type' ); ?>" class="widefat" <?php echo $style; ?>>
 		<?php foreach ( $post_types as $name => $label ) : ?>
 		<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $post_type, $name ); ?>>
 			<?php echo $label; ?>
 		</option>
 		<?php endforeach; ?>
 	</select>
+	<?php if($desc) : ?>
+		<span class="description"><?php echo $desc; ?></span>
+	<?php endif; ?>
 </p>
 <?php endif; ?>
 

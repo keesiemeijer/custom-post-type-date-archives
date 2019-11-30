@@ -1,5 +1,8 @@
-const { __ } = wp.i18n;
-const { SelectControl } = wp.components;
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
+import { SelectControl } from '@wordpress/components';
 
 const options = [{
 	label: __('all posts'),

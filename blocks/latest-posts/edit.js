@@ -7,14 +7,18 @@ import { isUndefined, debounce } from 'lodash';
 /**
  * WordPress dependencies
  */
-const { __ } = wp.i18n;
-const { Disabled, PanelBody, ToggleControl, RangeControl, TextareaControl, BaseControl } = wp.components;
-const { Component } = wp.element;
-const { withSelect } = wp.data;
-const { InspectorControls } = wp.blockEditor;
+import { __ } from '@wordpress/i18n';
+import { Disabled, PanelBody, ToggleControl, RangeControl, TextareaControl, BaseControl } from '@wordpress/components';
+import { Component } from '@wordpress/element';
+import { withSelect } from '@wordpress/data';
+import { InspectorControls } from '@wordpress/block-editor';
 
+/**
+ * Internal dependencies
+ */
+import { hasDateArchive } from '../components/post-types.js';
 import CPTDA_ServerSideRender from '../components/server-side-render';
-import PostTypePanel from '../components/post-types.js';
+import PostTypeSelect from '../components/post-types.js';
 import IncludePosts from '../components/include-posts.js';
 
 let instances = 0;
@@ -36,8 +40,10 @@ class LatestPostsEdit extends Component {
 		let { post_type } = attributes;
 
 		if (!post_type) {
+			const current = hasDateArchive(postType) ? postType : 'post';
+
 			// Default to current post type
-			setAttributes({ post_type: postType })
+			setAttributes({ post_type: current })
 		}
 	}
 
@@ -70,9 +76,10 @@ class LatestPostsEdit extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Latest Posts Settings', 'custom-post-type-date-archives' ) }>
-					<PostTypePanel
+					<PostTypeSelect
 						postType={post_type}
 						onPostTypeChange={ ( value ) => setAttributes( { post_type: value } ) }
+						dateArchives={false}
 					/>
 					<RangeControl
 							label={ __( 'Number of posts', 'custom-post-type-date-archives' ) }
@@ -111,7 +118,9 @@ class LatestPostsEdit extends Component {
 						block='recent-posts'
 						title='Custom Post Type Latest Posts'
 						defaultClass='wp-block-latest-posts'
-						attributes={ this.props.attributes }					/>
+						dateArchives={false}
+						attributes={ this.props.attributes }
+					/>
 				</Disabled>
 			</Fragment>
 		);
