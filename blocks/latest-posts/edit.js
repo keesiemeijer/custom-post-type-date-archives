@@ -16,7 +16,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 /**
  * Internal dependencies
  */
-import { hasDateArchive } from '../components/post-types.js';
+import { isPublicPostType } from '../components/post-types.js';
 import CPTDA_ServerSideRender from '../components/server-side-render';
 import PostTypeSelect from '../components/post-types.js';
 import IncludePosts from '../components/include-posts.js';
@@ -40,7 +40,7 @@ class LatestPostsEdit extends Component {
 		let { post_type } = attributes;
 
 		if (!post_type) {
-			const current = hasDateArchive(postType) ? postType : 'post';
+			const current = isPublicPostType(postType) ? postType : 'post';
 
 			// Default to current post type
 			setAttributes({ post_type: current })

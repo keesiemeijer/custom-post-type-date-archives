@@ -59,7 +59,7 @@ export class CPTDA_ServerSideRender extends Component {
 		if (null !== this.state.response) {
 			this.setState({ response: null });
 		}
-		const { block, attributes = null, urlQueryArgs = {} } = props;
+
 		const path = rendererPath(props);
 
 		// Store the latest fetch request so that when we process it, we can

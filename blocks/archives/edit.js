@@ -16,7 +16,7 @@ import { InspectorControls } from '@wordpress/block-editor';
  * Internal dependencies
  */
 import CPTDA_ServerSideRender from '../components/server-side-render';
-import { hasDateArchive } from '../components/post-types.js';
+import { isDateArchivePostType } from '../components/post-types.js';
 import PostTypeSelect from '../components/post-types.js';
 import QueryPanel from '../components/query-panel.js';
 
@@ -31,7 +31,7 @@ class ArchivesEdit extends Component {
 		let current;
 
 		if (!post_type) {
-			current = hasDateArchive(postType) ? postType : 'post';
+			current = isDateArchivePostType(postType) ? postType : 'post';
 
 			// Default to current post type
 			setAttributes({ post_type: current })

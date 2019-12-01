@@ -17,7 +17,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 /**
  * Internal dependencies
  */
-import {hasDateArchive} from '../components/post-types.js';
+import {isDateArchivePostType} from '../components/post-types.js';
 import CPTDA_ServerSideRender from '../components/server-side-render';
 import PostTypeSelect from '../components/post-types.js';
 
@@ -38,7 +38,7 @@ class CalendarEdit extends Component {
 		let { post_type } = attributes;
 
 		if (!post_type) {
-			const current = hasDateArchive(postType) ? postType : 'post';
+			const current = isDateArchivePostType(postType) ? postType : 'post';
 
 			// Default to current post type
 			setAttributes({ post_type: current })

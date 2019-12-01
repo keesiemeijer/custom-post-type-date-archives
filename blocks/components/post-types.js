@@ -17,7 +17,7 @@ export function getPublicPostTypes() {
 	return get(window, 'cptda_data.public', {});
 }
 
-export function hasDateArchive(postType) {
+export function isDateArchivePostType(postType) {
 	const postTypes = Object.keys(getDateArchivePostTypes());
 	if (('post' === postType) || (-1 !== postTypes.indexOf(postType))) {
 		return true;
@@ -26,14 +26,13 @@ export function hasDateArchive(postType) {
 	return false;
 }
 
-export function is_public_post_type(postType) {
+export function isPublicPostType(postType) {
 	const postTypes = Object.keys(getPublicPostTypes());
 	if (-1 !== postTypes.indexOf(postType)) {
 		return true;
 	}
 
 	return false;
-
 }
 
 export function getPostTypeOptions(invalidPostType = '', dateArchives = true) {
@@ -81,12 +80,12 @@ export default function PostTypeSelect({
 	let help = '';
 	let invalidPostType = '';
 
-	if (dateArchives && !hasDateArchive(postType)) {
+	if (dateArchives && !isDateArchivePostType(postType)) {
 		error = 'cptda-select-error';
 		help = sprintf(__("The post type %s doesn't exist or doesn't have date archives.", 'custom-post-type-date-archives'), postType);
 		help += ' ' + __('Please select another post type', 'custom-post-type-date-archives');
 		invalidPostType = postType;
-	} else if (!dateArchives && !is_public_post_type(postType)) {
+	} else if (!dateArchives && !isPublicPostType(postType)) {
 		error = 'cptda-select-error';
 		help = sprintf(__("The post type %s doesn't exist.", 'custom-post-type-date-archives'), postType);
 		help += ' ' + __('Please select another post type', 'custom-post-type-date-archives');
