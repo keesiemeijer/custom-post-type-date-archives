@@ -26,6 +26,10 @@ add_action( 'wp_loaded', 'cptda_block_editor_init', 20 );
  * @since 2.6.2
  */
 function cptda_block_editor_init() {
+	if ( ! function_exists( '\register_block_type' ) ) {
+		return;
+	}
+
 	// automatically load dependencies and version
 	$asset_file = include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/assets/js/blocks/index.asset.php';
 
@@ -240,12 +244,8 @@ function cptda_render_block_recent_posts( $args ) {
 	 */
 	$query_args = apply_filters( 'cptda_block_latest_posts_args', $query_args );
 
-	$recent_posts = get_posts( $query_args );
-
-	$args['class']        = 'wp-block-latest-posts';
-	$args['title']        = '';
-	$args['before_title'] = '';
-	$args['after_title']  = '';
+	$recent_posts  = get_posts( $query_args );
+	$args['class'] = 'wp-block-latest-posts';
 
 	return cptda_get_recent_posts_html( $recent_posts, $args );
 }
@@ -270,10 +270,6 @@ function cptda_render_block_archives( $args ) {
 	 */
 	$args = apply_filters( 'cptda_block_archives_args', $args );
 
-	$args['class']        = 'wp-block-archives';
-	$args['title']        = '';
-	$args['before_title'] = '';
-	$args['after_title']  = '';
-
+	$args['class'] = 'wp-block-archives';
 	return cptda_get_archives_html( $args );
 }
