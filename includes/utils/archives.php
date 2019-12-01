@@ -78,12 +78,12 @@ function cptda_sanitize_archive_settings( $args ) {
 	$defaults = cptda_get_archive_settings();
 	$args     = array_merge( $defaults, $args );
 
-	$args['post_type']       = sanitize_key( trim( (string) $args['post_type'] ) );
+	$args['post_type']       = sanitize_key( strip_tags( trim( (string) $args['post_type'] ) ) );
+	$args['order']           = strtoupper( strip_tags( trim( (string) $args['order'] ) ) );
 	$args['type']            = strip_tags( trim( (string) $args['type'] ) );
+	$args['format']          = strip_tags( trim( (string) $args['format'] ) );
 	$args['limit']           = absint( $args['limit'] );
 	$args['offset']          = absint( $args['offset'] );
-	$args['order']           = strtoupper( strip_tags( trim( (string) $args['order'] ) ) );
-	$args['format']          = strip_tags( trim( (string) $args['format'] ) );
 	$args['show_post_count'] = wp_validate_boolean( $args['show_post_count'] );
 	$args['echo']            = wp_validate_boolean( $args['echo'] );
 	$args['before']          = trim( (string) $args['before'] ) ;
@@ -163,7 +163,6 @@ function cptda_get_archives_html( $args ) {
 	/* If the archives should be shown in a <select> drop-down. */
 	if ( 'option' === $args['format'] ) {
 		$label       = cptda_get_archive_label( $args['type'] );
-		// $label_title = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
 		$label_title = $title ? $title  : __( 'Archives', 'custom-post-type-date-archives' );
 
 		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
@@ -178,7 +177,6 @@ function cptda_get_archives_html( $args ) {
 
 	} elseif ( 'html' === $args['format'] ) {
 		$class = $class ? ' class="' . $class . '"' : '';
-		// $html .= "{$title}<ul{$class}>\n{$archives}</ul>\n";
 		$html .= "<ul{$class}>\n{$archives}</ul>\n";
 	} else {
 

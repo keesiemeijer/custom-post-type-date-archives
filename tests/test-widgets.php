@@ -2,6 +2,8 @@
 
 /**
  * Tests for public plugin functions
+ *
+ * @group Widget
  */
 class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 
@@ -102,7 +104,7 @@ EOF;
 		$this->assertContains( '</section>', $output );
 
 		$expected = <<<EOF
-<section><h2>Archives</h2><div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
+<section>\n<h2>Archives</h2>\n<div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
 EOF;
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
 	}

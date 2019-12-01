@@ -64,8 +64,9 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 
 		$args  = $this->get_instance_settings( $instance );
 		$title = ( ! empty( $args['title'] ) ) ? $args['title'] : __( 'Recent Posts' );
-		$title = apply_filters( 'widget_title', $title, $args, $this->id_base );
 
+		/** This filter is documented in wp-includes/default-widgets.php */
+		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
 		if ( $title ) {
 			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
 		}
@@ -95,19 +96,13 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @return array Updated settings to save.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance              = $old_instance;
-		$new_instance          = cptda_validate_recent_posts_settings( $new_instance );
-		$instance['title']     = sanitize_text_field( (string) $new_instance['title'] );
-		$instance['message']   = sanitize_text_field( (string) $new_instance['message'] );
-		$instance['number']    = (int) $new_instance['number'];
-		$instance['show_date'] = (bool) $new_instance['show_date'];
-		$instance['include']   = (string) $new_instance['include'];
-		$instance['post_type'] = (string) $new_instance['post_type'];
+		$instance = $this->get_instance_settings( $new_instance );
+		$instance = cptda_validate_recent_posts_settings( $instance );
 
-		// Back compat.
-		unset( $instance['status_future'] );
+		// Note: the message argument is sanitized with wp_kses_post().
+		$instance['title'] = sanitize_text_field( (string) $instance['title'] );
 
-		return $instance;
+		return array_merge( $old_instance, $instance );
 	}
 
 	/**
@@ -157,14 +152,15 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @return @return array All Recent Posts widget instance settings with back compat applied.
 	 */
 	function get_instance_settings( $instance ) {
-
 		// 'status_future' was removed and replaced by 'include'
 		if ( isset( $instance['status_future'] ) && ! isset( $instance['include'] ) ) {
 			$instance['include'] = $instance['status_future'] ? 'future' : 'all';
 		}
 
+		unset( $instance['status_future'] );
+
 		$default = cptda_get_recent_posts_settings();
-		$default['title'] = __('Recent Posts', 'custom-post-type-date-archives');
+		$default['title'] = __( 'Recent Posts', 'custom-post-type-date-archives' );
 
 		return wp_parse_args( (array) $instance, $default );
 	}

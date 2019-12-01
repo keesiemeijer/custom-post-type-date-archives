@@ -64,7 +64,7 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 	$args['number']       = absint( $args['number'] );
 	$args['show_date']    = wp_validate_boolean( $args['show_date'] );
 	$args['include']      = strip_tags( trim( (string) $args['include'] ) );
-	$args['post_type']    = sanitize_key( (string) $args['post_type'] );
+	$args['post_type']    = sanitize_key( strip_tags( (string) $args['post_type'] ) );
 
 	return $args;
 }

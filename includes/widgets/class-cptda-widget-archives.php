@@ -46,6 +46,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		/* Set the $widget_args for wp_get_archives() to the $instance array. */
 		$args = wp_parse_args( $instance, $this->get_defaults() );
 
+		/** This filter is documented in wp-includes/default-widgets.php */
 		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
 		if ( $title ) {
 			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
@@ -74,14 +75,13 @@ class CPTDA_Widget_Archives extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$new_instance  = array_merge( $this->get_defaults(), $new_instance );
-		$new_instance  = cptda_validate_archive_settings( $new_instance );
-		$instance      = array_merge( $old_instance, $new_instance );
+		$instance  = array_merge( $this->get_defaults(), $new_instance );
+		$instance  = cptda_validate_archive_settings( $instance );
 
-		$instance['title'] = sanitize_text_field( (string) $new_instance['title'] );
+		$instance['title'] = sanitize_text_field( (string) $instance['title'] );
 		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 5;
 
-		return $instance;
+		return array_merge( $old_instance, $instance );
 	}
 
 	public function form( $instance ) {

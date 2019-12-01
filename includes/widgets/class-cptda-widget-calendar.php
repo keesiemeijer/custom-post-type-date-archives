@@ -56,17 +56,15 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	}
 
 	public function widget( $widget_args, $instance ) {
-
-		/* Set the $widget_args for wp_get_archives() to the $instance array. */
-		$args = wp_parse_args( $instance, $this->defaults );
+		$args = array_merge( $this->defaults, $instance );
 
 		/** This filter is documented in wp-includes/default-widgets.php */
-		$title = apply_filters( 'widget_title', empty( $args['title'] ) ? '' : $args['title'], $args, $this->id_base );
-
-		echo $widget_args['before_widget'];
+		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
 		if ( $title ) {
-			echo $widget_args['before_title'] . $title . $widget_args['after_title'];
+			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
 		}
+
+		echo $widget_args['before_widget'] . "\n{$title}\n";
 
 		if ( 0 === self::$instance ) {
 			echo '<div id="calendar_wrap" class="calendar_wrap">';
@@ -83,13 +81,12 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance     = $old_instance;
-		$new_instance = array_merge( $this->defaults, $new_instance );
+		$instance = array_merge( $this->defaults, $new_instance );
 
-		$instance['title']     = strip_tags( $new_instance['title'] );
-		$instance['post_type'] = strip_tags( $new_instance['post_type'] );
+		$instance['title']     = sanitize_text_field( (string) $instance['title'] );
+		$instance['post_type'] = strip_tags( trim( $instance['post_type'] ) );
 
-		return $instance;
+		return array_merge( $old_instance, $instance );
 	}
 
 	public function form( $instance ) {
