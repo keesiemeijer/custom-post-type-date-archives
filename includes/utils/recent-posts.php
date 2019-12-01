@@ -23,9 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function cptda_get_recent_posts_settings() {
 	return array(
-		'title'         => '',
-		'before_title'  => '',
-		'after_title'   => '',
 		'message'       => '',
 		'number'        => 5,
 		'show_date'     => false,
@@ -63,9 +60,6 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
 
-	$args['title']        = strip_tags( trim( (string) $args['title'] ) );
-	$args['before_title'] = trim( (string) $args['before_title'] ) ;
-	$args['after_title']  = trim( (string) $args['after_title'] );
 	$args['message']      = wp_kses_post( (string) $args['message'] );
 	$args['number']       = absint( $args['number'] );
 	$args['show_date']    = wp_validate_boolean( $args['show_date'] );
@@ -113,17 +107,9 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$is_block = false;
 	$html     = '';
 
-	$title = '';
-	if ( $args['title'] ) {
-		$title = $args['before_title'] . $args['title'] . $args['after_title'];
-	}
-
-	$no_posts_found = $message ? $title . $message : '';
-
 	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;
 		$block_class = 'cptda-block-latest-posts';
-		$title    = '';
 
 		// Add extra classes from the editor block
 		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
@@ -131,11 +117,11 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 		$class .= $args['show_date'] ? ' has-dates' : '';
 
 		$no_posts_class = "{$block_class} cptda-no-posts";
-		$no_posts_found = $message ? "<div class=\"{$no_posts_class}\">\n{$message}\n</div>\n" : '';
+		$message = $message ? "<div class=\"{$no_posts_class}\">\n{$message}\n</div>\n" : '';
 	}
 
-	if ( ! $recent_posts ) {
-		return $no_posts_found;
+	if ( empty( $recent_posts ) ) {
+		return $message;
 	}
 
 	ob_start();
@@ -148,12 +134,11 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$recent_posts_html = trim($recent_posts_html);
 
 	if ( ! $recent_posts_html ) {
-		return $no_posts_found;
+		return $message;
 	}
 
-	$title = $title ? "{$title}\n" : '';
 	$class = $is_block ? " class=\"{$class}\"" : '';
-	return "{$title}<ul{$class}>\n{$recent_posts_html}\n</ul>";
+	return "<ul{$class}>\n{$recent_posts_html}\n</ul>";
 }
 
 /**

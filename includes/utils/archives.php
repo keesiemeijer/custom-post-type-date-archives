@@ -33,9 +33,6 @@ function cptda_get_archive_settings() {
 		'echo'            => true,
 		'before'          => '',
 		'after'           => '',
-		'title'           => '',
-		'before_title'    => '',
-		'after_title'     => '',
 	);
 }
 
@@ -91,9 +88,6 @@ function cptda_sanitize_archive_settings( $args ) {
 	$args['echo']            = wp_validate_boolean( $args['echo'] );
 	$args['before']          = trim( (string) $args['before'] ) ;
 	$args['after']           = trim( (string) $args['after'] );
-	$args['title']           = strip_tags( trim( (string) $args['title'] ) );
-	$args['before_title']    = trim( (string) $args['before_title'] ) ;
-	$args['after_title']     = trim( (string) $args['after_title'] );
 
 	return $args;
 }
@@ -107,9 +101,8 @@ function cptda_sanitize_archive_settings( $args ) {
  * @param string $context Set context to 'date_archives' to only allow date archive post types.
  * @return array Array with validated archives settings.
  */
-function cptda_validate_archive_settings( $args, $context = '' ) {
-	$date_archives = ( 'date_archives' === $context );
-	$args          = cptda_sanitize_archive_settings( $args );
+function cptda_validate_archive_settings( $args) {
+	$args = cptda_sanitize_archive_settings( $args );
 
 	$type   = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
 	$format = array( 'custom', 'html', 'option', 'object' );
@@ -139,15 +132,11 @@ function cptda_get_archives_html( $args ) {
 	$args['echo']   = false;
 	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
 
-	$title = $args['title'];
-	if ( ! empty( $title ) ) {
-		$title = $args['before_title'] . $args['title'] . $args['after_title'];
-	}
+	$title = isset( $args['title'] ) ? trim( $args['title'] ) : '';
+	$class = isset( $args['class'] ) ? trim( $args['class'] ) : '';
 
-	$class = isset( $args['class'] ) ? $args['class'] : '';
 	if ( $class && ( 'wp-block-archives' === $class ) ) {
 		$is_block = true;
-		$title = '';
 
 		// Add extra classes from the editor block
 		$archive_type = ( 'option' === $args['format'] ) ? 'dropdown' : 'list';
@@ -174,10 +163,12 @@ function cptda_get_archives_html( $args ) {
 	/* If the archives should be shown in a <select> drop-down. */
 	if ( 'option' === $args['format'] ) {
 		$label       = cptda_get_archive_label( $args['type'] );
-		$label_title = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
+		// $label_title = $args['title'] ? $args['title'] : __( 'Archives', 'custom-post-type-date-archives' );
+		$label_title = $title ? $title  : __( 'Archives', 'custom-post-type-date-archives' );
+
 		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
 
-		$html .= $title;
+		// $html .= $title;
 		$html .= ( $is_block ) ? "<div class=\"{$class}\">\n" : '';
 		$html .= '<label class="screen-reader-text" for="' . $dropdown_id . '">' . $label_title . '</label>';
 		$html .= '<select id="' . $dropdown_id . '" name="archive-dropdown"';
@@ -187,7 +178,8 @@ function cptda_get_archives_html( $args ) {
 
 	} elseif ( 'html' === $args['format'] ) {
 		$class = $class ? ' class="' . $class . '"' : '';
-		$html .= "{$title}<ul{$class}>\n{$archives}</ul>\n";
+		// $html .= "{$title}<ul{$class}>\n{$archives}</ul>\n";
+		$html .= "<ul{$class}>\n{$archives}</ul>\n";
 	} else {
 
 		$html .= $archives;

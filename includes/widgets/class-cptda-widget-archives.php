@@ -46,10 +46,11 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		/* Set the $widget_args for wp_get_archives() to the $instance array. */
 		$args = wp_parse_args( $instance, $this->get_defaults() );
 
-		$args['title'] = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
+		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
+		if ( $title ) {
+			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
+		}
 
-		$args['before_title'] = $widget_args['before_title'];
-		$args['after_title']  = $widget_args['after_title'];
 		$args['cpda_widget_archives'] =  true;
 
 		if ( 'option' === $args['format'] ) {
@@ -60,7 +61,7 @@ class CPTDA_Widget_Archives extends WP_Widget {
 			$args = apply_filters( 'widget_archives_args', $args, $instance );
 		}
 
-		$args = cptda_validate_archive_settings( $args, 'date_archives' );
+		$args = cptda_validate_archive_settings( $args );
 
 		/* Overwrite the $echo argument and set it to false. */
 		$args['echo'] = false;
@@ -68,14 +69,16 @@ class CPTDA_Widget_Archives extends WP_Widget {
 		$archives = cptda_get_archives_html( $args );
 
 		if ( $archives ) {
-			echo $widget_args['before_widget'] . $archives . $widget_args['after_widget'];
+			echo $widget_args['before_widget'] . $title . $archives . $widget_args['after_widget'];
 		}
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$new_instance  = cptda_validate_archive_settings( $new_instance, 'date_archives' );
-		$instance      = array_merge( $old_instance, $new_instance);
+		$new_instance  = array_merge( $this->get_defaults(), $new_instance );
+		$new_instance  = cptda_validate_archive_settings( $new_instance );
+		$instance      = array_merge( $old_instance, $new_instance );
 
+		$instance['title'] = sanitize_text_field( (string) $new_instance['title'] );
 		$instance['limit'] = $instance['limit'] ? $instance['limit'] : 5;
 
 		return $instance;

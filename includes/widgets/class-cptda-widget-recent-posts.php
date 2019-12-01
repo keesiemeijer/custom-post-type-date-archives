@@ -64,12 +64,11 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 
 		$args  = $this->get_instance_settings( $instance );
 		$title = ( ! empty( $args['title'] ) ) ? $args['title'] : __( 'Recent Posts' );
+		$title = apply_filters( 'widget_title', $title, $args, $this->id_base );
 
-		$args['before_title'] = $widget_args['before_title'];
-		$args['after_title'] = $widget_args['after_title'];
-
-		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
-		$args['title'] = apply_filters( 'widget_title', $title, $args, $this->id_base );
+		if ( $title ) {
+			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
+		}
 
 		$query_args = cptda_get_recent_posts_query( $args );
 
@@ -80,7 +79,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$widget       = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		if ( $widget ) {
-			echo $widget_args['before_widget'] . $widget . $widget_args['after_widget'];
+			echo $widget_args['before_widget'] . $title . $widget . $widget_args['after_widget'];
 		}
 	}
 
@@ -120,7 +119,6 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @param array $instance Current settings.
 	 */
 	public function form( $instance ) {
-
 		$instance  = $this->get_instance_settings( $instance );
 
 		$title     = sanitize_text_field( (string) $instance['title'] );
@@ -166,6 +164,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		}
 
 		$default = cptda_get_recent_posts_settings();
+		$default['title'] = __('Recent Posts', 'custom-post-type-date-archives');
 
 		return wp_parse_args( (array) $instance, $default );
 	}
