@@ -1,6 +1,8 @@
 <?php
 /**
  * Tests for public plugin functions
+ *
+ * @group Functions
  */
 class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 
@@ -237,7 +239,6 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 * @expectedDeprecated cptda_get_date_archive_cpt
 	 */
 	function test_empty_output() {
-
 		$this->init();
 		$posts = $this->create_posts();
 		$_posts = get_posts( 'post_type=cpt&posts_per_page=-1' );
@@ -247,6 +248,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$day   = get_the_date( 'j', $_posts[0] );
 
 		$this->go_to( '?post_type=cpt&year=' . $year  );
+		global $wp_query;
 
 		if ( ! defined( 'WP_DEBUG' ) ) {
 			define( 'WP_DEBUG', true );
@@ -259,11 +261,13 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$post_type  = cptda_get_post_types();
 		$is_posts   = cptda_is_date_post_type( 'cpt' );
 		$is_valid   = cptda_is_valid_post_type( 'cpt' );
+		$public     = cptda_get_public_post_types();
 		$is_date    = cptda_is_cpt_date();
 		$post_type  = cptda_get_queried_date_archive_post_type();
 		$stati      = cptda_get_cpt_date_archive_stati( 'cpt' );
 		$deprecated = cptda_get_date_archive_cpt();
 		$deprecated = cptda_get_admin_post_types();
+		$base       = cptda_get_post_type_base( 'cpt' );
 		$archives   = cptda_get_archives( 'post_type=cpt&echo=0' );
 		$date       = cptda_get_calendar_date();
 		$adjacent   = cptda_get_adjacent_archive_date( 'cpt', $date );
@@ -271,22 +275,36 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$calendar   = cptda_get_calendar( 'cpt', true, false );
 		$_year      = cptda_get_year_link( $year, 'cpt' );
 		$_month     = cptda_get_month_link( $year, $month, 'cpt' );
-		$_day       = cptda_get_month_link( $year, $month, $day, 'cpt' );
+		$_day       = cptda_get_day_link( $year, $month, $day, 'cpt' );
 		$_year      = cptda_get_year_archive_link( $year, 'cpt' );
 		$_month     = cptda_get_month_archive_link( $year, $month, 'cpt' );
 		$_day       = cptda_get_day_archive_link( $year, $month, $day, 'cpt' );
 		$arch_args  = cptda_get_archive_settings();
+		$label      = cptda_get_archive_label( '' );
 		$sanitize   = cptda_sanitize_archive_settings( $arch_args );
 		$validate   = cptda_validate_archive_settings( $arch_args );
 		$arch_html  = cptda_get_archives_html( $arch_args );
 		$rp_args    = cptda_get_recent_posts_settings();
 		$sanitize   = cptda_sanitize_recent_posts_settings( $rp_args );
+		$validate   = cptda_validate_recent_posts_settings( $rp_args );
 		$html       = cptda_get_recent_posts_html( $posts, $rp_args );
 		$query      = cptda_get_recent_posts_query( $rp_args );
+		$types      = cptda_get_recent_posts_date_query_types();
+		// $block   = cptda_block_editor_init();
+		// $block   = cptda_register_blocks();
+		$block      = cptda_render_block_calendar( $date );
+		$block      = cptda_render_block_recent_posts( $rp_args );
+		$block      = cptda_render_block_archives( $arch_args );
+		$classes    = cptda_get_block_classes( $arch_args, 'wp-block' );
+		$deactivate = cptda_deactivate_plugin();
+		$widgets    = cptda_register_widgets();
+		$template   = cptda_date_template_include( 'index.php' );
+		$ppp        = cptda_pre_get_posts( $wp_query );
+		$_404       = cptda_handle_404();
 
 		$out = ob_get_clean();
 
-		$this->assertEmpty( $out );
+		$this->assertSame( '', trim( $out )  );
 	}
 
 	function add_future_status( $status, $post_type ) {
