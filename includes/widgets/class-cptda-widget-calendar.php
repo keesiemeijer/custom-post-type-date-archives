@@ -102,7 +102,7 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 		}
 
 		$show_post_types = true;
-		if ( 1 === count( $post_types ) && in_array( 'post', $post_types ) ) {
+		if ( 1 === count( $post_types ) && in_array( 'post', array_keys( $post_types ) ) ) {
 			$show_post_types = false;
 		}
 
