@@ -163,9 +163,8 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		$args = apply_filters( 'cptda_rest_api_archives_args', $args, $request );
 		$args = cptda_validate_archive_settings( $args );
 
-		// Unfiltarable arguments
+		// Unfiltarable argument
 		$args['post_type'] = $post_type;
-		$args['echo'] = false;
 
 		$rendered = $this->get_archives( $args );
 
