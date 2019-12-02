@@ -189,6 +189,10 @@ function cptda_register_blocks() {
 function cptda_render_block_calendar( $args ) {
 	global $monthnum, $year;
 
+	if ( ! isset( $args['post_type'] ) ) {
+		return '';
+	}
+
 	$previous_monthnum = $monthnum;
 	$previous_year     = $year;
 	$post_type         = $args['post_type'];
