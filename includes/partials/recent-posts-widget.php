@@ -36,7 +36,7 @@
 		<?php _e( 'Include Posts:', 'custom-post-type-date-archives' ); ?>
 	</label> 
 	<select name="<?php echo $this->get_field_name( 'include' ); ?>" id="<?php echo $this->get_field_id( 'include' ); ?>" class="widefat">
-		<?php foreach ( $this->include as $name => $label ) : ?>
+		<?php foreach ( $included as $name => $label ) : ?>
 		<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $include, $name ); ?>>
 			<?php echo $label; ?>
 		</option>
