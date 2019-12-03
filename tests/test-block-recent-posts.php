@@ -17,6 +17,7 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test recent posts block output.
+	 * @group oo
 	 */
 	function test_recent_posts_block_in_post_content() {
 		global $wp_locale, $wp_version;

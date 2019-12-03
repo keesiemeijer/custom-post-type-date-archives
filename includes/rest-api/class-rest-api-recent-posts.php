@@ -162,7 +162,7 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 		$args['post_type'] = $post_type;
 
 		$query_args   = cptda_get_recent_posts_query( $args );
-		$recent_posts = get_posts( $query_args );
+		$recent_posts = cptda_get_recent_posts( $query_args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		$tags = wp_kses_allowed_html( 'post' );

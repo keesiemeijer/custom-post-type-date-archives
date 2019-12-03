@@ -78,7 +78,6 @@ function cptda_sanitize_recent_posts_settings( $args ) {
  * @return array Validated recent posts arguments.
  */
 function cptda_validate_recent_posts_settings( $args ) {
-	$plugin = cptda_date_archives();
 	$args   = cptda_sanitize_recent_posts_settings( $args );
 
 	$args['number'] = $args['number'] ? $args['number'] : 5;
@@ -89,6 +88,29 @@ function cptda_validate_recent_posts_settings( $args ) {
 	}
 
 	return $args;
+}
+
+/**
+ * Get recent posts.
+ *
+ * @since 2.6.2
+ *
+ * @param array $args Query args for get_posts().
+ * @return array Array with post objects.
+ */
+function cptda_get_recent_posts( $args ) {
+	$recent_posts = array();
+
+	if ( ! isset( $args['post_type'] ) ) {
+		return $recent_posts;
+	}
+
+	$post_types = cptda_get_public_post_types();
+	if ( in_array( $args['post_type'], array_keys( $post_types ) ) ) {
+		$recent_posts = get_posts( $args );
+	}
+
+	return $recent_posts;
 }
 
 /**

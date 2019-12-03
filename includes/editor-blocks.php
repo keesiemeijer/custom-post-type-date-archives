@@ -238,8 +238,8 @@ function cptda_render_block_calendar( $args ) {
  * @return string Recent posts block HTML.
  */
 function cptda_render_block_recent_posts( $args ) {
-	$args       = cptda_validate_recent_posts_settings( $args );
-	$query_args = cptda_get_recent_posts_query( $args );
+	$args         = cptda_validate_recent_posts_settings( $args );
+	$query_args   = cptda_get_recent_posts_query( $args );
 
 	/**
 	 * Filter the arguments for the Recent Posts block before rendering.
@@ -248,9 +248,9 @@ function cptda_render_block_recent_posts( $args ) {
 	 *
 	 * @param array $query_args Array of arguments used to retrieve the recent posts.
 	 */
-	$query_args = apply_filters( 'cptda_block_latest_posts_args', $query_args );
+	$query_args   = apply_filters( 'cptda_block_latest_posts_args', $query_args );
 
-	$recent_posts  = get_posts( $query_args );
+	$recent_posts  = cptda_get_recent_posts( $query_args );
 	$args['class'] = 'wp-block-latest-posts';
 
 	return cptda_get_recent_posts_html( $recent_posts, $args );
