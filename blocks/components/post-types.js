@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import {get } from 'lodash';
+import { get } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -38,7 +38,7 @@ export function isPublicPostType(postType) {
 export function getPostTypeOptions(invalidPostType = '', dateArchives = true) {
 	const options = [];
 
-	// invalid post type
+	// Add invalid post type to options
 	if (invalidPostType.length) {
 		options.push({
 			label: invalidPostType,

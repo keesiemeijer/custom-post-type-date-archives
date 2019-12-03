@@ -101,18 +101,19 @@ function cptda_validate_recent_posts_settings( $args ) {
  * @return string Recent posts HTML.
  */
 function cptda_get_recent_posts_html( $recent_posts, $args ) {
+	$is_block = false;
+	$html     = '';
 	$args     = cptda_validate_recent_posts_settings( $args );
 	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
 	$class    = isset( $args['class'] ) ? $args['class'] : '';
-	$is_block = false;
-	$html     = '';
+	$class    = sanitize_html_class( $class );
 
 	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;
 		$block_class = 'cptda-block-latest-posts';
 
 		// Add extra classes from the editor block
-		$class = esc_attr( cptda_get_block_classes( $args, $class ) );
+		$class = cptda_get_block_classes( $args, $class );
 		$class .= " wp-block-latest-posts__list {$block_class}";
 		$class .= $args['show_date'] ? ' has-dates' : '';
 
@@ -125,13 +126,13 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	}
 
 	ob_start();
-	if($is_block) {
+	if ( $is_block ) {
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/latest-posts-block-display.php';
 	} else {
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
 	}
 	$recent_posts_html = ob_get_clean();
-	$recent_posts_html = trim($recent_posts_html);
+	$recent_posts_html = trim( $recent_posts_html );
 
 	if ( ! $recent_posts_html ) {
 		return $message;

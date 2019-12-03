@@ -101,7 +101,7 @@ function cptda_sanitize_archive_settings( $args ) {
  * @param string $context Set context to 'date_archives' to only allow date archive post types.
  * @return array Array with validated archives settings.
  */
-function cptda_validate_archive_settings( $args) {
+function cptda_validate_archive_settings( $args ) {
 	$args = cptda_sanitize_archive_settings( $args );
 
 	$type   = array( 'alpha', 'daily', 'monthly', 'postbypost', 'weekly', 'yearly' );
@@ -124,16 +124,16 @@ function cptda_validate_archive_settings( $args) {
  * @return string Archives HTML.
  */
 function cptda_get_archives_html( $args ) {
-	$args     = cptda_validate_archive_settings( $args );
 	$is_block = false;
 	$html     = '';
+	$args     = cptda_validate_archive_settings( $args );
+	$title    = isset( $args['title'] ) ? trim( $args['title'] ) : '';
+	$class    = isset( $args['class'] ) ? trim( $args['class'] ) : '';
+	$class    = sanitize_html_class( $class );
 
 	/* Override archive $args if needed. */
 	$args['echo']   = false;
 	$args['format'] = ( 'object' === $args['format'] ) ? 'html' : $args['format'];
-
-	$title = isset( $args['title'] ) ? trim( $args['title'] ) : '';
-	$class = isset( $args['class'] ) ? trim( $args['class'] ) : '';
 
 	if ( $class && ( 'wp-block-archives' === $class ) ) {
 		$is_block = true;
@@ -146,7 +146,6 @@ function cptda_get_archives_html( $args ) {
 		$class .= $type_class;
 	}
 
-	$class = esc_attr( trim( $class ) );
 
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : 0;
 	$paged = ( 1 < $paged ) ? $paged : 0;
@@ -167,7 +166,6 @@ function cptda_get_archives_html( $args ) {
 
 		$dropdown_id = esc_attr( uniqid( 'wp-block-archives-' ) );
 
-		// $html .= $title;
 		$html .= ( $is_block ) ? "<div class=\"{$class}\">\n" : '';
 		$html .= '<label class="screen-reader-text" for="' . $dropdown_id . '">' . $label_title . '</label>';
 		$html .= '<select id="' . $dropdown_id . '" name="archive-dropdown"';
