@@ -13,6 +13,41 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+/**
+ * Get calendar HTML
+ *
+ * Wraps the calendar inside a div for editor block calendars.
+ *
+ * @since 2.6.2
+ *
+ * @param array $args Calendar arguments.
+ * @return string Calendar HTML.
+ */
+function cptda_get_calendar_html( $args ) {
+	if ( ! isset( $args['post_type'] ) ) {
+		return '';
+	}
+
+	$calendar = cptda_get_calendar( $args['post_type'], true, false );
+	$calendar = is_string( $calendar ) ? trim( $calendar ) : '';
+
+	if ( empty( $calendar ) ) {
+		return '';
+	}
+
+	$class = isset( $args['class'] ) ? $args['class'] : '';
+	$class = sanitize_html_class( $class );
+
+	if ( $class && ( 'wp-block-calendar' === $class ) ) {
+		// Add extra classes from the editor block
+		$class = cptda_get_block_classes( $args, $class );
+		$class .= ' cptda-block-calendar';
+
+		$calendar = sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar );
+	}
+
+	return $calendar;
+}
 
 /**
  * Get the current calendar date.

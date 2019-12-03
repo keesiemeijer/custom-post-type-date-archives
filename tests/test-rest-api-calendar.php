@@ -127,6 +127,9 @@ class CPTDA_WP_Rest_API_Calendar extends CPTDA_UnitTestCase {
 		$this->assertContains( cptda_get_day_link( $year, 3, 20, 'cpt' ) , $data['rendered'] );
 		$this->assertContains( '>&laquo; Jan<', $data['rendered'] );
 
+		// editor block wrapper div
+		$this->assertNotContains( '<div', $data['rendered'] );
+
 		$date['month'] = 2;
 		$data = $this->rest_cptda_get_calendar( 'cpt', $date );
 		$this->assertContains( '>&laquo; Jan<', $data['rendered'] );

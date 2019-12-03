@@ -72,6 +72,8 @@ class CPTDA_UnitTestCase extends WP_UnitTestCase {
 	function get_back_compat_latest_posts_class() {
 		$version = $GLOBALS['wp_version'];
 		$class = 'wp-block-latest-posts';
+
+		// WordPress added a className in WP 5.3
 		if ( version_compare( $version , '5.2', '>' ) ) {
 			$class .= ' wp-block-latest-posts__list';
 		}

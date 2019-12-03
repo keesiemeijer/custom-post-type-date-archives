@@ -184,10 +184,19 @@ function cptda_register_blocks() {
  * @since 2.6.2
  *
  * @param array $args The block arguments.
- * @return string Returns the block content.
+ * @return string Calendar block HTML.
  */
 function cptda_render_block_calendar( $args ) {
 	global $monthnum, $year;
+
+	/**
+	 * Filter the arguments for the calendar block before rendering.
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param array $args Array of arguments used to retrieve the calendar.
+	 */
+	$args = apply_filters( 'cptda_block_calendar_args', $args );
 
 	if ( ! isset( $args['post_type'] ) ) {
 		return '';
@@ -195,7 +204,6 @@ function cptda_render_block_calendar( $args ) {
 
 	$previous_monthnum = $monthnum;
 	$previous_year     = $year;
-	$post_type         = $args['post_type'];
 
 	if ( isset( $args['month'] ) && isset( $args['year'] ) ) {
 		$permalink_structure = get_option( 'permalink_structure' );
@@ -210,14 +218,8 @@ function cptda_render_block_calendar( $args ) {
 		}
 	}
 
-	$class = cptda_get_block_classes( $args, 'wp-block-calendar' );
-	$class .= ' cptda-block-calendar';
-
-	$output = sprintf(
-		'<div class="%1$s">%2$s</div>',
-		esc_attr( $class ),
-		cptda_get_calendar( $post_type, true, false )
-	);
+	$args['class'] = 'wp-block-calendar';
+	$output = cptda_get_calendar_html( $args );
 
 	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 	$monthnum = $previous_monthnum;
@@ -233,14 +235,14 @@ function cptda_render_block_calendar( $args ) {
  * @since 2.6.2
  *
  * @param array $args The block arguments.
- * @return string Returns the block content.
+ * @return string Recent posts block HTML.
  */
 function cptda_render_block_recent_posts( $args ) {
 	$args       = cptda_validate_recent_posts_settings( $args );
 	$query_args = cptda_get_recent_posts_query( $args );
 
 	/**
-	 * Filters the arguments for the Recent Posts block before rendering.
+	 * Filter the arguments for the Recent Posts block before rendering.
 	 *
 	 * @since 2.6.2
 	 *
@@ -260,13 +262,13 @@ function cptda_render_block_recent_posts( $args ) {
  * @since 2.6.2
  *
  * @param array $args The block arguments.
- * @return string Returns archives block HTML.
+ * @return string Archives block HTML.
  */
 function cptda_render_block_archives( $args ) {
 	$args = cptda_validate_archive_settings( $args );
 
 	/**
-	 * Filters the arguments for the Archives block before rendering.
+	 * Filter the arguments for the Archives block before rendering.
 	 *
 	 * @since 2.6.2
 	 *
