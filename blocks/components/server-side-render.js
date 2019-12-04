@@ -11,6 +11,7 @@ import { Component, RawHTML } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import { Placeholder, Spinner } from '@wordpress/components';
+import { getPostTypeError } from '../components/post-types.js';
 
 export function rendererPath(props) {
 	const { block, defaultClass, attributes = null, urlQueryArgs = {} } = props;
@@ -125,15 +126,16 @@ CPTDA_ServerSideRender.defaultProps = {
 		</Placeholder>
 		)
 	},
-	ErrorResponsePlaceholder: ({ response, className, label, dateArchives }) => {
+	ErrorResponsePlaceholder: ({ response, className, label, dateArchives, attributes }) => {
+		const { post_type } = attributes;
+
 		// translators: %s: error message describing the problem
 		let errorMessage = sprintf(__('Error loading block: %s', 'custom-post-type-date-archives'), response.errorMsg);
 		if ('Invalid post type' === response.errorMsg) {
-			const archiveError = __("The post type for this block doesn't exist or doesn't have date archives.", 'custom-post-type-date-archives');
-			const typeError = __("The post type for this block doesn't exist.", 'custom-post-type-date-archives');
-			const error = dateArchives ? archiveError : typeError;
-
-			errorMessage = (<span>{errorMessage}<br/><br/>{error}</span>);
+			let error = getPostTypeError(post_type, dateArchives);
+			if (error.length) {
+				errorMessage = (<span>{errorMessage}<br/><br/>{error}</span>);
+			}
 		}
 
 		return (

@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { get } from 'lodash';
+import {get } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -33,6 +33,21 @@ export function isPublicPostType(postType) {
 	}
 
 	return false;
+}
+
+export function getPostTypeError(postType, dateArchives) {
+	if (!postType.length) {
+		return '';
+	}
+
+	let error = '';
+	if (!isPublicPostType(postType)) {
+		error = __("The post type for this block doesn't exist.", 'custom-post-type-date-archives');
+	} else if (dateArchives && !isDateArchivePostType(postType)) {
+		error = __("The post type for this block doesn't have date archives.", 'custom-post-type-date-archives');
+	}
+
+	return error;
 }
 
 export function getPostTypeOptions(invalidPostType = '', dateArchives = true) {
