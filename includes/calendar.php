@@ -74,15 +74,13 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	}
 
 	// Quick check. If we have no posts at all, abort!
-	if ( ! $posts ) {
-		$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE {$post_type_sql} LIMIT 1" );
-		if ( ! $gotsome ) {
-			$cache[ $key ] = '';
-			wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
-			$cache_data[ $key ] = '';
-			wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
-			return '';
-		}
+	$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE {$post_type_sql} LIMIT 1" );
+	if ( ! $gotsome ) {
+		$cache[ $key ] = '';
+		wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
+		$cache_data[ $key ] = '';
+		wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
+		return '';
 	}
 
 	// week_begins = 0 stands for Sunday
