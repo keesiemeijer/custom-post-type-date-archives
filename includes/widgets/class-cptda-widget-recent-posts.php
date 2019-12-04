@@ -1,16 +1,18 @@
 <?php
 /**
- * Widget API: WP_Widget_Recent_Posts class
+ * Recent posts widget
  *
- * @package WordPress
- * @subpackage Widgets
- * @since 4.4.0
+ * @package     Custom_Post_Type_Date_Archives
+ * @subpackage  Widget
+ * @copyright   Copyright (c) 2014, Kees Meijer
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.4.0
  */
 
 /**
  * Core class used to implement a Recent Posts widget.
  *
- * @since 2.8.0
+ * @since 2.4.0
  *
  * @see WP_Widget
  */
@@ -21,7 +23,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	/**
 	 * Sets up a new Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 */
 	public function __construct() {
@@ -47,7 +49,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	/**
 	 * Outputs the content for the current Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $args     Display arguments including 'before_title', 'after_title',
@@ -84,7 +86,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	/**
 	 * Handles updating the settings for the current Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $new_instance New settings for this instance as input by the user via
@@ -105,7 +107,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	/**
 	 * Outputs the settings form for the Recent Posts widget.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $instance Current settings.
@@ -145,6 +147,8 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * Gets instance settings.
 	 *
 	 * Merges instance settings with defaults and applies back compatibility.
+	 *
+	 * @since 2.5.0
 	 *
 	 * @param array $instance Settings for the current Recent Posts widget instance.
 	 * @return @return array All Recent Posts widget instance settings with back compat applied.

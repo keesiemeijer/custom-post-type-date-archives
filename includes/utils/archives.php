@@ -146,7 +146,6 @@ function cptda_get_archives_html( $args ) {
 		$class .= $type_class;
 	}
 
-
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : 0;
 	$paged = ( 1 < $paged ) ? $paged : 0;
 	if ( $paged ) {

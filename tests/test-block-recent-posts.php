@@ -17,7 +17,6 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test recent posts block output.
-	 * @group oo
 	 */
 	function test_recent_posts_block_in_post_content() {
 		global $wp_locale, $wp_version;
@@ -49,9 +48,6 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		);
 
 		$recent_posts_html = cptda_get_recent_posts_html( $posts, $args );
-		// $wp_latest_posts = "<ul class=\"{$block_class}\">\n{$expected}</ul>\n";
-		// $block_class = $this->get_back_compat_latest_posts_class();
-
 
 		$this->assertEquals( strip_ws( $cptda_latest_posts ), strip_ws( $recent_posts_html ) );
 	}
@@ -118,6 +114,19 @@ class KM_CPTDA_Tests_Block_Recent_Posts extends CPTDA_UnitTestCase {
 		$recent_posts_html = cptda_render_block_recent_posts( $args );
 		$expected = "<div class=\"cptda-block-latest-posts cptda-no-posts\">\n<p>No posts found</p>\n</div>";
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $recent_posts_html ) );
+	}
+
+	function test_latest_post_empty_for_non_existing_post_types() {
+		$this->init( 'cpt' );
+		$posts = $this->create_posts( 'cpt' );
+		$this->unregister_post_type( 'cpt' );
+
+		$args = cptda_get_recent_posts_settings();
+		$args['post_type'] = 'cpt';
+		$query = cptda_get_recent_posts_query( $args );
+
+		$recent_posts = cptda_get_recent_posts( $query );
+		$this->assertEmpty( $recent_posts );
 	}
 
 }

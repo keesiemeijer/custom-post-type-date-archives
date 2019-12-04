@@ -76,32 +76,6 @@ function cptda_is_valid_post_type( $post_type ) {
 }
 
 /**
- * Get all public post types
- *
- * Note: the 'attachment' and 'page' post type are not included.
- *
- * @since 2.6.2
- *
- * @return array Array with public post types.
- */
-function cptda_get_public_post_types() {
-	$args = array(
-		'public'             => true,
-		'publicly_queryable' => true, // excludes pages
-	);
-
-	$post_types = get_post_types( $args, 'objects', 'and' );
-
-	foreach ( (array) $post_types as $key => $value ) {
-		$post_types[ $key ] = esc_attr( $value->labels->menu_name );
-	}
-
-	unset( $post_types['attachment'] );
-
-	return $post_types;
-}
-
-/**
  * Is the query for a custom post type date archive?
  *
  * @see WP_Query::is_date()
@@ -182,6 +156,32 @@ function cptda_get_post_type_base( $post_type = '' ) {
 
 	$rewrite = new CPTDA_CPT_Rewrite( $post_type );
 	return $rewrite->get_base_permastruct();
+}
+
+/**
+ * Get all public post types including post type 'post'.
+ *
+ * Note: the 'attachment' and 'page' post type are not included.
+ *
+ * @since 2.6.2
+ *
+ * @return array Array with public post types.
+ */
+function cptda_get_public_post_types() {
+	$args = array(
+		'public'             => true,
+		'publicly_queryable' => true, // excludes pages
+	);
+
+	$post_types = get_post_types( $args, 'objects', 'and' );
+
+	foreach ( (array) $post_types as $key => $value ) {
+		$post_types[ $key ] = esc_attr( $value->labels->menu_name );
+	}
+
+	unset( $post_types['attachment'] );
+
+	return $post_types;
 }
 
 /**

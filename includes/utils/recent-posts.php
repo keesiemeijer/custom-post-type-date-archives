@@ -99,18 +99,16 @@ function cptda_validate_recent_posts_settings( $args ) {
  * @return array Array with post objects.
  */
 function cptda_get_recent_posts( $args ) {
-	$recent_posts = array();
-
 	if ( ! isset( $args['post_type'] ) ) {
-		return $recent_posts;
+		return array();
 	}
 
 	$post_types = cptda_get_public_post_types();
 	if ( in_array( $args['post_type'], array_keys( $post_types ) ) ) {
-		$recent_posts = get_posts( $args );
+		return get_posts( $args );
 	}
 
-	return $recent_posts;
+	return array();
 }
 
 /**
@@ -126,9 +124,11 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
 	$is_block = false;
 	$html     = '';
 	$args     = cptda_validate_recent_posts_settings( $args );
-	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
 	$class    = isset( $args['class'] ) ? $args['class'] : '';
 	$class    = sanitize_html_class( $class );
+
+	/** This filter is documented in wp-includes/post_template.php */
+	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
 
 	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
 		$is_block = true;

@@ -186,7 +186,6 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 
 	/**
 	 * Test test rendered output.
-	 * @group hh
 	 */
 	function test_rendered_archives_dropdown() {
 		global $wp_locale;

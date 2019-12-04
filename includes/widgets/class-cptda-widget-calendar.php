@@ -112,6 +112,8 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	/**
 	 * Gets instance settings.
 	 *
+	 * @since 2.6.2
+	 *
 	 * @param array $instance Settings for the current Recent Posts widget instance.
 	 * @return @return array All Recent Posts widget instance settings with back compat applied.
 	 */
