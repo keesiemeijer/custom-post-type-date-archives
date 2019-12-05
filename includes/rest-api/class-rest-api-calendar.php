@@ -89,7 +89,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$types[]   = 'post';
 
 		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
-			$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
+			$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 400 ) );
 			return $error;
 		}
 
@@ -106,7 +106,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		}
 
 		if ( ! ( $args['year'] && $args['month'] ) ) {
-			$error = new WP_Error( 'rest_invalid_request', __( 'Invalid calendar request.', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
+			$error = new WP_Error( 'rest_invalid_request', __( 'Invalid calendar request.', 'custom-post-type-date-archives' ), array( 'status' => 400 ) );
 			return $error;
 		}
 
@@ -174,7 +174,7 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		/**
 		 * Filter calendar Rest API request arguments.
 		 *
-		 * @since 2.6.2
+		 * @since 2.7.0
 		 *
 		 * @param array $args    Sanitized Rest API request arguments.
 		 * @param array $request Rest API request.
@@ -186,14 +186,13 @@ class CPTDA_Rest_API_Calendar extends WP_REST_Controller {
 		$args['post_type'] = $post_type;
 
 		$calendar = $this->get_calendar( $args );
-		$calendar = $calendar ? $calendar : '';
 
 		$data = array(
 			'post_type' => $post_type,
 			'year'      => (int) $args['year'],
 			'month'     => (int) $args['month'],
 			'date'      => $this->calendar_data,
-			'rendered'  => $calendar,
+			'rendered'  => $calendar ? $calendar : '',
 		);
 
 		// Reset filter_args.

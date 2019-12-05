@@ -81,7 +81,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 		$args  = $request->get_params();
-		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
+		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 400 ) );
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
 		$types     = cptda_get_post_types();
@@ -155,7 +155,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		/**
 		 * Filter archive Rest API request arguments
 		 *
-		 * @since 2.6.2
+		 * @since 2.7.0
 		 *
 		 * @param array $args    Sanitized Rest API request arguments.
 		 * @param array $request Rest API request.
