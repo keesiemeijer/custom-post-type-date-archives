@@ -95,15 +95,15 @@ export default function PostTypeSelect({
 	let help = '';
 	let invalidPostType = '';
 
-	if (dateArchives && !isDateArchivePostType(postType)) {
-		error = 'cptda-select-error';
-		help = sprintf(__("The post type %s doesn't exist or doesn't have date archives.", 'custom-post-type-date-archives'), postType);
-		help += ' ' + __('Please select another post type', 'custom-post-type-date-archives');
-		invalidPostType = postType;
-	} else if (!dateArchives && !isPublicPostType(postType)) {
+	if (!isPublicPostType(postType)) {
 		error = 'cptda-select-error';
 		help = sprintf(__("The post type %s doesn't exist.", 'custom-post-type-date-archives'), postType);
-		help += ' ' + __('Please select another post type', 'custom-post-type-date-archives');
+		help += ' ' + __('Please select another post type.', 'custom-post-type-date-archives');
+		invalidPostType = postType;
+	} else if (dateArchives && !isDateArchivePostType(postType)) {
+		error = 'cptda-select-error';
+		help = sprintf(__("The post type %s doesn't have date archives.", 'custom-post-type-date-archives'), postType);
+		help += ' ' + __('Please select another post type or add date archives to this post type.', 'custom-post-type-date-archives');
 		invalidPostType = postType;
 	}
 

@@ -134,6 +134,7 @@ CPTDA_ServerSideRender.defaultProps = {
 		if ('Invalid post type' === response.errorMsg) {
 			let error = getPostTypeError(post_type, dateArchives);
 			if (error.length) {
+				error += ' ' + __('See the settings of this block for more information.', 'custom-post-type-date-archives');
 				errorMessage = (<span>{errorMessage}<br/><br/>{error}</span>);
 			}
 		}

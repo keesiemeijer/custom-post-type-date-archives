@@ -18,6 +18,7 @@ registerBlockType('cptda/calendar', {
 	keywords: [ __( 'posts', 'custom-post-type-date-archives' ), __( 'archive', 'custom-post-type-date-archives' ) ],
 	supports: {
 		align: true,
+		html: false,
 	},
 	edit,
 	save() {

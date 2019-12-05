@@ -82,7 +82,7 @@ class LatestPostsEdit extends Component {
 						dateArchives={false}
 					/>
 					<RangeControl
-							label={ __( 'Number of posts', 'custom-post-type-date-archives' ) }
+							label={ __( 'Number of items', 'custom-post-type-date-archives' ) }
 							value={ number }
 							onChange={ ( value ) => setAttributes( { number: value } ) }
 							min={ 1 }

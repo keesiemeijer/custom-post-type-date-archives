@@ -53,5 +53,4 @@ const typeOptions = [
 	{ value: 'postbypost', label: __('Post By Post') },
 	{ value: 'weekly', label: __('Weekly') },
 	{ value: 'yearly', label: __('Yearly') },
-
 ];
