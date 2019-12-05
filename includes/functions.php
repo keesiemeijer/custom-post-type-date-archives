@@ -163,7 +163,7 @@ function cptda_get_post_type_base( $post_type = '' ) {
  *
  * Note: the 'attachment' and 'page' post type are not included.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @return array Array with public post types.
  */
@@ -187,7 +187,7 @@ function cptda_get_public_post_types() {
 /**
  * Get classes for the editor blocks.
  *
- * @since  2.6.2
+ * @since 2.7.0
  *
  * @param array  $args    Block arguments.
  * @param string $default Default block class.

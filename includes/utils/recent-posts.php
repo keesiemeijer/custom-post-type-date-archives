@@ -34,7 +34,7 @@ function cptda_get_recent_posts_settings() {
 /**
  * Get date query types
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @return array Array with all date query types and their labels.
  */
@@ -60,11 +60,11 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
 
-	$args['message']      = wp_kses_post( (string) $args['message'] );
-	$args['number']       = absint( $args['number'] );
-	$args['show_date']    = wp_validate_boolean( $args['show_date'] );
-	$args['include']      = strip_tags( trim( (string) $args['include'] ) );
-	$args['post_type']    = sanitize_key( strip_tags( (string) $args['post_type'] ) );
+	$args['message']   = wp_kses_post( (string) $args['message'] );
+	$args['number']    = absint( $args['number'] );
+	$args['show_date'] = wp_validate_boolean( $args['show_date'] );
+	$args['include']   = strip_tags( trim( (string) $args['include'] ) );
+	$args['post_type'] = sanitize_key( strip_tags( (string) $args['post_type'] ) );
 
 	return $args;
 }
@@ -72,7 +72,7 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 /**
  * Validates recent posts settings.
  *
- * @since  2.6.2
+ * @since 2.7.0
  *
  * @param array $args Recent posts arguments.
  * @return array Validated recent posts arguments.
@@ -93,7 +93,7 @@ function cptda_validate_recent_posts_settings( $args ) {
 /**
  * Get recent posts.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param array $args Query args for get_posts().
  * @return array Array with post objects.

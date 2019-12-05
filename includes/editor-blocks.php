@@ -6,7 +6,7 @@
  * @subpackage  Editor_Block
  * @copyright   Copyright (c) 2019, Kees Meijer
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.6.2
+ * @since       2.7.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ add_action( 'wp_loaded', 'cptda_block_editor_init', 20 );
  * `wp-element`: includes the WordPress Element abstraction for describing the structure of your blocks.
  * `wp-i18n`: To internationalize the block's text.
  *
- * @since 2.6.2
+ * @since 2.7.0
  */
 function cptda_block_editor_init() {
 	if ( ! function_exists( '\register_block_type' ) ) {
@@ -64,7 +64,7 @@ function cptda_block_editor_init() {
 /**
  * Registers blocks on server.
  *
- * @since 2.6.2
+ * @since 2.7.0
  */
 function cptda_register_blocks() {
 	register_block_type(
@@ -181,7 +181,7 @@ function cptda_register_blocks() {
 /**
  * Renders the `cptda/calendar` block on server.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param array $args The block arguments.
  * @return string Calendar block HTML.
@@ -192,7 +192,7 @@ function cptda_render_block_calendar( $args ) {
 	/**
 	 * Filter the arguments for the calendar block before rendering.
 	 *
-	 * @since 2.6.2
+	 * @since 2.7.0
 	 *
 	 * @param array $args Array of arguments used to retrieve the calendar.
 	 */
@@ -232,7 +232,7 @@ function cptda_render_block_calendar( $args ) {
 /**
  * Renders the `cptda/recent-posts` block on server.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param array $args The block arguments.
  * @return string Recent posts block HTML.
@@ -244,7 +244,7 @@ function cptda_render_block_recent_posts( $args ) {
 	/**
 	 * Filter the arguments for the Recent Posts block before rendering.
 	 *
-	 * @since 2.6.2
+	 * @since 2.7.0
 	 *
 	 * @param array $query_args Array of arguments used to retrieve the recent posts.
 	 */
@@ -259,7 +259,7 @@ function cptda_render_block_recent_posts( $args ) {
 /**
  * Renders the `cptda/archives` block on server.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param array $args The block arguments.
  * @return string Archives block HTML.
@@ -270,7 +270,7 @@ function cptda_render_block_archives( $args ) {
 	/**
 	 * Filter the arguments for the Archives block before rendering.
 	 *
-	 * @since 2.6.2
+	 * @since 2.7.0
 	 *
 	 * @param array $args Array of archives block arguments.
 	 */

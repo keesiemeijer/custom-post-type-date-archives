@@ -59,6 +59,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	if ( $is_cache && $is_cache_data ) {
 		/** This filter is documented in includes/calendar.php */
 		$output = apply_filters( 'cptda_get_calendar', $cache[ $key ], $cache_data[ $key ] );
+		$output = is_string( $output ) ? $output : '';
 
 		if ( $echo ) {
 			echo $output;

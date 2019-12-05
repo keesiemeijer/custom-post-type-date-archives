@@ -98,7 +98,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 		$instance = $this->get_instance( $new_instance );
 		$instance = cptda_validate_recent_posts_settings( $instance );
 
-		// Note: the message argument is sanitized with wp_kses_post().
+		// Note: the message textarea field was sanitized with wp_kses_post().
 		$instance['title'] = sanitize_text_field( (string) $instance['title'] );
 
 		return array_merge( $old_instance, $instance );

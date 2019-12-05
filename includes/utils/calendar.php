@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Wraps the calendar inside a div for editor block calendars.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param array $args Calendar arguments.
  * @return string Calendar HTML.

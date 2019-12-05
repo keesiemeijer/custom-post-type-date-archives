@@ -39,7 +39,7 @@ function cptda_get_archive_settings() {
 /**
  * Get the label of type of archive.
  *
- * @since 2.6.2
+ * @since 2.7.0
  *
  * @param sting $type Type of archive. Accepts 'yearly', 'monthly', 'daily', 'weekly'.
  * @return string Archive label.
@@ -140,8 +140,9 @@ function cptda_get_archives_html( $args ) {
 
 		// Add extra classes from the editor block
 		$archive_type = ( 'option' === $args['format'] ) ? 'dropdown' : 'list';
-		$type_class = " {$class}-{$archive_type}";
-		$class = cptda_get_block_classes( $args, $class );
+		$type_class   = " {$class}-{$archive_type}";
+		$class        = cptda_get_block_classes( $args, $class );
+
 		$class .= ' cptda-block-archives';
 		$class .= $type_class;
 	}
