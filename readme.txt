@@ -3,24 +3,23 @@ Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
 Requires at least: 4.3
 Tested up to: 5.3
-Stable tag:  2.6.2-alpha
+Stable tag:  2.7.0-beta1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Add date archives to WordPress custom post types
 
 == Description ==
-Add Date archives to custom post types right in the dashboard itself. This plugin also provides you with a calendar, archive and recent posts widget, and editor blocks. This allows you to use this plugin as a super simple events calendar.
+Add Date archives to custom post types right in the dashboard itself. This plugin also provides widgets and editor blocks to display archives, calendars and recent posts. This allows you to use this plugin as a super simple events calendar.
 
 **Features**:
 
 * Adds a date archives submenu for each custom post type
 * Adds the rewrite rules needed for viewing the date archives
-* Adds extra (post type) options to the calendar, archive and recent posts widget
-* Adds calendar, archive and recent posts editor blocks for use in your posts.
+* Adds widgets and editor blocks for archives, calendars and recent posts
 * Allows you to publish scheduled posts with future dates like normal posts
 * Allows you to use specific theme templates files for cpt date archives
-* Adds WP Rest API endpoints for the calendar, archives and recent posts
+* Adds WP Rest API endpoints for archives, calendar and recent posts
 
 [Plugin Documentation](https://github.com/keesiemeijer/custom-post-type-date-archives/wiki)
 
@@ -61,6 +60,10 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.7.0 =
+* Enhancement
+	* Add calendar, archives and recent post editor blocks.
+
 = 2.6.1 =
 * Fix white screen bug for themes without archive templates. props @wpexplorer
 
@@ -105,5 +108,5 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 Initial Commit
 
 == Upgrade Notice ==
-= 2.6.1 =
-Fix white screen bug for themes without archive templates. props @wpexplorer
+= 2.7.0 =
+This upgrade will add editor blocks for the display of calendars, archives and recent posts.
