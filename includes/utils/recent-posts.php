@@ -23,14 +23,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function cptda_get_recent_posts_settings() {
 	return array(
-		'title'         => '',
-		'before_title'  => '',
-		'after_title'   => '',
 		'message'       => '',
 		'number'        => 5,
 		'show_date'     => false,
 		'include'       => 'all',
 		'post_type'     => 'post',
+	);
+}
+
+/**
+ * Get date query types
+ *
+ * @since 2.7.0
+ *
+ * @return array Array with all date query types and their labels.
+ */
+function cptda_get_recent_posts_date_query_types() {
+	return array(
+		'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
+		'future' => __( 'posts with future dates only', 'custom-post-type-date-archives' ),
+		'year'   => __( 'posts from the current year', 'custom-post-type-date-archives' ),
+		'month'  => __( 'posts from the current month', 'custom-post-type-date-archives' ),
+		'day'    => __( 'posts from today', 'custom-post-type-date-archives' ),
 	);
 }
 
@@ -46,16 +60,55 @@ function cptda_sanitize_recent_posts_settings( $args ) {
 	$defaults = cptda_get_recent_posts_settings();
 	$args     = array_merge( $defaults, $args );
 
-	$args['title']        = strip_tags( trim( (string) $args['title'] ) );
-	$args['before_title'] = trim( (string) $args['before_title'] ) ;
-	$args['after_title']  = trim( (string) $args['after_title'] );
-	$args['message']      = wp_kses_post( (string) $args['message'] );
-	$args['number']       = absint( $args['number'] );
-	$args['show_date']    = wp_validate_boolean( $args['show_date'] );
-	$args['include']      = strip_tags( trim( (string) $args['include'] ) );
-	$args['post_type']    = sanitize_key( (string) $args['post_type'] );
+	$args['message']   = wp_kses_post( (string) $args['message'] );
+	$args['number']    = absint( $args['number'] );
+	$args['show_date'] = wp_validate_boolean( $args['show_date'] );
+	$args['include']   = strip_tags( trim( (string) $args['include'] ) );
+	$args['post_type'] = sanitize_key( strip_tags( (string) $args['post_type'] ) );
 
 	return $args;
+}
+
+/**
+ * Validates recent posts settings.
+ *
+ * @since 2.7.0
+ *
+ * @param array $args Recent posts arguments.
+ * @return array Validated recent posts arguments.
+ */
+function cptda_validate_recent_posts_settings( $args ) {
+	$args   = cptda_sanitize_recent_posts_settings( $args );
+
+	$args['number'] = $args['number'] ? $args['number'] : 5;
+
+	$types = cptda_get_recent_posts_date_query_types();
+	if ( ! in_array( $args['include'], array_keys( $types ) ) ) {
+		$args['include'] = 'all';
+	}
+
+	return $args;
+}
+
+/**
+ * Get recent posts.
+ *
+ * @since 2.7.0
+ *
+ * @param array $args Query args for get_posts().
+ * @return array Array with post objects.
+ */
+function cptda_get_recent_posts( $args ) {
+	if ( ! isset( $args['post_type'] ) ) {
+		return array();
+	}
+
+	$post_types = cptda_get_public_post_types();
+	if ( in_array( $args['post_type'], array_keys( $post_types ) ) ) {
+		return get_posts( $args );
+	}
+
+	return array();
 }
 
 /**
@@ -68,29 +121,47 @@ function cptda_sanitize_recent_posts_settings( $args ) {
  * @return string Recent posts HTML.
  */
 function cptda_get_recent_posts_html( $recent_posts, $args ) {
-	$defaults = cptda_get_recent_posts_settings();
-	$args     = array_merge( $defaults, $args );
-	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
+	$is_block = false;
 	$html     = '';
-	$title    = '';
+	$args     = cptda_validate_recent_posts_settings( $args );
+	$class    = isset( $args['class'] ) ? $args['class'] : '';
+	$class    = sanitize_html_class( $class );
 
-	if ( $args['title'] ) {
-		$title = $args['before_title'] . $args['title'] . $args['after_title'];
+	/** This filter is documented in wp-includes/post_template.php */
+	$message  = $args['message'] ? apply_filters( 'the_content', $args['message'] ) : '';
+
+	if ( $class && ( 'wp-block-latest-posts' === $class ) ) {
+		$is_block = true;
+		$block_class = 'cptda-block-latest-posts';
+
+		// Add extra classes from the editor block
+		$class = cptda_get_block_classes( $args, $class );
+		$class .= " wp-block-latest-posts__list {$block_class}";
+		$class .= $args['show_date'] ? ' has-dates' : '';
+
+		$no_posts_class = "{$block_class} cptda-no-posts";
+		$message = $message ? "<div class=\"{$no_posts_class}\">\n{$message}\n</div>\n" : '';
 	}
 
-	if ( ! $recent_posts ) {
-		return $message ? $title . $message : '';
+	if ( empty( $recent_posts ) ) {
+		return $message;
 	}
 
 	ob_start();
-	include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
+	if ( $is_block ) {
+		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/latest-posts-block-display.php';
+	} else {
+		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-display.php';
+	}
 	$recent_posts_html = ob_get_clean();
+	$recent_posts_html = trim( $recent_posts_html );
 
 	if ( ! $recent_posts_html ) {
-		return $message ? $title . $message : '';
+		return $message;
 	}
 
-	return "{$title}\n<ul>\n{$recent_posts_html}</ul>";
+	$class = $is_block ? " class=\"{$class}\"" : '';
+	return "<ul{$class}>\n{$recent_posts_html}\n</ul>";
 }
 
 /**
@@ -102,17 +173,13 @@ function cptda_get_recent_posts_html( $recent_posts, $args ) {
  * @return array Recent posts query.
  */
 function cptda_get_recent_posts_query( $args ) {
-	$defaults = cptda_get_recent_posts_settings();
-	$args     = array_merge( $defaults, $args );
-
-	// Default recent posts is 5
-	$number = $args['number'] ? $args['number'] : 5;
+	$args = cptda_validate_recent_posts_settings( $args );
 
 	$query_args = array(
 		'post_type'           => $args['post_type'],
 		'fields'              => 'ids',
 		'post_status'         => cptda_get_cpt_date_archive_stati( $args['post_type'] ),
-		'posts_per_page'      => $number,
+		'posts_per_page'      => $args['number'],
 		'no_found_rows'       => true,
 		'ignore_sticky_posts' => true,
 		'cptda_recent_posts'  => true, // To check if it's a query from this plugin
@@ -121,7 +188,7 @@ function cptda_get_recent_posts_query( $args ) {
 	$paged = isset( $args['page'] ) ? absint( $args['page'] ) : '';
 	$paged = ( 1 < $paged ) ? $paged : '';
 	if ( $paged ) {
-		$query_args['offset'] = ( ( $paged - 1 ) * $number );
+		$query_args['offset'] = ( ( $paged - 1 ) * $args['number'] );
 	}
 
 	$today = getdate();

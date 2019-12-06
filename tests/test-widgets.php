@@ -2,6 +2,8 @@
 
 /**
  * Tests for public plugin functions
+ *
+ * @group Widget
  */
 class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 
@@ -39,7 +41,7 @@ class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 			$post = $this->factory->post->create( $args );
 			$url = cptda_get_month_link( $year, $month, 'cpt' );
 			$text = sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year );
-			$expected .=  trim( get_archives_link( $url, $text ) );
+			$expected .=  trim( get_archives_link( $url, $text ) ) . "\n";
 		}
 
 		$widget = new CPTDA_Widget_Archives( 'archives', __( 'Archives' ) );
@@ -61,7 +63,7 @@ class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 		$this->assertContains( '</section>', $output );
 
 		$expected = <<<EOF
-<section><h2>Archives</h2><ul>{$expected}</ul></section>
+<section><h2>Archives</h2><ul>\n{$expected}</ul>\n</section>
 EOF;
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
 	}
@@ -102,7 +104,7 @@ EOF;
 		$this->assertContains( '</section>', $output );
 
 		$expected = <<<EOF
-<section><h2>Archives</h2><div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
+<section>\n<h2>Archives</h2>\n<div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
 EOF;
 		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
 	}

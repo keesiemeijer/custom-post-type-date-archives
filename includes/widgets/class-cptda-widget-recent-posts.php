@@ -1,40 +1,33 @@
 <?php
 /**
- * Widget API: WP_Widget_Recent_Posts class
+ * Recent posts widget
  *
- * @package WordPress
- * @subpackage Widgets
- * @since 4.4.0
+ * @package     Custom_Post_Type_Date_Archives
+ * @subpackage  Widget
+ * @copyright   Copyright (c) 2014, Kees Meijer
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.4.0
  */
 
 /**
  * Core class used to implement a Recent Posts widget.
  *
- * @since 2.8.0
+ * @since 2.4.0
  *
  * @see WP_Widget
  */
 class CPTDA_Widget_Recent_Posts extends WP_Widget {
 
 	protected $plugin;
-	protected $include;
 
 	/**
 	 * Sets up a new Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 */
 	public function __construct() {
 		$this->plugin = cptda_date_archives();
-
-		$this->include = array(
-			'all'    => __( 'all posts', 'custom-post-type-date-archives' ),
-			'future' => __( 'posts with future dates only', 'custom-post-type-date-archives' ),
-			'year'   => __( 'posts from the current year', 'custom-post-type-date-archives' ),
-			'month'  => __( 'posts from the current month', 'custom-post-type-date-archives' ),
-			'day'    => __( 'posts from today', 'custom-post-type-date-archives' ),
-		);
 
 		$widget_ops = array(
 			'classname'                   => 'widget_recent_entries',
@@ -56,7 +49,7 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	/**
 	 * Outputs the content for the current Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $args     Display arguments including 'before_title', 'after_title',
@@ -68,32 +61,32 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 			$widget_args['widget_id'] = $this->id;
 		}
 
-		$args  = $this->get_instance_settings( $instance );
+		$args  = $this->get_instance( $instance );
 		$title = ( ! empty( $args['title'] ) ) ? $args['title'] : __( 'Recent Posts' );
 
-		$args['before_title'] = $widget_args['before_title'];
-		$args['after_title'] = $widget_args['after_title'];
-
-		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
-		$args['title'] = apply_filters( 'widget_title', $title, $args, $this->id_base );
+		/** This filter is documented in wp-includes/default-widgets.php */
+		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
+		if ( $title ) {
+			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
+		}
 
 		$query_args = cptda_get_recent_posts_query( $args );
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-recent-posts.php */
 		$query_args = apply_filters( 'widget_posts_args', $query_args, $args );
 
-		$recent_posts = get_posts( $query_args );
+		$recent_posts = cptda_get_recent_posts( $query_args );
 		$widget       = cptda_get_recent_posts_html( $recent_posts, $args );
 
 		if ( $widget ) {
-			echo $widget_args['before_widget'] . $widget . $widget_args['after_widget'];
+			echo $widget_args['before_widget'] . $title . $widget . $widget_args['after_widget'];
 		}
 	}
 
 	/**
 	 * Handles updating the settings for the current Recent Posts widget instance.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $new_instance New settings for this instance as input by the user via
@@ -102,56 +95,49 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 * @return array Updated settings to save.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance              = $old_instance;
-		$new_instance          = cptda_sanitize_recent_posts_settings( $new_instance );
-		$instance['title']     = sanitize_text_field( (string) $new_instance['title'] );
-		$instance['number']    = $new_instance['number'] ? $new_instance['number'] : 5;
-		$instance['show_date'] = (bool) $new_instance['show_date'];
-		$instance['message']   = (string) $new_instance['message'];
+		$instance = $this->get_instance( $new_instance );
+		$instance = cptda_validate_recent_posts_settings( $instance );
 
-		$post_types = $this->plugin->post_type->get_post_types( 'names' );
-		$post_types[] = 'post';
+		// Note: the message textarea field was sanitized with wp_kses_post().
+		$instance['title'] = sanitize_text_field( (string) $instance['title'] );
 
-		$instance['post_type'] = $new_instance['post_type'];
-		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
-			$instance['post_type'] = 'post';
-		}
-
-		$instance['include'] = $new_instance['include'];
-		if ( ! in_array( $new_instance['include'], array_keys( $this->include ) ) ) {
-			$instance['include'] = 'all';
-		}
-
-		// Back compat.
-		unset( $instance['status_future'] );
-
-		return $instance;
+		return array_merge( $old_instance, $instance );
 	}
 
 	/**
 	 * Outputs the settings form for the Recent Posts widget.
 	 *
-	 * @since 2.8.0
+	 * @since 2.4.0
 	 * @access public
 	 *
 	 * @param array $instance Current settings.
 	 */
 	public function form( $instance ) {
+		$instance = $this->get_instance( $instance );
 
-		$instance  = $this->get_instance_settings( $instance );
+		$title      = sanitize_text_field( (string) $instance['title'] );
+		$message    = trim( (string) $instance['message'] );
+		$post_type  = trim( (string) $instance['post_type'] );
+		$number     = absint( $instance['number'] );
+		$show_date  = (bool) $instance['show_date'];
+		$include    = trim( (string) $instance['include'] );
+		$desc       = '';
+		$style      = '';
+		$included   = cptda_get_recent_posts_date_query_types();
+		$post_type  = $instance['post_type'] ? (string) $instance['post_type'] : 'post';
+		$post_types = cptda_get_public_post_types();
 
-		$title     = sanitize_text_field( (string) $instance['title'] );
-		$message   = trim( (string) $instance['message'] );
-		$post_type = trim( (string) $instance['post_type'] );
-		$number    = absint( $instance['number'] );
-		$show_date = (bool) $instance['show_date'];
-		$include   = trim( (string) $instance['include'] );
+		if ( ! in_array( $post_type, array_keys( $post_types ) ) ) {
+			// Post type doesnt exist
+			$post_types[ $post_type ] = $post_type;
 
-		$show_post_types = false;
-		$post_types      = $this->plugin->post_type->get_post_types( 'labels' );
-		if ( ! empty( $post_types ) ) {
-			$show_post_types = true;
-			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+			$style = ' style="border-color: red;"';
+			$desc  = sprintf( __( "<strong>Note</strong>: The post type '%s' doesn't exist anymore", 'custom-post-type-date-archives' ), $post_type );
+		}
+
+		$show_post_types = true;
+		if ( 1 === count( $post_types ) && in_array( 'post', array_keys( $post_types ) ) ) {
+			$show_post_types = false;
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/recent-posts-widget.php';
@@ -162,17 +148,21 @@ class CPTDA_Widget_Recent_Posts extends WP_Widget {
 	 *
 	 * Merges instance settings with defaults and applies back compatibility.
 	 *
+	 * @since 2.5.0
+	 *
 	 * @param array $instance Settings for the current Recent Posts widget instance.
 	 * @return @return array All Recent Posts widget instance settings with back compat applied.
 	 */
-	function get_instance_settings( $instance ) {
-
+	function get_instance( $instance ) {
 		// 'status_future' was removed and replaced by 'include'
 		if ( isset( $instance['status_future'] ) && ! isset( $instance['include'] ) ) {
 			$instance['include'] = $instance['status_future'] ? 'future' : 'all';
 		}
 
+		unset( $instance['status_future'] );
+
 		$default = cptda_get_recent_posts_settings();
+		$default['title'] = __( 'Recent Posts', 'custom-post-type-date-archives' );
 
 		return wp_parse_args( (array) $instance, $default );
 	}

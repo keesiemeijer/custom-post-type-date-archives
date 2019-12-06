@@ -17,7 +17,6 @@
 class CPTDA_Widget_Calendar extends WP_Widget {
 
 	protected $plugin;
-	protected $defaults;
 
 	/**
 	 * Ensure that the ID attribute only appears in the markup once
@@ -32,13 +31,6 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 
 	public function __construct() {
 		$this->plugin = cptda_date_archives();
-
-		/* Set up defaults. */
-		$this->defaults = array(
-			'title'           => esc_attr__( 'Archives', 'custom-post-type-date-archives' ),
-			'placeholder'     => esc_attr__( 'Calendar', 'custom-post-type-date-archives' ),
-			'post_type'       => 'post',
-		);
 
 		$widget_ops = array(
 			'classname' => 'widget_calendar',
@@ -56,17 +48,15 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	}
 
 	public function widget( $widget_args, $instance ) {
-
-		/* Set the $widget_args for wp_get_archives() to the $instance array. */
-		$args = wp_parse_args( $instance, $this->defaults );
+		$args = $this->get_instance( $instance );
 
 		/** This filter is documented in wp-includes/default-widgets.php */
-		$title = apply_filters( 'widget_title', empty( $args['title'] ) ? '' : $args['title'], $args, $this->id_base );
-
-		echo $widget_args['before_widget'];
+		$title = apply_filters( 'widget_title', $args['title'], $args, $this->id_base );
 		if ( $title ) {
-			echo $widget_args['before_title'] . $title . $widget_args['after_title'];
+			$title = $widget_args['before_title'] . $title . $widget_args['after_title'];
 		}
+
+		echo $widget_args['before_widget'] . "\n{$title}\n";
 
 		if ( 0 === self::$instance ) {
 			echo '<div id="calendar_wrap" class="calendar_wrap">';
@@ -83,33 +73,58 @@ class CPTDA_Widget_Calendar extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance = $this->get_instance( $new_instance );
 
-		$post_types = $this->plugin->post_type->get_post_types( 'names' );
-		$post_types[] = 'post';
+		$instance['title']     = sanitize_text_field( (string) $instance['title'] );
+		$instance['post_type'] = strip_tags( trim( $instance['post_type'] ) );
 
-		$instance['post_type'] = $new_instance['post_type'];
-		if ( ! in_array( $new_instance['post_type'], $post_types ) ) {
-			$instance['post_type'] = 'post';
-		}
-
-		return $instance;
+		return array_merge( $old_instance, $instance );
 	}
 
 	public function form( $instance ) {
-		/* Merge the user-selected arguments with the defaults. */
-		$instance    = wp_parse_args( (array) $instance, $this->defaults );
-		$title       = esc_attr__( strip_tags( $instance['title'] ) );
-		$post_types  = $this->plugin->post_type->get_post_types( 'labels' );
-		$post_type   = isset( $instance['post_type'] ) ? (string) $instance['post_type'] : 'post';
+		$instance   = $this->get_instance( $instance );
+		$title      = esc_attr__( strip_tags( $instance['title'] ) );
+		$desc       = '';
+		$style      = '';
+		$post_type  = $instance['post_type'] ? (string) $instance['post_type'] : 'post';
+		$post_types = $this->plugin->post_type->get_post_types( 'labels' );
+		$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
 
-		$show_post_types = false;
-		if ( ! empty( $post_types ) ) {
-			$show_post_types = true;
-			$post_types = array_merge( array( 'post' => __( 'Post' ) ), $post_types );
+		if ( ! in_array( $post_type, array_keys( $post_types ) ) ) {
+			// Post type doesnt exist or has no date archives
+			$post_types[ $post_type ] = $post_type;
+			$style = ' style="border-color: red;"';
+			if ( ! post_type_exists( $post_type ) ) {
+				$desc = sprintf( __( "<strong>Note</strong>: The post type '%s' doesn't exist anymore", 'custom-post-type-date-archives' ), $post_type );
+			} else {
+				$desc = sprintf( __( "<strong>Note</strong>: The post type '%s' doesn't have date archives", 'custom-post-type-date-archives' ), $post_type );
+			}
+		}
+
+		$show_post_types = true;
+		if ( 1 === count( $post_types ) && in_array( 'post', array_keys( $post_types ) ) ) {
+			$show_post_types = false;
 		}
 
 		include CPT_DATE_ARCHIVES_PLUGIN_DIR . 'includes/partials/calendar-widget.php';
 	}
+
+	/**
+	 * Gets instance settings.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param array $instance Settings for the current Recent Posts widget instance.
+	 * @return @return array All Recent Posts widget instance settings with back compat applied.
+	 */
+	function get_instance( $instance ) {
+		$defaults = array(
+			'title'           => esc_attr__( 'Archives', 'custom-post-type-date-archives' ),
+			'placeholder'     => esc_attr__( 'Calendar', 'custom-post-type-date-archives' ),
+			'post_type'       => 'post',
+		);
+
+		return wp_parse_args( (array) $instance, $defaults );
+	}
+
 }

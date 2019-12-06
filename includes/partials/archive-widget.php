@@ -5,12 +5,15 @@
 	<label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e('Limit', 'custom-post-type-date-archives'); ?></label> <input type="number" class="smallfat code" size="5" min="0" id="<?php echo $this->get_field_id( 'limit' ); ?>" name="<?php echo $this->get_field_name( 'limit' ); ?>" value="<?php echo esc_attr( $instance['limit'] ); ?>" placeholder="10">
 </p><?php if ( $show_post_types ) : ?>
 <p>
-	<label for="<?php echo $this->get_field_id( 'post_type' ); ?>"><?php _e( 'Post Type:', 'custom-post-type-date-archives' ); ?></label> <select name="<?php echo $this->get_field_name( 'post_type' ); ?>" id="<?php echo $this->get_field_id( 'post_type' ); ?>" class="widefat">
+	<label for="<?php echo $this->get_field_id( 'post_type' ); ?>"><?php _e( 'Post Type:', 'custom-post-type-date-archives' ); ?></label> <select name="<?php echo $this->get_field_name( 'post_type' ); ?>" id="<?php echo $this->get_field_id( 'post_type' ); ?>" class="widefat"<?php echo $style; ?>>
 		<?php foreach ( $post_types as $name => $label ) : ?>
 		<option value="<?php echo $name; ?>" <?php selected( $post_type, $name ); ?>>
 			<?php echo $label; ?>
 		</option><?php endforeach; ?>
 	</select>
+	<?php if($desc) : ?>
+		<span class="description"><?php echo $desc; ?></span>
+	<?php endif; ?>
 </p><?php endif; ?>
 <p>
 	<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php _e('Type', 'custom-post-type-date-archives') ?></label> <select class="widefat" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>">

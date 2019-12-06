@@ -127,6 +127,9 @@ class CPTDA_WP_Rest_API_Calendar extends CPTDA_UnitTestCase {
 		$this->assertContains( cptda_get_day_link( $year, 3, 20, 'cpt' ) , $data['rendered'] );
 		$this->assertContains( '>&laquo; Jan<', $data['rendered'] );
 
+		// editor block wrapper div
+		$this->assertNotContains( '<div', $data['rendered'] );
+
 		$date['month'] = 2;
 		$data = $this->rest_cptda_get_calendar( 'cpt', $date );
 		$this->assertContains( '>&laquo; Jan<', $data['rendered'] );
@@ -139,5 +142,29 @@ class CPTDA_WP_Rest_API_Calendar extends CPTDA_UnitTestCase {
 		$this->assertContains( '<td><a ', $data['rendered'] );
 		$this->assertContains( cptda_get_day_link( $year, 1, 20, 'cpt' ) , $data['rendered'] );
 		$this->assertContains( '>Mar &raquo;<', $data['rendered'] );
+	}
+
+	/**
+	 * Test block calendar output.
+	 */
+	function test_rendered_block_calendar() {
+		global $wp_locale;
+		$this->init();
+		$year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		foreach ( array( '03', '01' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+		}
+
+		$date = array(
+			'year'  =>  $year,
+			'month' => 3,
+			'class' => 'wp-block-calendar',
+		);
+
+		$data = $this->rest_cptda_get_calendar( 'cpt', $date );
+		$this->assertContains( '<div class="wp-block-calendar cptda-block-calendar">', $data['rendered'] );
 	}
 }

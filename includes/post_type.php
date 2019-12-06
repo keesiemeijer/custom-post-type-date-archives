@@ -153,8 +153,8 @@ class CPTDA_Post_Types {
 		}
 
 		foreach ( $future_types as $name ) {
-			remove_action( "future_{$name}", '_future_post_hook' );
-			add_action( "future_{$name}", array( $this, '_future_post_hook' ) );
+			remove_action( 'future_' . $name, '_future_post_hook', 5, 2 );
+			add_action( "future_{$name}", array( $this, '_future_post_hook' ), 10 , 2 );
 		}
 	}
 
@@ -162,11 +162,12 @@ class CPTDA_Post_Types {
 	 * Set new post's post_status to "publish" if the post is sceduled.
 	 *
 	 * @since 1.2.0
-	 * @param int $post_id Post ID.
+	 * @param int     $post_id Post ID (deprecated argument).
+	 * @param WP_Post $post    Post object.
 	 * @return void
 	 */
-	public function _future_post_hook( $post_id ) {
-		$post = get_post( $post_id );
+	public function _future_post_hook( $post_id, $post ) {
+		$post = get_post( $post );
 
 		/**
 		 * Filter whether to publish posts with future dates from a specific post type.
@@ -176,7 +177,7 @@ class CPTDA_Post_Types {
 		 */
 		$publish = apply_filters( "cptda_publish_future_{$post->post_type}", true );
 		if ( (bool) $publish ) {
-			wp_publish_post( $post_id );
+			wp_publish_post( $post );
 		}
 	}
 

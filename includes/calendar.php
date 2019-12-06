@@ -59,6 +59,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	if ( $is_cache && $is_cache_data ) {
 		/** This filter is documented in includes/calendar.php */
 		$output = apply_filters( 'cptda_get_calendar', $cache[ $key ], $cache_data[ $key ] );
+		$output = is_string( $output ) ? $output : '';
 
 		if ( $echo ) {
 			echo $output;
@@ -74,15 +75,13 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	}
 
 	// Quick check. If we have no posts at all, abort!
-	if ( ! $posts ) {
-		$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE {$post_type_sql} LIMIT 1" );
-		if ( ! $gotsome ) {
-			$cache[ $key ] = '';
-			wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
-			$cache_data[ $key ] = '';
-			wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
-			return;
-		}
+	$gotsome = $wpdb->get_var( "SELECT 1 as test FROM $wpdb->posts WHERE {$post_type_sql} LIMIT 1" );
+	if ( ! $gotsome ) {
+		$cache[ $key ] = '';
+		wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
+		$cache_data[ $key ] = '';
+		wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
+		return '';
 	}
 
 	// week_begins = 0 stands for Sunday
@@ -96,8 +95,8 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		'calendar_days' => array(),
 	);
 
-	$calendar_date = cptda_get_calendar_date();
-	$calendar_date = array_merge( $calendar_date, $default_data );
+	$date = cptda_get_calendar_date();
+	$date = array_merge( $date, $default_data );
 
 	/**
 	 * Filter calendar data for the current date.
@@ -106,46 +105,47 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	 *
 	 * @since 2.6.0
 	 *
-	 * @param array  $calendar_data Array with calendar data.
-	 * @param string $post_type     Post type
+	 * @param array  $date      Array with calendar data.
+	 * @param string $post_type Post type
 	 */
-	$calendar_data = apply_filters( 'cptda_calendar_data', $calendar_date, $post_type );
-	$calendar_data = array_merge( $calendar_date, $calendar_data );
+	$calendar = apply_filters( 'cptda_calendar_data', $date, $post_type );
+	$calendar = array_merge( $date, $calendar );
 
-	if ( ( '' === $calendar_data['prev_year'] ) && ( '' === $calendar_data['prev_month'] ) ) {
-		$prev       = cptda_get_adjacent_archive_date( $post_type, $calendar_data );
-		$prev_year  = isset( $prev['year'] ) ? $prev['year'] : '';
-		$prev_month = isset( $prev['month'] ) ? $prev['month'] : '';
+	if ( ( '' === $calendar['prev_year'] ) && ( '' === $calendar['prev_month'] ) ) {
+		$prev       = cptda_get_adjacent_archive_date( $post_type, $calendar );
+		$prev_year  = absint( $prev['year'] );
+		$prev_month = absint( $prev['month'] );
 	} else {
-		$prev_year  = absint( $calendar_data['prev_year'] );
-		$prev_month = absint( $calendar_data['prev_month'] );
+		$prev_year  = absint( $calendar['prev_year'] );
+		$prev_month = absint( $calendar['prev_month'] );
 	}
 
-	if ( ( '' === $calendar_data['next_year'] ) && ( '' === $calendar_data['next_month'] ) ) {
-		$next       = cptda_get_adjacent_archive_date( $post_type, $calendar_data, 'next' );
-		$next_year  = isset( $next['year'] ) ? $next['year'] : '';
-		$next_month = isset( $next['month'] ) ? $next['month'] : '';
+	if ( ( '' === $calendar['next_year'] ) && ( '' === $calendar['next_month'] ) ) {
+		$next       = cptda_get_adjacent_archive_date( $post_type, $calendar, 'next' );
+		$next_year  = absint( $next['year'] );
+		$next_month = absint( $next['month'] );
 	} else {
-		$next_year  = absint( $calendar_data['next_year'] );
-		$next_month = absint( $calendar_data['next_month'] );
+		$next_year  = absint( $calendar['next_year'] );
+		$next_month = absint( $calendar['next_month'] );
 	}
 
-	$calendar_data['next_year'] = $next_year;
-	$calendar_data['next_month'] = $next_month;
-	$calendar_data['prev_year'] = $prev_year;
-	$calendar_data['prev_month'] = $prev_month;
+	// Add dates to calendar data for filters below.
+	$calendar['next_year'] = $next_year;
+	$calendar['next_month'] = $next_month;
+	$calendar['prev_year'] = $prev_year;
+	$calendar['prev_month'] = $prev_month;
 
-	$thisyear = $calendar_data['year'];
-	$thismonth = zeroise( absint( $calendar_data['month'] ), 2 );
-	$last_day = $calendar_data['last_day'];
+	$thisyear = $calendar['year'];
+	$thismonth = zeroise( absint( $calendar['month'] ), 2 );
+	$last_day = $calendar['last_day'];
 
 	/* translators: Calendar caption: 1: month name, 2: 4-digit year */
 	$calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
-	$calendar_output = '<table id="wp-calendar">
+	$output = '<table id="wp-calendar">
 	<caption>' . sprintf(
 		$calendar_caption,
 		$wp_locale->get_month( $thismonth ),
-		date( 'Y', $calendar_data['unixmonth'] )
+		date( 'Y', $calendar['unixmonth'] )
 	) . '</caption>
 	<thead>
 	<tr>';
@@ -159,10 +159,10 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	foreach ( $myweek as $wd ) {
 		$day_name = $initial ? $wp_locale->get_weekday_initial( $wd ) : $wp_locale->get_weekday_abbrev( $wd );
 		$wd = esc_attr( $wd );
-		$calendar_output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
+		$output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
 	}
 
-	$calendar_output .= '
+	$output .= '
 	</tr>
 	</thead>
 
@@ -170,24 +170,24 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tr>';
 
 	if ( $prev_year && $prev_month ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_archive_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
+		$output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_archive_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $prev_month ) ) .
 			'</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
+		$output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
 	}
 
-	$calendar_output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
+	$output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
 
 	if ( $next_year && $next_month ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_archive_link( $next_year, $next_month, $post_type ) . '">' .
+		$output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_archive_link( $next_year, $next_month, $post_type ) . '">' .
 			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next_month ) ) .
 			' &raquo;</a></td>';
 	} else {
-		$calendar_output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
+		$output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
 	}
 
-	$calendar_output .= '
+	$output .= '
 	</tr>
 	</tfoot>
 
@@ -195,7 +195,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	<tr>';
 
 	$daywithpost = array();
-	if ( is_array( $calendar_data['calendar_days'] ) && empty( $calendar_data['calendar_days'] ) ) {
+	if ( is_array( $calendar['calendar_days'] ) && empty( $calendar['calendar_days'] ) ) {
 		// Get days with posts
 		$dayswithposts = $wpdb->get_results( "SELECT DISTINCT DAYOFMONTH(post_date)
 			FROM $wpdb->posts WHERE post_date >= '{$thisyear}-{$thismonth}-01 00:00:00'
@@ -207,49 +207,49 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 			}
 		}
 	} else {
-		$daywithpost = is_array( $calendar_data['calendar_days'] ) ? $calendar_data['calendar_days'] : array();
+		$daywithpost = is_array( $calendar['calendar_days'] ) ? $calendar['calendar_days'] : array();
 	}
 
 	$daywithpost = array_unique( array_map( 'intval', $daywithpost ) );
-	$calendar_data['calendar_days'] = $daywithpost;
+	$calendar['calendar_days'] = $daywithpost;
 
 	// See how much we should pad in the beginning
-	$pad = calendar_week_mod( date( 'w', $calendar_data['unixmonth'] ) - $week_begins );
+	$pad = calendar_week_mod( date( 'w', $calendar['unixmonth'] ) - $week_begins );
 	if ( 0 != $pad ) {
-		$calendar_output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
+		$output .= "\n\t\t" . '<td colspan="' . esc_attr( $pad ) . '" class="pad">&nbsp;</td>';
 	}
 
 	$newrow = false;
-	$daysinmonth = (int) date( 't', $calendar_data['unixmonth'] );
+	$daysinmonth = (int) date( 't', $calendar['unixmonth'] );
 
 	for ( $day = 1; $day <= $daysinmonth; ++$day ) {
 		if ( isset( $newrow ) && $newrow ) {
-			$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
+			$output .= "\n\t</tr>\n\t<tr>\n\t\t";
 		}
 		$newrow = false;
 
-		if ( $day == gmdate( 'j', $calendar_data['timestamp'] ) &&
-			$thismonth == gmdate( 'm', $calendar_data['timestamp'] ) &&
-			$thisyear == gmdate( 'Y', $calendar_data['timestamp'] ) ) {
-			$calendar_output .= '<td id="today">';
+		if ( $day == gmdate( 'j', $calendar['timestamp'] ) &&
+			$thismonth == gmdate( 'm', $calendar['timestamp'] ) &&
+			$thisyear == gmdate( 'Y', $calendar['timestamp'] ) ) {
+			$output .= '<td id="today">';
 		} else {
-			$calendar_output .= '<td>';
+			$output .= '<td>';
 		}
 
 		if ( in_array( $day, $daywithpost ) ) {
 			// any posts today?
 			$date_format = date( _x( 'F j, Y', 'daily archives date format' ), strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
 			$label = sprintf( __( 'Posts published on %s' ), $date_format );
-			$calendar_output .= sprintf(
+			$output .= sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				cptda_get_day_archive_link( $thisyear, $thismonth, $day, $post_type ),
 				esc_attr( $label ),
 				$day
 			);
 		} else {
-			$calendar_output .= $day;
+			$output .= $day;
 		}
-		$calendar_output .= '</td>';
+		$output .= '</td>';
 
 		if ( 6 == calendar_week_mod( date( 'w', mktime( 0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins ) ) {
 			$newrow = true;
@@ -258,14 +258,14 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 
 	$pad = 7 - calendar_week_mod( date( 'w', mktime( 0, 0 , 0, $thismonth, $day, $thisyear ) ) - $week_begins );
 	if ( $pad != 0 && $pad != 7 ) {
-		$calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
+		$output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 	}
-	$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
+	$output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
 
-	$cache[ $key ] = $calendar_output;
+	$cache[ $key ] = $output;
 	wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );
 
-	$cache_data[ $key ] = $calendar_data;
+	$cache_data[ $key ] = $calendar;
 	wp_cache_set( 'cptda_get_calendar_data', $cache_data, 'calendar_data' );
 
 	if ( $echo ) {
@@ -274,12 +274,12 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 		 *
 		 * @since 2.6.0
 		 *
-		 * @param string $calendar_output HTML output of the calendar.
-		 * @param array  $calendar_data   Array with arguments for the current calendar.
+		 * @param string $output   HTML output of the calendar.
+		 * @param array  $calendar Array with arguments for the current calendar.
 		 */
-		echo apply_filters( 'cptda_get_calendar', $calendar_output, $calendar_data );
+		echo apply_filters( 'cptda_get_calendar', $output, $calendar );
 		return;
 	}
 	/** This filter is documented in includes/calendar.php */
-	return apply_filters( 'cptda_get_calendar', $calendar_output, $calendar_data );
+	return apply_filters( 'cptda_get_calendar', $output, $calendar );
 }

@@ -13,6 +13,41 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+/**
+ * Get calendar HTML
+ *
+ * Wraps the calendar inside a div for editor block calendars.
+ *
+ * @since 2.7.0
+ *
+ * @param array $args Calendar arguments.
+ * @return string Calendar HTML.
+ */
+function cptda_get_calendar_html( $args ) {
+	if ( ! isset( $args['post_type'] ) ) {
+		return '';
+	}
+
+	$calendar = cptda_get_calendar( $args['post_type'], true, false );
+	$calendar = is_string( $calendar ) ? trim( $calendar ) : '';
+
+	if ( empty( $calendar ) ) {
+		return '';
+	}
+
+	$class = isset( $args['class'] ) ? $args['class'] : '';
+	$class = sanitize_html_class( $class );
+
+	if ( $class && ( 'wp-block-calendar' === $class ) ) {
+		// Add extra classes from the editor block
+		$class = cptda_get_block_classes( $args, $class );
+		$class .= ' cptda-block-calendar';
+
+		$calendar = sprintf( '<div class="%1$s">%2$s</div>', esc_attr( $class ), $calendar );
+	}
+
+	return $calendar;
+}
 
 /**
  * Get the current calendar date.
@@ -56,11 +91,11 @@ function cptda_get_calendar_date() {
 	$last_day = (int) date( 't', $unixmonth );
 
 	return array(
-		'year'          => $thisyear,
-		'month'         => $thismonth,
-		'last_day'      => $last_day,
-		'unixmonth'     => $unixmonth,
-		'timestamp'     => $ts,
+		'year'      => $thisyear,
+		'month'     => $thismonth,
+		'last_day'  => $last_day,
+		'unixmonth' => $unixmonth,
+		'timestamp' => $ts,
 	);
 }
 
@@ -73,8 +108,8 @@ function cptda_get_calendar_date() {
  * @return string SQL for the post type
  */
 function cptda_get_calendar_post_type_sql( $post_type ) {
-	$types     = cptda_get_post_types();
-	$types[]   = 'post';
+	$types   = cptda_get_post_types();
+	$types[] = 'post';
 
 	if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 		return '';
@@ -114,9 +149,9 @@ function cptda_get_adjacent_archive_date( $post_type, $calendar_date, $type = 'p
 		return $date;
 	}
 
-	$month     = zeroise( $month, 2 );
-	$order     = 'DESC';
-	$date_sql  = "post_date < '$year-$month-01'";
+	$month    = zeroise( $month, 2 );
+	$order    = 'DESC';
+	$date_sql = "post_date < '$year-$month-01'";
 
 	if ( isset( $calendar_date['last_day'] ) && ( 'next' === $type ) ) {
 		$order    = 'ASC';

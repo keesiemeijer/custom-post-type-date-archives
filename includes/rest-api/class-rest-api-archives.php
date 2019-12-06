@@ -81,8 +81,7 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 		$args  = $request->get_params();
-		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
-		$data  = array();
+		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 400 ) );
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
 		$types     = cptda_get_post_types();
@@ -92,14 +91,10 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 			return $error;
 		}
 
-		$args['post_type'] = $post_type;
 		unset( $args['cptda_type'] );
 
-		$defaults = cptda_get_archive_settings();
-		$args     = wp_parse_args( $args, $defaults );
-
-		$args['post_type'] = $post_type;
 		$args = cptda_sanitize_archive_settings( $args );
+		$args['post_type'] = $post_type;
 
 		$args = $this->prepare_item_for_response( $args, $request );
 
@@ -112,7 +107,6 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 * @since 2.6.0
 	 * @access public
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -150,13 +144,58 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
+		$post_type = $args['post_type'];
+
+		$defaults = cptda_get_archive_settings();
+		$args     = array_merge( $defaults, $args );
+
+		// Don't allow large queries.
+		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
+
+		/**
+		 * Filter archive Rest API request arguments
+		 *
+		 * @since 2.7.0
+		 *
+		 * @param array $args    Sanitized Rest API request arguments.
+		 * @param array $request Rest API request.
+		 */
+		$args = apply_filters( 'cptda_rest_api_archives_args', $args, $request );
+		$args = cptda_validate_archive_settings( $args );
+
+		// Unfiltarable argument
+		$args['post_type'] = $post_type;
+
 		$rendered = $this->get_archives( $args );
+
+		$tags = wp_kses_allowed_html( 'post' );
+
+		// Needed for dropdown
+		if ( 'option' === $args['format'] ) {
+			$allowed_tags = array(
+				'select' => array(
+					'id'       => true,
+					'name'     => true,
+					'onchange' => true,
+				),
+				'option' => array(
+					'value' => true,
+				),
+			);
+
+			$tags = array_merge( $tags, $allowed_tags );
+		}
+
+		// Archive arguments could contain HTML or Javascript.
+		$rendered = wp_kses( $rendered, $tags );
+		$rendered = $rendered ? $rendered : '';
 
 		$data = array(
 			'archives' => $this->archives,
 			'rendered' => $rendered,
 		);
 
+		// Reset archives property
 		$this->archives = array();
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -207,24 +246,8 @@ class CPTDA_Rest_API_Archives extends WP_REST_Controller {
 		return $output;
 	}
 
-	public function get_archives( $args ) {
+	private function get_archives( $args ) {
 		$this->archives = array();
-
-		// Don't allow large queries.
-		$args['limit'] = ( 100 >= $args['limit'] ) ? $args['limit'] : 100;
-
-		// Don't allow these archive arguments.
-		$blacklisted = array(
-			'title',
-			'before_title',
-			'after_title',
-			'before',
-			'after',
-		);
-
-		foreach ( $blacklisted as $value ) {
-			$args[ $value ] = '';
-		}
 
 		add_filter( 'cptda_get_archives', array( $this, 'archive_filter_callback' ), 10, 3 );
 		$archives = cptda_get_archives_html( $args );

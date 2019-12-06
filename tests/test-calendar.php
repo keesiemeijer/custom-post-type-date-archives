@@ -70,9 +70,32 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		$monthnum = 3;
 		$year = (int) date( "Y" ) - 1;
 
+		// create posts for month
+		foreach ( array( '03', '01' ) as $month ) {
+			$args = array( 'post_date' => "$year-$month-20 00:00:00", 'post_type' => 'post' );
+			$post = $this->factory->post->create( $args );
+		}
 
 		$calendar = cptda_get_calendar( 'post', true, false );
 		$this->assertContains( "<caption>March {$year}</caption>", $calendar );
+	}
+
+	/**
+	 * Test invalid post type
+	 */
+	function test_cptda_get_calendar_empty_post_type() {
+		global $wp_locale, $monthnum, $year;
+
+		$monthnum = 3;
+		$year = (int) date( "Y" ) - 1;
+
+		// No post type
+		$calendar = cptda_get_calendar( '', true, false );
+		$this->assertEmpty( $calendar );
+
+		// Not a post type with archives
+		$calendar = cptda_get_calendar( 'noarchive', true, false );
+		$this->assertEmpty( $calendar );
 	}
 
 	/**
@@ -145,7 +168,31 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		$calendar       = cptda_get_calendar( 'cpt', true, false );
 		$queries_after  = get_num_queries();
 
-		$this->assertSame( $queries_before + 3, $queries_after );
+		$this->assertSame( $queries_before + 4, $queries_after );
+
+		$calendar       = cptda_get_calendar( 'cpt', true, false );
+		$no_queries     = get_num_queries();
+
+		$this->assertSame( $queries_after, $no_queries );
+	}
+
+	/**
+	 * Test calendar cache.
+	 */
+	function test_cptda_calendar_cache_no_posts() {
+		global $wp_locale, $monthnum, $year;
+		$this->init();
+		$post_year = (int) date( "Y" ) - 1;
+
+		$monthnum = 3;
+		$year = $post_year;
+
+		$queries_before = get_num_queries();
+		$calendar       = cptda_get_calendar( 'cpt', true, false );
+		$queries_after  = get_num_queries();
+
+		// Query to see if there are any 'cpt' posts
+		$this->assertSame( $queries_before + 1, $queries_after );
 
 		$calendar       = cptda_get_calendar( 'cpt', true, false );
 		$no_queries     = get_num_queries();

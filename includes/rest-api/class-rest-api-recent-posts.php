@@ -73,24 +73,20 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 		$args  = $request->get_params();
-		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 404 ) );
-		$data  = array();
+		$error = new WP_Error( 'rest_invalid_args', __( 'Invalid post type', 'custom-post-type-date-archives' ), array( 'status' => 400 ) );
 
 		$post_type = isset( $args['cptda_type'] ) ? $args['cptda_type'] : '';
-		$types     = cptda_get_post_types();
-		$types[]   = 'post';
+		$types     = array_keys( cptda_get_public_post_types() );
 
 		if ( ! $post_type || ! in_array( $post_type, $types ) ) {
 			return $error;
 		}
 
-		$defaults = cptda_get_recent_posts_settings();
-		$args     = wp_parse_args( $args, $defaults );
-
-		$args['post_type'] = $post_type;
 		unset( $args['cptda_type'] );
 
 		$args = cptda_sanitize_recent_posts_settings( $args );
+		$args['post_type'] = $post_type;
+
 		$args = $this->prepare_item_for_response( $args, $request );
 
 		return rest_ensure_response( $args );
@@ -140,27 +136,45 @@ class CPTDA_Rest_API_Recent_Posts extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $args, $request ) {
+		$post_type = $args['post_type'];
+
+		$defaults = cptda_get_recent_posts_settings();
+		$args     = array_merge( $defaults, $args );
+
 		// Default recent posts number is 5
 		$number = $args['number'] ? $args['number'] : 5;
 
 		// Don't allow queries over 100 posts
 		$args['number'] = ( 100 >= $number ) ? $number : 100;
 
-		// Don't allow title and message arguments.
-		$blacklisted = array(
-			'title',
-			'before_title',
-			'after_title',
-			'message',
-		);
+		/**
+		 * Filter recent posts Rest API request arguments.
+		 *
+		 * @since 2.7.0
+		 *
+		 * @param array $args    Sanitized Rest API request arguments.
+		 * @param array $request Rest API request.
+		 */
+		$args = apply_filters( 'cptda_rest_api_recent_posts_args', $args, $request );
+		$args = cptda_validate_recent_posts_settings( $args );
 
-		foreach ( $blacklisted as $value ) {
-			$args[ $value ] = '';
-		}
+		// Unfilterable argument
+		$args['post_type'] = $post_type;
 
 		$query_args   = cptda_get_recent_posts_query( $args );
-		$recent_posts = get_posts( $query_args );
+		$recent_posts = cptda_get_recent_posts( $query_args );
 		$rendered     = cptda_get_recent_posts_html( $recent_posts, $args );
+
+		$tags = wp_kses_allowed_html( 'post' );
+
+		// For show date
+		$tags['time'] = array(
+			'datetime' => true,
+			'class' => true,
+		);
+
+		$rendered = wp_kses( $rendered, $tags );
+		$rendered = $rendered ? $rendered : '';
 
 		$data = array(
 			'posts'    => $recent_posts,
