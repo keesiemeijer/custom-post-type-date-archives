@@ -29,8 +29,6 @@ class CPTDA_Post_Types {
 	 */
 	private $post_types = array();
 
-	private $name;
-
 	public function __construct() {
 		add_action( 'wp_loaded',   array( $this, 'setup' ) );
 	}
@@ -232,9 +230,6 @@ class CPTDA_Post_Types {
 	 */
 	public function get_post_types_by_context( $context = 'date_archive' ) {
 		switch ( $context ) {
-			case 'public':
-				$post_types = $this->post_types;
-				break;
 			case 'admin':
 				$args = array(
 					'show_ui'      => true,
