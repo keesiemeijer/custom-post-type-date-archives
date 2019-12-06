@@ -62,7 +62,7 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 == Changelog ==
 = 2.7.0 =
 * Enhancement
-	* Add calendar, archives and recent post editor blocks.
+	* Add editor blocks to display archives, calendars and recent posts.
 
 = 2.6.1 =
 * Fix white screen bug for themes without archive templates. props @wpexplorer
