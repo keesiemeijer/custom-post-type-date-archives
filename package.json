@@ -1,8 +1,8 @@
 {
   "name": "custom-post-type-date-archives",
   "version": "2.7.0",
-  "tested_up_to": "5.3",
-  "requires_at_least": "4.3",
+  "tested_up_to": "5.4",
+  "requires_at_least": "4.4",
   "main": "Gruntfile.js",
   "author": "keesiemeijer",
   "license": "GPL-2.0+",
