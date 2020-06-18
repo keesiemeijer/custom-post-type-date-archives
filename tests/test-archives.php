@@ -45,7 +45,7 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 		add_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
 
 		$expected  = array(
-			'year' => '2018',
+			'year' => $year,
 			'month' => '3',
 			'posts' => '1',
 		);
@@ -68,7 +68,7 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 		$post = $this->factory->post->create( $args );
 
 		$expected  = array(
-			'year' => '2018',
+			'year' => $year,
 			'month' => '3',
 			'posts' => '1',
 		);
