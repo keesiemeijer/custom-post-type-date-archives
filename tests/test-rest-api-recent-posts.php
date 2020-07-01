@@ -75,7 +75,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 		sort( $expected );
 		sort( $data );
 
-		$this->assertEquals( $expected, $data );
+		$this->assertSame( $expected, $data );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 
 		// Title and message are not allowed for the rest api.
 		$expected = "<ul>{$expected}</ul>";
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 
 	/**
@@ -152,7 +152,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 
 		// Title and message are not allowed for the rest api.
 		$expected = "<ulclass=\"{$block_class}\">{$expected}</ul>";
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 
 	/**
@@ -182,7 +182,7 @@ class CPTDA_WP_Rest_API_Recent_Posts extends CPTDA_UnitTestCase {
 
 		$data = $this->rest_cptda_get_recent_posts( 'cpt', $args );
 
-		$this->assertEquals( 1 , count( $data['posts'] ) );
-		$this->assertEquals( $posts[1] , $data['posts'][0] );
+		$this->assertSame( 1 , count( $data['posts'] ) );
+		$this->assertSame( $posts[1] , $data['posts'][0] );
 	}
 }

@@ -36,7 +36,7 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 		$this->delete_settings();
 
-		$this->assertEquals( $expected, $settings_obj->get_settings() );
+		$this->assertSame( $expected, $settings_obj->get_settings() );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 
 		update_option( 'custom_post_type_date_archives', $option );
 
-		$this->assertEquals( $expected, $settings_obj->get_settings() );
+		$this->assertSame( $expected, $settings_obj->get_settings() );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 		);
 
 		$merged = $settings_obj->merge_settings( $settings, $new_settings, 'cpt_2' );
-		$this->assertEquals( $expected, $merged );
+		$this->assertSame( $expected, $merged );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class KM_CPTDA_Tests_Settings extends CPTDA_UnitTestCase {
 		);
 
 		$merged = $settings_obj->merge_settings( $settings, $new_settings, 'cpt' );
-		$this->assertEquals( $expected, $merged );
+		$this->assertSame( $expected, $merged );
 	}
 
 }

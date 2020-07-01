@@ -65,7 +65,7 @@ class KM_CPTDA_Tests_Widgets extends CPTDA_UnitTestCase {
 		$expected = <<<EOF
 <section><h2>Archives</h2><ul>\n{$expected}</ul>\n</section>
 EOF;
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $output ) );
 	}
 
 	/**
@@ -106,7 +106,7 @@ EOF;
 		$expected = <<<EOF
 <section>\n<h2>Archives</h2>\n<div id="calendar_wrap" class="calendar_wrap">{$calendar}</div></section>
 EOF;
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $output ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $output ) );
 	}
 
 	/**
@@ -149,7 +149,7 @@ EOF;
 		$expected = <<<EOF
 <section><h2>Recent Posts</h2><ul>{$expected}</ul></section>
 EOF;
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
 	/**
@@ -196,7 +196,7 @@ EOF;
 		$expected = <<<EOF
 <section><h2>Recent Posts</h2><ul>{$expected}</ul></section>
 EOF;
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
 	/**
@@ -234,7 +234,7 @@ EOF;
 <section><h2>Recent Posts</h2><p>no posts found</p></section>
 EOF;
 		// No posts found message is displayed.
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $output ) );
 	}
 
 	/**
@@ -254,25 +254,25 @@ EOF;
 		}
 
 		$widget   = new CPTDA_Widget_Archives();
-		$this->assertEquals( 'archives', $widget->id_base );
+		$this->assertSame( 'archives', $widget->id_base );
 
 		$widget   = new CPTDA_Widget_Calendar();
-		$this->assertEquals( 'calendar', $widget->id_base );
+		$this->assertSame( 'calendar', $widget->id_base );
 
 		$widget = new CPTDA_Widget_Recent_Posts();
-		$this->assertEquals( 'recent-posts', $widget->id_base );
+		$this->assertSame( 'recent-posts', $widget->id_base );
 
 		add_filter( 'cptda_replace_default_core_widgets', '__return_false' );
 
 		cptda_register_widgets();
 
 		$widget   = new CPTDA_Widget_Archives();
-		$this->assertEquals( 'cptda_archives', $widget->id_base );
+		$this->assertSame( 'cptda_archives', $widget->id_base );
 
 		$widget   = new CPTDA_Widget_Calendar();
-		$this->assertEquals( 'cptda_calendar', $widget->id_base );
+		$this->assertSame( 'cptda_calendar', $widget->id_base );
 
 		$widget = new CPTDA_Widget_Recent_Posts();
-		$this->assertEquals( 'cptda_recent-posts', $widget->id_base );
+		$this->assertSame( 'cptda_recent-posts', $widget->id_base );
 	}
 }

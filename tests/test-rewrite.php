@@ -30,7 +30,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 		$this->init( 'cpt', 'publish', array( 'with_front' => false ) );
 
 		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
-		$this->assertEquals( 'cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+		$this->assertSame( 'cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
 	}
 
 
@@ -42,7 +42,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 		$this->init( 'cpt', 'publish' );
 
 		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
-		$this->assertEquals( 'blog/cpt/%day%/%monthnum%/%year%', $rewrite->get_date_permastruct() );
+		$this->assertSame( 'blog/cpt/%day%/%monthnum%/%year%', $rewrite->get_date_permastruct() );
 	}
 
 
@@ -54,7 +54,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 		$this->init( 'cpt', 'publish' );
 
 		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
-		$this->assertEquals( 'blog/cpt/date/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+		$this->assertSame( 'blog/cpt/date/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
 	}
 
 
@@ -65,7 +65,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'my-cpt' ) );
 
 		$rewrite = new CPTDA_CPT_Rewrite( 'cpt' );
-		$this->assertEquals( 'blog/my-cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
+		$this->assertSame( 'blog/my-cpt/%year%/%monthnum%/%day%', $rewrite->get_date_permastruct() );
 	}
 
 
@@ -123,6 +123,8 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 			$expected = array_merge( $expected, $array_embed );
 		}
 
+		// Has all the key values but not in the right order.
+		// We cannot use assertSame in this instance.
 		$this->assertEquals( $expected, $rules->rules );
 	}
 
@@ -151,7 +153,7 @@ class KM_CPTDA_Tests_Rewrite extends CPTDA_UnitTestCase {
 			'blog/cpt/([0-9]{4})/?$' => 'index.php?post_type=cpt&year=$matches[1]',
 		);
 
-		$this->assertEquals( $expected, $rules->rules );
+		$this->assertSame( $expected, $rules->rules );
 	}
 
 

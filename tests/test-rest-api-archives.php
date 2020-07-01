@@ -76,7 +76,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		sort( $expected );
 		sort( $data );
 
-		$this->assertEquals( $expected, $data );
+		$this->assertSame( $expected, $data );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data = $this->rest_cptda_get_archives( 'cpt', $args );
 		// Title is not allowed for the rest api.
 		$expected = "<ul>{$expected}</ul>";
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data = $this->rest_cptda_get_archives( 'cpt', $args );
 		// Title is not allowed for the rest api.
 		$expected = "<ulclass=\"wp-block-archivescptda-block-archiveswp-block-archives-list\">{$expected}</ul>";
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ),  preg_replace( '/\s+/', '', $data['rendered'] ) );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data = $this->rest_cptda_get_archives( 'cpt', $args );
 		// Script tags are removed from output
 		$expected = "<ul>\n{$expected}</ul>";
-		$this->assertEquals( strip_ws( $expected ),  strip_ws( $data['rendered'] ) );
+		$this->assertSame( strip_ws( $expected ),  strip_ws( $data['rendered'] ) );
 	}
 
 	/**
@@ -219,7 +219,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data = preg_replace("#id=\"wp-block-archives\-(.*?)\"#", 'id="wp-block-archives-"',  $data['rendered'] );
 		$data = preg_replace("#for=\"wp-block-archives\-(.*?)\"#", 'for="wp-block-archives-"',  $data );
 
-		$this->assertEquals( strip_ws( $expected ),  strip_ws( $data ) );
+		$this->assertSame( strip_ws( $expected ),  strip_ws( $data ) );
 	}
 
 	/**
@@ -251,7 +251,7 @@ class CPTDA_Tests_Rest_API_Archives extends CPTDA_UnitTestCase {
 		$data     = $this->rest_cptda_get_archives( 'cpt', $args );
 		$expected = "<ul>\n{$expected}\n</ul>";
 
-		$this->assertEquals( 1 , count( $data['archives'] ) );
-		$this->assertEquals( strip_ws( $expected ) , strip_ws( $data['rendered'] ) );
+		$this->assertSame( 1 , count( $data['archives'] ) );
+		$this->assertSame( strip_ws( $expected ) , strip_ws( $data['rendered'] ) );
 	}
 }

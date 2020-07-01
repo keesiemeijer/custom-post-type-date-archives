@@ -28,7 +28,7 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 
 		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
 
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $archive ) );
 	}
 
 	/**
@@ -45,14 +45,14 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 		add_filter( 'cptda_get_archives', array( $this, 'get_objects' ), 10 , 2 );
 
 		$expected  = array(
-			'year' => $year,
+			'year' => "$year",
 			'month' => '3',
 			'posts' => '1',
 		);
 
 		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false ) );
 
-		$this->assertEquals( $expected, get_object_vars( $this->archive_objects[0] ) );
+		$this->assertSame( $expected, get_object_vars( $this->archive_objects[0] ) );
 		$this->archive_objects = null;
 	}
 
@@ -68,14 +68,14 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 		$post = $this->factory->post->create( $args );
 
 		$expected  = array(
-			'year' => $year,
+			'year' => "$year",
 			'month' => '3',
 			'posts' => '1',
 		);
 
 		$archive = cptda_get_archives( array( 'post_type' => 'cpt', 'echo' => false, 'format' => 'object' ) );
 
-		$this->assertEquals( $expected, get_object_vars( $archive[0] ) );
+		$this->assertSame( $expected, get_object_vars( $archive[0] ) );
 	}
 
 	/**
@@ -128,8 +128,8 @@ class KM_CPTDA_Tests_Archive extends CPTDA_UnitTestCase {
 
 		$archive = cptda_get_archives( $args );
 
-		$this->assertEquals( 1 , count( $archive ) );
-		$this->assertEquals( '2' , $archive[0]->month );
+		$this->assertSame( 1 , count( $archive ) );
+		$this->assertSame( '2' , $archive[0]->month );
 	}
 
 	function get_objects( $html, $objects ) {

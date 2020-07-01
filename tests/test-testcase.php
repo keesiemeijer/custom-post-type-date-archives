@@ -39,7 +39,7 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 	 */
 	function test_create_posts() {
 		$posts = $this->create_posts();
-		$this->assertEquals( 7, count( $posts ) );
+		$this->assertSame( 7, count( $posts ) );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 	function test_create_posts_init() {
 		$this->init();
 		$posts = $this->create_posts();
-		$this->assertEquals( 7, count( $posts ) );
+		$this->assertSame( 7, count( $posts ) );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class KM_CPTDA_Tests_Testcase extends CPTDA_UnitTestCase {
 	function test_create_posts_future_init() {
 		$this->future_init();
 		$posts = $this->create_posts();
-		$this->assertEquals( 13, count( $posts ) );
+		$this->assertSame( 13, count( $posts ) );
 	}
 
 	/**

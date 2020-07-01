@@ -26,7 +26,7 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 	function test_cpt_slug_with_front() {
 		$this->init();
 		$slug = cptda_get_post_type_base( 'cpt' );
-		$this->assertEquals( 'blog/cpt', $slug );
+		$this->assertSame( 'blog/cpt', $slug );
 	}
 
 	/**
@@ -36,7 +36,7 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->set_permalink_structure( '/%postname%/' );
 		$this->init();
 		$slug = cptda_get_post_type_base( 'cpt' );
-		$this->assertEquals( 'cpt', $slug );
+		$this->assertSame( 'cpt', $slug );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 	function test_cpt_rewrite_slug() {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => true ) );
 		$slug = cptda_get_post_type_base( 'cpt' );
-		$this->assertEquals( 'blog/rewrite', $slug );
+		$this->assertSame( 'blog/rewrite', $slug );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->init( 'cpt', 'publish', array( 'slug' => 'rewrite', 'with_front' => false ) );
 		$plugin = cptda_date_archives();
 		$slug = cptda_get_post_type_base( 'cpt' );
-		$this->assertEquals( 'rewrite', $slug );
+		$this->assertSame( 'rewrite', $slug );
 	}
 
 	/**
@@ -68,7 +68,7 @@ class KM_CPTDA_Post_Type extends CPTDA_UnitTestCase {
 		$this->cpt_setup( 'cpt' );
 		$post_type = get_post_type_object( 'cpt' );
 		$slug = cptda_get_post_type_base( 'cpt' );
-		$this->assertEquals( '', $slug );
+		$this->assertSame( '', $slug );
 	}
 
 }

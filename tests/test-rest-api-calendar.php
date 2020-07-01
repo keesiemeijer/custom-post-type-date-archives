@@ -89,7 +89,7 @@ class CPTDA_WP_Rest_API_Calendar extends CPTDA_UnitTestCase {
 		sort( $expected );
 		sort( $data );
 
-		$this->assertEquals( $expected, $data );
+		$this->assertSame( $expected, $data );
 	}
 	/**
 	 * Test success response for rest request.

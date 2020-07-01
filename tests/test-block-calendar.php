@@ -54,7 +54,7 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$monthnum = $previous_monthnum;
 		$year = $previous_year;
 
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $block ) );
 	}
 
 	/**
@@ -98,7 +98,7 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$year = $previous_year;
 
 		// Same as WP calendar
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $block ) );
 	}
 
 }
