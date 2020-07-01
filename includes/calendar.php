@@ -139,13 +139,13 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$thismonth = zeroise( absint( $calendar['month'] ), 2 );
 	$last_day = $calendar['last_day'];
 
-	/* translators: Calendar caption: 1: month name, 2: 4-digit year */
+	/* translators: Calendar caption: 1: Month name, 2: 4-digit year. */
 	$calendar_caption = _x( '%1$s %2$s', 'calendar caption' );
-	$output = '<table id="wp-calendar">
+	$output  = '<table id="wp-calendar" class="wp-calendar-table">
 	<caption>' . sprintf(
 		$calendar_caption,
 		$wp_locale->get_month( $thismonth ),
-		date( 'Y', $calendar['unixmonth'] )
+		gmdate( 'Y', $calendar['unixmonth'] )
 	) . '</caption>
 	<thead>
 	<tr>';
@@ -165,32 +165,6 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	$output .= '
 	</tr>
 	</thead>
-
-	<tfoot>
-	<tr>';
-
-	if ( $prev_year && $prev_month ) {
-		$output .= "\n\t\t" . '<td colspan="3" id="prev"><a href="' . cptda_get_month_archive_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
-			$wp_locale->get_month_abbrev( $wp_locale->get_month( $prev_month ) ) .
-			'</a></td>';
-	} else {
-		$output .= "\n\t\t" . '<td colspan="3" id="prev" class="pad">&nbsp;</td>';
-	}
-
-	$output .= "\n\t\t" . '<td class="pad">&nbsp;</td>';
-
-	if ( $next_year && $next_month ) {
-		$output .= "\n\t\t" . '<td colspan="3" id="next"><a href="' . cptda_get_month_archive_link( $next_year, $next_month, $post_type ) . '">' .
-			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next_month ) ) .
-			' &raquo;</a></td>';
-	} else {
-		$output .= "\n\t\t" . '<td colspan="3" id="next" class="pad">&nbsp;</td>';
-	}
-
-	$output .= '
-	</tr>
-	</tfoot>
-
 	<tbody>
 	<tr>';
 
@@ -220,7 +194,7 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	}
 
 	$newrow = false;
-	$daysinmonth = (int) date( 't', $calendar['unixmonth'] );
+	$daysinmonth = (int) gmdate( 't', $calendar['unixmonth'] );
 
 	for ( $day = 1; $day <= $daysinmonth; ++$day ) {
 		if ( isset( $newrow ) && $newrow ) {
@@ -260,7 +234,33 @@ function cptda_get_calendar( $post_type, $initial = true, $echo = true ) {
 	if ( $pad != 0 && $pad != 7 ) {
 		$output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 	}
-	$output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
+
+	$output .= "\n\t</tr>\n\t</tbody>";
+	$output .= "\n\t</table>";
+
+	$output .= '<nav aria-label="' . __( 'Previous and next months' ) . '" class="wp-calendar-nav">';
+
+	if ( $prev_year && $prev_month ) {
+		$output .= "\n\t\t" . '<span class="wp-calendar-nav-prev"><a href="' . cptda_get_month_archive_link( $prev_year, $prev_month, $post_type ) . '">&laquo; ' .
+			$wp_locale->get_month_abbrev( $wp_locale->get_month( $prev_month ) ) .
+			'</a></span>';
+	} else {
+		$output .= "\n\t\t" . '<span class="wp-calendar-nav-prev">&nbsp;</span>';
+	}
+
+	$output .= "\n\t\t" . '<span class="pad">&nbsp;</span>';
+
+	if ( $next_year && $next_month ) {
+		$output .= "\n\t\t" . '<span class="wp-calendar-nav-next"><a href="' . cptda_get_month_archive_link( $next_year, $next_month, $post_type ) . '">' .
+			$wp_locale->get_month_abbrev( $wp_locale->get_month( $next_month ) ) .
+			' &raquo;</a></span>';
+	} else {
+		$output .= "\n\t\t" . '<span class="wp-calendar-nav-next">&nbsp;</span>';
+	}
+
+	$output .= '
+	</nav>';
+
 
 	$cache[ $key ] = $output;
 	wp_cache_set( 'cptda_get_calendar', $cache, 'calendar' );

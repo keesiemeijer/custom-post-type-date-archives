@@ -37,7 +37,7 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 
 		$expected = "<ul class=\"wp-block-archives cptda-block-archives wp-block-archives-list\">\n{$expected}</ul>";
 
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $block ) );
 
 		$archive = cptda_get_archives_html( array( 
 			'post_type' => 'cpt',
@@ -47,7 +47,7 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 		);
 
 		// Check to see if cptda_get_archives_html() and cptda_render_block_archives() have same output.
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $archive ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $archive ) );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 		$expected = "<ul class=\"wp-block-archives wp-block-archives-list\">\n{$expected}</ul>\n";
 
 		// Markup same as WP archives block
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $block ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $block ) );
 
 		$archive = cptda_render_block_archives( array(
 			'post_type' => 'post',
@@ -84,6 +84,6 @@ class KM_CPTDA_Tests_Block_Archive extends CPTDA_UnitTestCase {
 		$archive = str_replace(' cptda-block-archives ', ' ', $archive);
 
 		// Markup same as WP archives block
-		$this->assertEquals( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $archive ) );
+		$this->assertSame( preg_replace( '/\s+/', '', $expected ), preg_replace( '/\s+/', '', $archive ) );
 	}
 }

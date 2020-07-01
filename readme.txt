@@ -3,7 +3,7 @@ Contributors: keesiemeijer
 Tags: post type,date,archives,events,calendar
 Requires at least: 4.4
 Tested up to: 5.4
-Stable tag:  2.7.0
+Stable tag:  2.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 4. The Recent Posts widget
 
 == Changelog ==
+= 2.7.1 =
+* Enhancement
+	* Update calendar HTML to be the same as WP 5.4
+
 = 2.7.0 =
 * Enhancement
 	* Add editor blocks to display archives, calendars and recent posts.
@@ -108,5 +112,5 @@ If you don't see the "Date Archives" sub menu in the menu of a custom post type,
 Initial Commit
 
 == Upgrade Notice ==
-= 2.7.0 =
-This upgrade will add editor blocks for the display of calendars, archives and recent posts.
+= 2.7.1 =
+This upgrade will update the calendar HTML to be the same as WordPress 5.4 and higher.

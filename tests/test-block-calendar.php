@@ -54,7 +54,7 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$monthnum = $previous_monthnum;
 		$year = $previous_year;
 
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $block ) );
 	}
 
 	/**
@@ -64,6 +64,14 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 	 */
 	function test_calendar_block_is_equal_to_wp_calendar_block() {
 		global $monthnum, $year;
+
+		$version = $GLOBALS['wp_version'];
+
+		// WordPress changed HTML in version 5.4
+		if ( version_compare( $version , '5.4', '<' ) ) {
+			$this->markTestSkipped('Skipped calendar output test. Incorrect calendar HTML for WP < 5.4');
+		}
+
 
 		$previous_monthnum = $monthnum;
 		$previous_year     = $year;
@@ -90,7 +98,7 @@ class KM_CPTDA_Tests_Block_Calendar extends CPTDA_UnitTestCase {
 		$year = $previous_year;
 
 		// Same as WP calendar
-		$this->assertEquals( strip_ws( $expected ), strip_ws( $block ) );
+		$this->assertSame( strip_ws( $expected ), strip_ws( $block ) );
 	}
 
 }

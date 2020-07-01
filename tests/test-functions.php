@@ -83,8 +83,8 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 			$expected   = cptda_get_queried_date_archive_post_type();
 			$deprecated = cptda_get_date_archive_cpt();
 
-			$this->assertEquals( 'cpt', $expected );
-			$this->assertEquals( $expected, $deprecated );
+			$this->assertSame( 'cpt', $expected );
+			$this->assertSame( $expected, $deprecated );
 		} else {
 			$this->fail( "Posts not created" );
 		}
@@ -101,7 +101,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		if ( isset( $_posts[0] ) ) {
 			$year  = get_the_date( 'Y', $_posts[0] );
 			$this->go_to( '?post_type=cpt&year=' . $year  );
-			$this->assertEquals( 'cpt', cptda_get_queried_date_archive_post_type() );
+			$this->assertSame( 'cpt', cptda_get_queried_date_archive_post_type() );
 		} else {
 			$this->fail( "Posts not created" );
 		}
@@ -128,7 +128,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 */
 	function test_not_supported_custom_post_type_stati() {
 		$this->register_post_type( 'no_date_archives' );
-		$this->assertEquals( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'no_date_archives' ) );
+		$this->assertSame( array( 'publish' ), cptda_get_cpt_date_archive_stati( 'no_date_archives' ) );
 		$this->unregister_post_type( 'no_date_archives' );
 	}
 
@@ -153,7 +153,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	function test_post_status_future() {
 		$this->future_init();
 		add_filter( 'cptda_post_stati', array( $this, 'add_future_status' ), 10 , 2 );
-		$this->assertEquals( array( 'publish', 'future' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
+		$this->assertSame( array( 'publish', 'future' ), cptda_get_cpt_date_archive_stati( 'cpt' ) );
 	}
 
 	/**
@@ -161,7 +161,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 */
 	function test_cptda_get_post_types() {
 		$this->init();
-		$this->assertEquals( array( 'cpt' => 'Custom Post Type' ), cptda_get_post_types( 'labels' ) );
+		$this->assertSame( array( 'cpt' => 'Custom Post Type' ), cptda_get_post_types( 'labels' ) );
 	}
 
 	/**
@@ -169,7 +169,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 	 */
 	function test_cptda_get_post_types_future() {
 		$this->future_init();
-		$this->assertEquals( array( 'cpt' => 'Custom Post Type' ), cptda_get_post_types( 'labels', 'publish_future' ) );
+		$this->assertSame( array( 'cpt' => 'Custom Post Type' ), cptda_get_post_types( 'labels', 'publish_future' ) );
 	}
 
 	/**
@@ -192,7 +192,7 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		$this->init();
 		$expected   = cptda_get_post_types( 'labels', 'admin' );
 		$deprecated = cptda_get_admin_post_types( 'names' );
-		$this->assertEquals( $expected, $deprecated );
+		$this->assertSame( $expected, $deprecated );
 	}
 
 	/**
@@ -207,9 +207,9 @@ class KM_CPTDA_Tests_Functions extends CPTDA_UnitTestCase {
 		register_post_type( 'cpt_2', $args );
 		$this->cpt_setup( 'cpt_2' );
 
-		$this->assertEquals( array( 'cpt' ), cptda_get_post_types( 'names', 'admin' ) );
+		$this->assertSame( array( 'cpt' ), cptda_get_post_types( 'names', 'admin' ) );
 
-		$this->assertEquals( array( 'cpt', 'cpt_2' ), cptda_get_post_types( 'names' ) );
+		$this->assertSame( array( 'cpt', 'cpt_2' ), cptda_get_post_types( 'names' ) );
 	}
 
 	/**

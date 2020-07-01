@@ -1,6 +1,6 @@
 # Custom Post Type Date Archives [![Build Status](https://travis-ci.org/keesiemeijer/custom-post-type-date-archives.svg?branch=master)](http://travis-ci.org/keesiemeijer/custom-post-type-date-archives) #
 
-Version:           2.7.0  
+Version:           2.7.1  
 Requires at least: 4.4  
 Tested up to:      5.4  
 

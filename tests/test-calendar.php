@@ -268,13 +268,53 @@ class KM_CPTDA_Tests_Calendar extends CPTDA_UnitTestCase {
 		$this->calendar_data = null;
 
 		$expected = array (
-			'year'          => 2018,
+			'year'          => $post_year,
 			'month'         => 3,
 			'last_day'      => 31,
-			'next_year'     => 2018,
-			'prev_year'     => 2018,
+			'next_year'     => $post_year,
+			'prev_year'     => $post_year,
 			'next_month'    => 5,
 			'prev_month'    => 1,
+			'calendar_days' => array( 20 ),
+		);
+
+		unset( $calendar_data['timestamp'], $calendar_data['unixmonth'] );
+
+		$this->assertSame( $expected, $calendar_data );
+	}
+
+
+	/**
+	 * Test calendar data.
+	 */
+	function test_cptda_calendar_data_no_next_prev() {
+		global $wp_locale, $monthnum, $year;
+		$this->init();
+		$post_year = (int) date( "Y" ) - 1;
+
+		$expected = '';
+		// create posts for month
+		foreach ( array( '05' ) as $post_month ) {
+			$args = array( 'post_date' => "$post_year-$post_month-20 00:00:00", 'post_type' => 'cpt' );
+			$post = $this->factory->post->create( $args );
+		}
+
+		$monthnum = 5;
+		$year = $post_year;
+
+		add_filter( 'cptda_get_calendar', array( $this, 'get_calendar_data' ), 10, 2 );
+		$calendar = cptda_get_calendar( 'cpt', true, false );
+		$calendar_data = $this->calendar_data;
+		$this->calendar_data = null;
+
+		$expected = array (
+			'year'          => $post_year,
+			'month'         => 5,
+			'last_day'      => 31,
+			'next_year'     => 0,
+			'prev_year'     => 0,
+			'next_month'    => 0,
+			'prev_month'    => 0,
 			'calendar_days' => array( 20 ),
 		);
 

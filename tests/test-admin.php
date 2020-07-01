@@ -32,7 +32,7 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 		$admin = new CPTDA_Admin();
 		$admin->cptda_admin_menu();
 		$expected = admin_url( 'edit.php?post_type=cpt&#038;page=date-archives-cpt' );
-		$this->assertEquals( $expected, menu_page_url( 'date-archives-cpt', false ) );
+		$this->assertSame( $expected, menu_page_url( 'date-archives-cpt', false ) );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 			'publish_future_posts' => array(),
 		);
 
-		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
+		$this->assertSame( $expected, $admin->get_settings( 'cpt' ) );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 
 		update_option( 'custom_post_type_date_archives', $option );
 
-		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
+		$this->assertSame( $expected, $admin->get_settings( 'cpt' ) );
 	}
 
 	/**
@@ -95,6 +95,6 @@ class KM_CPTDA_Tests_Admin extends CPTDA_UnitTestCase {
 			'publish_future_posts' => array(),
 		);
 
-		$this->assertEquals( $expected, $admin->get_settings( 'cpt' ) );
+		$this->assertSame( $expected, $admin->get_settings( 'cpt' ) );
 	}
 }

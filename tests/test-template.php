@@ -35,7 +35,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 
 	function test_theme() {
 		$my_theme = wp_get_theme();
-		$this->assertEquals( 'CPTDA Dummy Test Theme', $my_theme->get( 'Name' ) );
+		$this->assertSame( 'CPTDA Dummy Test Theme', $my_theme->get( 'Name' ) );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		sort( $expected );
 		sort( $files );
 
-		$this->assertEquals( $expected, $files );
+		$this->assertSame( $expected, $files );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->create_templates( array( 'archive', 'archive-cpt' ) );
 		$this->go_to_date_archive( 'cpt' );
 		$template = $this->get_template();
-		$this->assertEquals( 'archive-cpt.php', basename( $template ) );
+		$this->assertSame( 'archive-cpt.php', basename( $template ) );
 	}
 
 	/**
@@ -88,7 +88,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->create_templates( array( 'archive', 'archive-cpt', 'date' ) );
 		$this->go_to_date_archive();
 		$template = $this->get_template();
-		$this->assertEquals( 'date.php', basename( $template ) );
+		$this->assertSame( 'date.php', basename( $template ) );
 	}
 
 	/**
@@ -102,7 +102,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->go_to_date_archive();
 		$template = $this->get_template();
 
-		$this->assertEquals( 'date-cptda-archive.php', basename( $template ) );
+		$this->assertSame( 'date-cptda-archive.php', basename( $template ) );
 	}
 
 	/**
@@ -116,7 +116,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->go_to_date_archive();
 		$template = $this->get_template();
 
-		$this->assertEquals( 'date-cpt.php', basename( $template ) );
+		$this->assertSame( 'date-cpt.php', basename( $template ) );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 			rename( $this->theme . "temp.php", $this->theme . "archive.php" );
 		}
 
-		$this->assertEquals( 'index.php', basename( $template ) );
+		$this->assertSame( 'index.php', basename( $template ) );
 
 	}
 
@@ -147,7 +147,7 @@ class KM_CPTDA_Tests_Template extends CPTDA_UnitTestCase {
 		$this->create_templates( array( 'archive', 'date-cptda-archive', 'date-cpt' ) );
 		$this->go_to_date_archive( 'post' );
 		$template = $this->get_template();
-		$this->assertEquals( 'archive.php', basename( $template ) );
+		$this->assertSame( 'archive.php', basename( $template ) );
 	}
 
 	function go_to_date_archive( $post_type = 'cpt' ) {
