@@ -3,8 +3,8 @@
   "version": "2.7.1",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
-    "@wordpress/components": "^9.9.0",
-    "@wordpress/scripts": "^12.0.0"
+    "@wordpress/components": "^10.0.5",
+    "@wordpress/scripts": "^12.1.1"
   },
   "scripts": {
     "test": "wp-scripts test-unit-js",
